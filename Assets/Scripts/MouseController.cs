@@ -18,14 +18,15 @@ public class MouseController : MonoBehaviour
 
             if (Input.GetMouseButton(0))
             {
-                overlayTile.GetComponent<OverlayTile>().ShowTile();
+                overlayTileManager.ShowTile();
                 if (overlayTileManager.occupyingDie != null)
                 {
-                    Globals.SELECTED_UNIT = overlayTileManager.occupyingDie;
+                    overlayTileManager.occupyingDie.Select();
                 }
             }
             if (Input.GetMouseButtonDown(1))
             {
+                Debug.Log(Globals.SELECTED_UNIT);
                 if (!overlayTileManager.isBlocked && Globals.SELECTED_UNIT != null)
                 {
                     Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(overlayTileManager);

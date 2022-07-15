@@ -16,10 +16,13 @@ public class DieManager : MonoBehaviour
     public void Select()
     {
         _isSelected = true;
+        Globals.SELECTED_UNIT = this;
+        Debug.Log("selected");
     }
 
     public void Deselect()
     {
         _isSelected = false;
+        Debug.Log("deselected");
     }
 }

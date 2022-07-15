@@ -9,7 +9,7 @@ public class OverlayTile : MonoBehaviour
     public DieManager occupyingDie;
 
 
-    private void Start()
+    private void Awake()
     {
         occupyingDie = null;
     }

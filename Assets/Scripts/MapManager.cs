@@ -75,7 +75,7 @@ public class MapManager : MonoBehaviour
         Collider2D[] col = Physics2D.OverlapCircleAll(pos, 1.0f);
         Debug.Log(col[0]);
 
-        return col.OrderByDescending(i => Vector2.Distance(i.transform.position, pos)).First();
+        return col.OrderByDescending(i => Vector2.Distance(i.transform.position, pos)).Last();
     }
 
     public Vector3 GetTileWorldSpace(Vector2Int pos)
