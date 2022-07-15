@@ -70,20 +70,11 @@ public class MapManager : MonoBehaviour
         return null;
     }
 
-    public RaycastHit2D? GetTileAtPos(Vector2 pos)
+    public Collider2D GetTileAtPos(Vector2 pos)
     {
-        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero);
-        if (hits.Length > 0)
-        {
-            Debug.Log(hits[0]);
+        Collider2D col = Physics2D.OverlapPoint(pos);
+        Debug.Log(col);
 
-            return hits.OrderByDescending(i => i.collider.transform.position.z).First();
-        }
-
-        return null;
-    }
-
-    public Vector3 GetTileWorldSpace(Vector2Int pos) {
-        return this.tileMap.GetCellCenterWorld((Vector3Int)pos);
+        return col;
     }
 }
