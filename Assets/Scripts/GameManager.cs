@@ -27,20 +27,21 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         GameObject die = Instantiate(diePrefab, startPos, Quaternion.identity);
+        DieManager dieManager = die.GetComponent<DieManager>();
+        var placedOnTile = MapManager.Instance.GetTileAtPos(startPos);
 
-    }
-
-    public RaycastHit2D? GetFocusedTile()
-    {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 mousePos2d = new Vector2(mousePos.x, mousePos.y);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2d, Vector2.zero);
-
-        if (hits.Length > 0)
+        if (placedOnTile.HasValue)
         {
-            return hits.OrderByDescending(i => i.collider.transform.position.z).First();
-        }
+            GameObject overlayTile = placedOnTile.Value.collider.gameObject;
+            OverlayTile overlayTileManager = overlayTile.GetComponent<OverlayTile>();
 
-        return null;
+            overlayTileManager.occupyingDie = dieManager;
+        }
+        else
+        {
+            Debug.Log("Spawning die failed");
+        }
     }
+
+
 }
