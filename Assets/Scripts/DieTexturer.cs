@@ -19,8 +19,6 @@ public struct TextureCoords {
 public class DieTexturer : MonoBehaviour {
     private const int WIDTH = 6;
 
-    [SerializeField] private int[] textureIndices = new int[6];
-
     public int frontIndex;
     public int backIndex;
     public int leftIndex;
@@ -37,10 +35,10 @@ public class DieTexturer : MonoBehaviour {
 
         var front = GetCoords(frontIndex);
         var back = GetCoords(backIndex);
-        var right = GetCoords(textureIndices[2]);
-        var left = GetCoords(textureIndices[3]);
-        var top = GetCoords(textureIndices[4]);
-        var bottom = GetCoords(textureIndices[5]);
+        var left = GetCoords(leftIndex);
+        var right = GetCoords(rightIndex);
+        var top = GetCoords(topIndex);
+        var bottom = GetCoords(bottomIndex);
 
         for (int triangle = 0; triangle < mesh.triangles.Length / 3; ++triangle) {
             var t = new int[] {

@@ -110,4 +110,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f73d5172d7087c64ab9fcd92a022a39f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureIndices: 000000000100000002000000030000000400000005000000
+  frontIndex: 0
+  backIndex: 1
+  leftIndex: 2
+  rightIndex: 3
+  topIndex: 4
+  bottomIndex: 5
