@@ -38,10 +38,6 @@ public class GameManager : MonoBehaviour
             die.transform.position = placedOnTile.transform.position;
             overlayTileManager.occupyingDie = dieManager;
         }
-        else
-        {
-            Debug.Log("Spawning die failed");
-        }
     }
 
 
