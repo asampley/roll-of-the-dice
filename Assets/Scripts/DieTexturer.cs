@@ -17,7 +17,7 @@ public struct TextureCoords {
 }
 
 public class DieTexturer : MonoBehaviour {
-    private const int WIDTH = 6;
+    private const int WIDTH = 3;
 
     public int frontIndex;
     public int backIndex;
@@ -56,26 +56,20 @@ public class DieTexturer : MonoBehaviour {
 
                     if (Mathf.Abs(n.x) > 0.5) {
                         if (mesh.vertices[t[0]].x > 0) {
-                            Debug.Log("Right");
                             coords = right;
                         } else {
-                            Debug.Log("Left");
                             coords = left;
                         }
                     } else if (Mathf.Abs(n.y) > 0.5) {
                         if (mesh.vertices[t[0]].y > 0) {
-                            Debug.Log("Top");
                             coords = top;
                         } else {
-                            Debug.Log("Bottom");
                             coords = bottom;
                         }
                     } else {
                         if (mesh.vertices[t[0]].z > 0) {
-                            Debug.Log("Front");
                             coords = front;
                         } else {
-                            Debug.Log("Back");
                             coords = back;
                         }
                     }

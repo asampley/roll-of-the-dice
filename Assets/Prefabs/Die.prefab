@@ -97,11 +97,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   frontIndex: 0
-  backIndex: 1
-  leftIndex: 2
-  rightIndex: 3
-  topIndex: 4
-  bottomIndex: 5
+  backIndex: 0
+  leftIndex: 1
+  rightIndex: 1
+  topIndex: 2
+  bottomIndex: 2
 --- !u!1 &4210247315298935970
 GameObject:
   m_ObjectHideFlags: 0
