@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3785088808524643953}
   - component: {fileID: 5813900947184309449}
   - component: {fileID: 2486718821954450112}
+  - component: {fileID: 609847487262568303}
   m_Layer: 0
   m_Name: Die
   m_TagString: Untagged
@@ -97,3 +98,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &609847487262568303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210247315298935970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73d5172d7087c64ab9fcd92a022a39f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textureIndices: 000000000100000002000000030000000400000005000000
