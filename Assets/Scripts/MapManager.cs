@@ -73,13 +73,17 @@ public class MapManager : MonoBehaviour
     public RaycastHit2D? GetTileAtPos(Vector2 pos)
     {
         RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero);
-        Debug.Log(hits[0]);
-
         if (hits.Length > 0)
         {
+            Debug.Log(hits[0]);
+
             return hits.OrderByDescending(i => i.collider.transform.position.z).First();
         }
 
         return null;
+    }
+
+    public Vector3 GetTileWorldSpace(Vector2Int pos) {
+        return this.tileMap.GetCellCenterWorld((Vector3Int)pos);
     }
 }
