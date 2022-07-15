@@ -10,6 +10,7 @@ public class DieManager : MonoBehaviour
     public void Move(OverlayTile newTile)
     {
         transform.position = newTile.transform.position;
+        newTile.occupyingDie = this;
     }
 
     public void Select()

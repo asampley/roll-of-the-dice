@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { return _instance; } }
 
 
-    private Vector3 startPos = new Vector3(0, 0, 1);
+    private Vector3 startPos = new Vector3(1, 0.5f, 1);
     public GameObject diePrefab;
 
     private void Awake()
@@ -30,11 +30,12 @@ public class GameManager : MonoBehaviour
         DieManager dieManager = die.GetComponent<DieManager>();
         var placedOnTile = MapManager.Instance.GetTileAtPos(startPos);
 
-        if (placedOnTile.HasValue)
+        if (placedOnTile != null)
         {
-            GameObject overlayTile = placedOnTile.Value.collider.gameObject;
+            GameObject overlayTile = placedOnTile.gameObject;
             OverlayTile overlayTileManager = overlayTile.GetComponent<OverlayTile>();
 
+            die.transform.position = placedOnTile.transform.position;
             overlayTileManager.occupyingDie = dieManager;
         }
         else
