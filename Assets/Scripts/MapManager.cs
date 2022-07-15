@@ -77,4 +77,9 @@ public class MapManager : MonoBehaviour
 
         return col;
     }
+
+    public Vector3 GetTileWorldSpace(Vector2Int pos)
+    {
+        return this.tileMap.GetCellCenterWorld((Vector3Int)pos);
+    }
 }
