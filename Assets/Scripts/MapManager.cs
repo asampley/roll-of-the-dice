@@ -9,6 +9,9 @@ public class MapManager : MonoBehaviour
     public static MapManager Instance {  get { return _instance; } }
     public OverlayTile overlayTilePrefab;
     public GameObject tileParent;
+    public Tilemap tileMap;
+
+    public Dictionary<Vector2Int, OverlayTile> map;
 
     private void Awake()
     {
@@ -24,24 +27,27 @@ public class MapManager : MonoBehaviour
 
     private void Start()
     {
-        var tileMap = gameObject.GetComponentInChildren<Tilemap>();
         BoundsInt bounds = tileMap.cellBounds;
+        map = new Dictionary<Vector2Int, OverlayTile>();
 
-        for (int z = bounds.max.z; z > bounds.min.z; z--)
+        for (int z = bounds.max.z; z >= bounds.min.z; z--)
         {
-            for (int y = bounds.max.y; y > bounds.min.y; y--)
+            for (int y = bounds.min.y; y < bounds.max.y; y++)
             {
-                for (int x = bounds.max.y; x > bounds.min.x; x--)
+                for (int x = bounds.min.x; x < bounds.max.x; x++)
                 {
                     var tileLocation = new Vector3Int(x, y, z);
+                    var tileKey = new Vector2Int(x, y);
 
-                    if (tileMap.HasTile(tileLocation))
+                    if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                     {
                         var overlayTile = Instantiate(overlayTilePrefab, tileParent.transform);
                         var cellWorldPos = tileMap.GetCellCenterWorld(tileLocation);
 
-                        overlayTile.transform.position = new Vector3(cellWorldPos.x, cellWorldPos.y, cellWorldPos.z - 1);
-                        overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
+                        overlayTile.transform.position = new Vector3(cellWorldPos.x, cellWorldPos.y, cellWorldPos.z);
+                        overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder + 1;
+                        overlayTile.GetComponent<OverlayTile>().HideTile();
+                        map.Add(tileKey, overlayTile);
                     }
                 }
             }

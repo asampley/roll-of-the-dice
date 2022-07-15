@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class MouseController : MonoBehaviour
 {
-
-    private void Update()
+    private void LateUpdate()
     {
         var focusedTileHit = GetFocusedTile();
 
@@ -14,7 +13,12 @@ public class MouseController : MonoBehaviour
         {
             GameObject overlayTile = focusedTileHit.Value.collider.gameObject;
             transform.position = overlayTile.transform.position;
-            gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder;
+            gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder + 2;
+
+            if (Input.GetMouseButton(0))
+            {
+                overlayTile.GetComponent<OverlayTile>().ShowTile();
+            }
         }
     }
 

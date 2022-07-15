@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   overlayTilePrefab: {fileID: 6304565648070460762, guid: b997b6b2c24c563468a175a553e153ca, type: 3}
   tileParent: {fileID: 7025642283063408812}
+  tileMap: {fileID: 6590801031153266369}
 --- !u!1 &3645155015149961214
 GameObject:
   m_ObjectHideFlags: 0
