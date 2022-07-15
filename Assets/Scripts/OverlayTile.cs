@@ -6,7 +6,13 @@ public class OverlayTile : MonoBehaviour
 {
     public bool isBlocked;
     public Vector3Int gridLocation;
+    public DieManager occupyingDie;
 
+
+    private void Start()
+    {
+        occupyingDie = null;
+    }
 
     private void Update()
     {
