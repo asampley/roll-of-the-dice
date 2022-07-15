@@ -42,3 +42,4 @@ Current plan
 
  - hold down alt for info mode? Hover on dice to see faces
  - rotate camera?
+ - click on die to see in ghost form
