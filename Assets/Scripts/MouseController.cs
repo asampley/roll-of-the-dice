@@ -7,7 +7,7 @@ public class MouseController : MonoBehaviour
 {
     private void LateUpdate()
     {
-        var focusedTileHit = GameManager.Instance.GetFocusedTile();
+        var focusedTileHit = MapManager.Instance.GetFocusedTile();
 
         if (focusedTileHit.HasValue)
         {

@@ -52,8 +52,6 @@ public class DieTexturer : MonoBehaviour {
                 {
                     var n = mesh.normals[t[j]];
 
-                    Debug.Log(n);
-
                     if (Mathf.Abs(n.x) > 0.5) {
                         if (mesh.vertices[t[0]].x > 0) {
                             coords = right;
