@@ -1,0 +1,44 @@
+Impossible Dice
+Physics play as die, how you land matters
+ - golf with dice, land a certain way
+
+Pool but with dice
+ - hit different angles to spin differently
+
+Randomness as core mechanic
+
+Grid based game, move and turn dice, faces are your actions, so orientation matters
+ - each move is a rotation
+ - could have goal to end up with a certain face up
+ - puzzle is how you move through space to end up in the right orientation
+
+Puzzle game, roll through, try to get end result
+
+Create your own dice, modify them, faces add up to a number means no best die exists
+
+FPS with dice guns
+ - some dice are sharper, some dice are heavier
+ - d4 shotgun
+
+Your dad has gone to vegas, doing dice rolling, you gotta get dad back by being good at dice
+ - dad in casino jail, gotta win back
+
+dice racing game: see reuleaux triangle, and there's a 3d equivalent (reuleaux tetrahedron)
+ - everyone's a die
+ - car is dice
+ - track is unfurled dice net
+ - everyone gets a die(ce)
+
+
+
+Current plan
+ - Grid
+ - d6s rolling by flipping faces
+ - rock paper scissors type combat
+ - resolved as soon as adjacent
+ - number of spaces to move?
+ - ghost faces displaying future moves, or current movement
+ - pathing is not simple, straight line or manual step by step
+
+ - hold down alt for info mode? Hover on dice to see faces
+ - rotate camera?
