@@ -162,13 +162,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04230cbb42d756645a5ee319901621e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  diceName: Normal
+  _maxRange: 3
+  movesAvailable: 0
+  isEnemy: 0
+  state: 0
   parentTile: {fileID: 0}
   _meshRenderer: {fileID: 6281394592449126351}
   _moveIndicator: {fileID: 7596649282032493092}
   enemyAI: {fileID: 255127251107806683}
-  _maxRange: 3
-  isEnemy: 0
-  state: 0
   ghostMaterial: {fileID: 2100000, guid: 3a44730b7b62eaf4ab1c4fb986cb9077, type: 2}
   alliedMaterial: {fileID: 2100000, guid: f92fedead821bdf468e4821c57b5f8ca, type: 2}
   enemyMaterial: {fileID: 2100000, guid: a9542602a0f2e894081f0a5aa5118174, type: 2}

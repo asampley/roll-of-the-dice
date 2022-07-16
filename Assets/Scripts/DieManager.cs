@@ -13,6 +13,14 @@ public enum DiceState : uint
 
 public class DieManager : MonoBehaviour
 {
+    //Properties
+    public string diceName;
+    [SerializeField]
+    private int _maxRange;
+    public int movesAvailable;
+    public bool isEnemy;
+    public DiceState state;
+
     private List<OverlayTile> _tilesInRange = new List<OverlayTile>();
     public OverlayTile parentTile;
     [SerializeField]
@@ -22,11 +30,7 @@ public class DieManager : MonoBehaviour
     [SerializeField]
     private EnemyAI enemyAI;
 
-    [SerializeField]
-    private int _maxRange;
-    private int _currentRange;
-    public bool isEnemy;
-    public DiceState state;
+    
 
     //Materials
     [HideInInspector]
@@ -53,7 +57,7 @@ public class DieManager : MonoBehaviour
     {
         if (!isEnemy)
         {
-            if (_currentRange > 0)
+            if (movesAvailable > 0)
             {
                 _moveIndicator.SetActive(true);
             }
@@ -124,6 +128,7 @@ public class DieManager : MonoBehaviour
         Globals.SELECTED_UNIT = this;
         GetTilesInRange();
         ShowTilesInRange();
+        EventManager.TriggerEvent("SelectUnit");
     }
 
     public void Deselect()
@@ -239,7 +244,7 @@ public class DieManager : MonoBehaviour
     private void GetTilesInRange()
     {
         _tilesInRange.Clear();
-        if (_currentRange <= 0) return;
+        if (movesAvailable <= 0) return;
         _tilesInRange = GetTilesAdjacent();
     }
 
@@ -250,10 +255,10 @@ public class DieManager : MonoBehaviour
     public void ResetRange()
     {
         if (!isEnemy) {
-            GameManager.Instance.PlayerMoveRemaining += _maxRange - _currentRange;
+            GameManager.Instance.PlayerMoveRemaining += _maxRange - movesAvailable;
         }
 
-        _currentRange = _maxRange;
+        movesAvailable = _maxRange;
     }
 
     public int MaxRange() {
@@ -306,7 +311,7 @@ public class DieManager : MonoBehaviour
 
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
-        _currentRange--;
+        movesAvailable--;
         if (!isEnemy) {
             GameManager.Instance.PlayerMoveRemaining--;
         }
@@ -320,7 +325,7 @@ public class DieManager : MonoBehaviour
         } else if (!isEnemy && turn == Turn.Player) {
             ResetRange();
         }
-        Debug.Log("Turn change " + this + ":"+ _currentRange + "/" + _maxRange);
+        Debug.Log("Turn change " + this + ":"+ movesAvailable + "/" + _maxRange);
     }
 
     void OnDestroy() {
@@ -330,7 +335,7 @@ public class DieManager : MonoBehaviour
             GameManager.Instance.EnemyCount--;
         } else {
             GameManager.Instance.PlayerCount--;
-            GameManager.Instance.PlayerMoveRemaining -= _currentRange;
+            GameManager.Instance.PlayerMoveRemaining -= movesAvailable;
         }
     }
 }
