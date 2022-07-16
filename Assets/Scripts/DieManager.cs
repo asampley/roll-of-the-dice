@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,14 @@ public class DieManager : MonoBehaviour
     public GameObject ghostComponents;
     private DieRotator _dieRotator;
 
+    private Action<Turn> turnChange;
+
+    public event Action<OverlayTile> MoveFinished;
+
+    void Start() {
+        turnChange = t => this.TurnChange(t);
+        GameManager.Instance.TurnChange += turnChange;
+    }
 
     public void Initialize(bool enemy)
     {
@@ -221,11 +230,25 @@ public class DieManager : MonoBehaviour
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
         _currentRange--;
+        if (!isEnemy && _currentRange == 0) {
+            GameManager.Instance.CurrentTurn = Turn.Enemy;
+        }
         GetTilesInRange();
         Fight();
+
+        MoveFinished?.Invoke(newTile);
+    }
+
+    void TurnChange(Turn turn) {
+        if (isEnemy && turn == Turn.Enemy) {
+            ResetRange();
+        } else if (!isEnemy && turn == Turn.Player) {
+            ResetRange();
+        }
     }
 
     void OnDestroy() {
         GhostManager.Instance.RemoveGhosts(gameObject);
+        GameManager.Instance.TurnChange -= turnChange;
     }
 }

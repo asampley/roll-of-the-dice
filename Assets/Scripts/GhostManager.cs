@@ -24,8 +24,8 @@ public class GhostManager : MonoBehaviour {
         }
     }
 
-    public bool CreateGhost(GameObject toGhost, Vector2Int pos, int xRot, int yRot) {
-        if (ghosts.ContainsKey(pos)) return false;
+    public GameObject CreateGhost(GameObject toGhost, Vector2Int pos, int xRot, int yRot) {
+        if (ghosts.ContainsKey(pos)) return null;
 
         var dieManager = toGhost.GetComponent<DieManager>();
         var ghostComponents = dieManager.ghostComponents;
@@ -46,7 +46,7 @@ public class GhostManager : MonoBehaviour {
 
         ghostsByContext[toGhost].Add(ghost);
 
-        return true;
+        return ghost;
     }
 
     public void RemoveGhosts(GameObject context) {

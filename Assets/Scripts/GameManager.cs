@@ -1,8 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum Turn {
+    Player,
+    Enemy,
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +16,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject diePrefab;
     public GameObject enemyPrefab;
+
+    public HashSet<EnemyAI> EnemiesWaiting = new HashSet<EnemyAI>();
 
     private void Awake()
     {
@@ -24,10 +31,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private Turn _turn;
+    public Turn CurrentTurn {
+        get { return _turn; }
+        set { _turn = value; TurnChange?.Invoke(_turn); }
+    }
+    public event Action<Turn> TurnChange;
+
     private void Start()
     {
+        CurrentTurn = Turn.Player;
+
         SpawnDie(new Vector2Int(0, 0), false);
         SpawnDie(new Vector2Int(2, 2));
+        SpawnDie(new Vector2Int(3, 3));
+
+        TurnChange += t => Debug.Log("Turn: " + t);
     }
 
 

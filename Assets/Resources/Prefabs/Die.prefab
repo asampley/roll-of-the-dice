@@ -162,7 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentTile: {fileID: 0}
   _meshRenderer: {fileID: 6281394592449126351}
-  _maxRange: 100
+  _maxRange: 3
   isEnemy: 0
   state: 0
   ghostMaterial: {fileID: 2100000, guid: 3a44730b7b62eaf4ab1c4fb986cb9077, type: 2}
