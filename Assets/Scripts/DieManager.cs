@@ -311,6 +311,7 @@ public class DieManager : MonoBehaviour
             GameManager.Instance.EnemyCount--;
         } else {
             GameManager.Instance.PlayerCount--;
+            GameManager.Instance.PlayerMoveRemaining -= _currentRange;
         }
     }
 }
