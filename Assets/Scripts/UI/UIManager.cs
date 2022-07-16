@@ -12,10 +12,7 @@ public class UIManager : MonoBehaviour
     public GameObject menu;
     public GameObject options;
     public GameObject menuButton;
-
-    // victory menu
-    public GameObject victoryMenu;
-    public TextMeshProUGUI victoryText;
+    public TextMeshProUGUI menuTitle;
     public Button nextLevelButton;
 
     //GameInfo
@@ -89,7 +86,6 @@ public class UIManager : MonoBehaviour
 
     public void Back()
     {
-        victoryMenu.SetActive(false);
         menus.SetActive(false);
         menuButton.SetActive(true);
     }
@@ -108,15 +104,13 @@ public class UIManager : MonoBehaviour
     }
 
     public void ShowVictoryScreen(bool victory) {
-        victoryText.text = victory ? "Victory" : "Defeat";
-        victoryText.color = victory
+        menuTitle.text = victory ? "Victory" : "Defeat";
+        menuTitle.color = victory
             ? new Color32(0, 255, 0, 255)
             : new Color32(255, 0, 0, 255);
 
         nextLevelButton.interactable = victory;
 
-        menus.SetActive(false);
-        menuButton.SetActive(false);
-        victoryMenu.SetActive(true);
+        OpenMenu();
     }
 }
