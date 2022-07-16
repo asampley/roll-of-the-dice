@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diePrefab: {fileID: 4210247315298935970, guid: 3344109ed0d897b4184082d9de0ad786, type: 3}
+  enemyPrefab: {fileID: 4210247315298935970, guid: 873d1b4d8478f9c44ae0bf86a7031d9a, type: 3}
 --- !u!114 &8721377018529874340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,4 +59,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2442498c0f5798040ac7a3903b0e43a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghostMaterial: {fileID: 2100000, guid: 3a44730b7b62eaf4ab1c4fb986cb9077, type: 2}
+  ghostContainer: {fileID: 3221832865650697799, guid: 4cc9d1ed88c72c441a8db6b2717651ad, type: 3}

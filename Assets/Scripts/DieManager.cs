@@ -22,7 +22,8 @@ public class DieManager : MonoBehaviour
     private int _currentRange;
     public bool isEnemy;
     public DiceState state;
-    public Material enemyMaterial;
+    public Material ghostMaterial;
+    public GameObject ghostComponents;
     private DieRotator _dieRotator;
 
 
@@ -30,16 +31,8 @@ public class DieManager : MonoBehaviour
     {
         isEnemy = enemy;
         ResetRange();
-        SetTexture();
         _dieRotator = GetComponentInChildren<DieRotator>();
         state = _dieRotator.UpFace();
-    }
-
-    private void SetTexture()
-    {
-        if (isEnemy)
-            GetComponentInChildren<MeshRenderer>().sharedMaterial = enemyMaterial;
-
     }
 
     public void Move(OverlayTile newTile)
@@ -177,6 +170,10 @@ public class DieManager : MonoBehaviour
         _currentRange = _maxRange;
     }
 
+    public int MaxRange() {
+        return _maxRange;
+    }
+
     public void CalculateDirection(OverlayTile newTile)
     {
         StartCoroutine(MoveToPos(parentTile.transform.position, newTile.transform.position));
@@ -223,8 +220,12 @@ public class DieManager : MonoBehaviour
 
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
-        _currentRange--;        
+        _currentRange--;
         GetTilesInRange();
         Fight();
+    }
+
+    void OnDestroy() {
+        GhostManager.Instance.RemoveGhosts(gameObject);
     }
 }
