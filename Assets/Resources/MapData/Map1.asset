@@ -16,7 +16,16 @@ MonoBehaviour:
   - diceClass: 0
     tilePosition: {x: 0, y: -2}
     isEnemy: 0
+  - diceClass: 0
+    tilePosition: {x: 2, y: -2}
+    isEnemy: 0
+  - diceClass: 0
+    tilePosition: {x: 3, y: 2}
+    isEnemy: 0
   enemyDice:
   - diceClass: 0
     tilePosition: {x: 1, y: 3}
+    isEnemy: 1
+  - diceClass: 1
+    tilePosition: {x: 2, y: -1}
     isEnemy: 1

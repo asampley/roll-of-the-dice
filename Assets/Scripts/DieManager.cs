@@ -189,6 +189,8 @@ public class DieManager : MonoBehaviour
     {
         Deselect();
         parentTile.RemoveDiceFromTile();
+        if (isEnemy)
+            Destroy(gameObject.GetComponent<EnemyAI>());
         Destroy(gameObject);
     }
 
