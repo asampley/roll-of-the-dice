@@ -25,7 +25,6 @@ public class DieRotator : MonoBehaviour {
     }
 
     public void RotateX(int count) {
-        Debug.Log("Rotate X");
 
         var targetInverse = Quaternion.Inverse(target);
         this.target *= Quaternion.FromToRotation(targetInverse * localRight, targetInverse * localForward);
@@ -35,7 +34,6 @@ public class DieRotator : MonoBehaviour {
     }
 
     public void RotateY(int count) {
-        Debug.Log("Rotate Y");
 
         var targetInverse = Quaternion.Inverse(target);
         this.target *= Quaternion.FromToRotation(targetInverse * localUp, targetInverse * localForward);
@@ -45,18 +43,6 @@ public class DieRotator : MonoBehaviour {
     }
 
     public void Update() {
-        rotateTime -= Time.deltaTime;
-
-        if (rotateTime < 0f) {
-            if (Random.value < 0.5f) {
-                RotateX(1);
-            } else {
-                RotateY(1);
-            }
-
-            rotateTime += 1.0f;
-        }
-
         if (Time.fixedTime < startTime + duration) {
             this.transform.rotation = Quaternion.Slerp(current, target, (Time.fixedTime - startTime) / duration);
         } else {

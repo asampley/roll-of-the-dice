@@ -22,9 +22,9 @@ public class DieManager : MonoBehaviour
     {
         if (!_tilesInRange.Contains(newTile))
             return;
+        CalculateDirection(newTile);
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
-        transform.position = newTile.transform.position;
         
         _currentRange--;
         HideTilesInRange();
@@ -50,6 +50,7 @@ public class DieManager : MonoBehaviour
        foreach (OverlayTile tile in _tilesInRange)
         {
             tile.ShowTile();
+            GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), 1, 1);
         }
     }
 
@@ -71,5 +72,24 @@ public class DieManager : MonoBehaviour
     public void ResetRange()
     {
         _currentRange = _maxRange;
+    }
+
+    public void CalculateDirection(OverlayTile newTile)
+    {
+        StartCoroutine(MoveToPos(parentTile.transform.position, newTile.transform.position));
+        Vector2 dir = parentTile.transform.position - newTile.transform.position;
+
+    }
+
+    private IEnumerator MoveToPos(Vector2 startPos, Vector2 endPos)
+    {
+        float elapsedTime = 0;
+
+        while (elapsedTime < Globals.MOVEMENT_TIME)
+        {
+            transform.position = Vector3.Lerp(startPos, endPos, (elapsedTime / Globals.MOVEMENT_TIME));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
     }
 }
