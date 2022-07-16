@@ -18,6 +18,8 @@ public class DieManager : MonoBehaviour
     [SerializeField]
     private MeshRenderer _meshRenderer;
     [SerializeField]
+    private GameObject _moveIndicator;
+    [SerializeField]
     private EnemyAI enemyAI;
 
     [SerializeField]
@@ -45,6 +47,21 @@ public class DieManager : MonoBehaviour
     void Start() {
         turnChange = t => this.TurnChange(t);
         GameManager.Instance.TurnChange += turnChange;
+    }
+
+    private void Update()
+    {
+        if (!isEnemy)
+        {
+            if (_currentRange > 0)
+            {
+                _moveIndicator.SetActive(true);
+            }
+            else
+            {
+                _moveIndicator.SetActive(false);
+            }
+        }
     }
 
     public void Initialize(bool enemy, DiceOrientation orientation)
