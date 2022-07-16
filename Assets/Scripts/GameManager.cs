@@ -39,6 +39,12 @@ public class GameManager : MonoBehaviour
     public event Action<int> EnemyCountChange;
     public event Action<int> PlayerCountChange;
 
+    private int _playerMoveRemaining;
+    public int PlayerMoveRemaining {
+        get { return _playerMoveRemaining; }
+        set { _playerMoveRemaining = value; if (value == 0) CurrentTurn = Turn.Enemy; }
+    }
+
     private Turn _turn;
     public Turn CurrentTurn {
         get { return _turn; }

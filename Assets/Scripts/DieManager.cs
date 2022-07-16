@@ -45,7 +45,6 @@ public class DieManager : MonoBehaviour
     void Start() {
         turnChange = t => this.TurnChange(t);
         GameManager.Instance.TurnChange += turnChange;
-
     }
 
     public void Initialize(bool enemy, DiceOrientation orientation)
@@ -229,6 +228,10 @@ public class DieManager : MonoBehaviour
 
     public void ResetRange()
     {
+        if (!isEnemy) {
+            GameManager.Instance.PlayerMoveRemaining += _maxRange - _currentRange;
+        }
+
         _currentRange = _maxRange;
     }
 
@@ -283,12 +286,11 @@ public class DieManager : MonoBehaviour
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
         _currentRange--;
+        if (!isEnemy) {
+            GameManager.Instance.PlayerMoveRemaining--;
+        }
         GetTilesInRange();
         Fight();
-
-        if (!isEnemy && _currentRange == 0) {
-            GameManager.Instance.CurrentTurn = Turn.Enemy;
-        }
     }
 
     void TurnChange(Turn turn) {
