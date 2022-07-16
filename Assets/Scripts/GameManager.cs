@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { return _instance; } }
 
     public GameObject diePrefab;
+    public GameObject enemyPrefab;
 
     private void Awake()
     {
@@ -32,8 +33,10 @@ public class GameManager : MonoBehaviour
 
     public void SpawnDie(Vector2Int startPos, bool isEnemy = true)
     {
+        GameObject prefab = isEnemy ? enemyPrefab : diePrefab;
+
         Vector3 pos = MapManager.Instance.GetTileWorldSpace(startPos);
-        GameObject die = Instantiate(diePrefab, pos, Quaternion.identity);
+        GameObject die = Instantiate(prefab, pos, Quaternion.identity);
         DieManager dieManager = die.GetComponent<DieManager>();
         var placedOnTile = MapManager.Instance.GetTileAtPos(startPos);
 

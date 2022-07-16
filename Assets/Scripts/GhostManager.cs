@@ -7,10 +7,10 @@ public class GhostManager : MonoBehaviour {
     private static GhostManager _instance;
     public static GhostManager Instance { get { return _instance; } }
 
-    public Material ghostMaterial;
-
     private Dictionary<Vector2Int, GameObject> ghosts = new Dictionary<Vector2Int, GameObject>();
     private Dictionary<GameObject, List<GameObject>> ghostsByContext = new Dictionary<GameObject, List<GameObject>>();
+
+    public GameObject ghostContainer;
 
     private void Awake()
     {
@@ -27,8 +27,13 @@ public class GhostManager : MonoBehaviour {
     public bool CreateGhost(GameObject toGhost, Vector2Int pos, int xRot, int yRot) {
         if (ghosts.ContainsKey(pos)) return false;
 
-        var ghost = Instantiate(toGhost, MapManager.Instance.GetTileWorldSpace(pos), toGhost.transform.rotation, this.transform);
-        ghost.GetComponentInChildren<MeshRenderer>().sharedMaterial = ghostMaterial;
+        var dieManager = toGhost.GetComponent<DieManager>();
+        var ghostComponents = dieManager.ghostComponents;
+
+        var ghost = Instantiate(ghostContainer, MapManager.Instance.GetTileWorldSpace(pos), toGhost.transform.rotation, this.transform);
+        Instantiate(ghostComponents, ghost.transform);
+
+        ghost.GetComponentInChildren<MeshRenderer>().sharedMaterial = dieManager.ghostMaterial;
         var rotator = ghost.GetComponentInChildren<DieRotator>();
 
         rotator.RotateX(xRot);
@@ -56,6 +61,12 @@ public class GhostManager : MonoBehaviour {
         foreach (var ghost in ghostsByContext[context]) {
             Destroy(ghost);
         }
+    }
+
+    public void SetGhostVisible(Vector2Int pos, bool visible) {
+        if (!ghosts.ContainsKey(pos)) return;
+
+        ghosts[pos].SetActive(visible);
     }
 
     public void Clear() {
