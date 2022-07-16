@@ -165,3 +165,4 @@ MonoBehaviour:
   _maxRange: 100
   isEnemy: 0
   state: 0
+  enemyMaterial: {fileID: 2100000, guid: a9542602a0f2e894081f0a5aa5118174, type: 2}

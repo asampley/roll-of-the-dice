@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
         DieManager dieManager = die.GetComponent<DieManager>();
         var placedOnTile = MapManager.Instance.GetTileAtPos(startPos);
 
-        dieManager.Initialize();
+        dieManager.Initialize(isEnemy);
 
         if (placedOnTile != null)
         {

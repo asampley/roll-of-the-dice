@@ -22,17 +22,24 @@ public class DieManager : MonoBehaviour
     private int _currentRange;
     public bool isEnemy;
     public DiceState state;
+    public Material enemyMaterial;
+    private DieRotator _dieRotator;
 
 
-
-    public void Initialize()
+    public void Initialize(bool enemy)
     {
+        isEnemy = enemy;
         ResetRange();
         SetTexture();
+        _dieRotator = GetComponentInChildren<DieRotator>();
+        state = _dieRotator.UpFace();
     }
 
     private void SetTexture()
     {
+        if (isEnemy)
+            GetComponentInChildren<MeshRenderer>().sharedMaterial = enemyMaterial;
+
     }
 
     public void Move(OverlayTile newTile)
@@ -40,7 +47,7 @@ public class DieManager : MonoBehaviour
         if (!_tilesInRange.Contains(newTile) || isEnemy)
             return;
         CalculateDirection(newTile);
-        Fight();
+        state = _dieRotator.UpFace();
         StartCoroutine(UpdateTilePos(newTile));
     }
 
@@ -64,7 +71,7 @@ public class DieManager : MonoBehaviour
 
         foreach (OverlayTile tile in _tilesInRange)
         {
-            if (tile.occupyingDie != null && isEnemy)
+            if (tile.occupyingDie != null && tile.occupyingDie.isEnemy)
             {
                 DieManager enemyDie = tile.occupyingDie;
                 DiceState enemyState = enemyDie.state;
@@ -91,6 +98,7 @@ public class DieManager : MonoBehaviour
 
     public void Die()
     {
+        parentTile.RemoveDiceFromTile();
         Destroy(gameObject);
     }
 
@@ -99,6 +107,8 @@ public class DieManager : MonoBehaviour
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
         {
+            if (tile.isBlocked) return;
+
             tile.ShowTile();
             Vector3Int rot = parentTile.gridLocation - tile.gridLocation;
             GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), rot.x, rot.y);
@@ -165,13 +175,17 @@ public class DieManager : MonoBehaviour
 
     private IEnumerator UpdateTilePos(OverlayTile newTile)
     {
+        HideTilesInRange();
         yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
 
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
 
+
         _currentRange--;
-        HideTilesInRange();
+        
+        GetTilesInRange();
+        Fight();
         GetTilesInRange();
         ShowTilesInRange();
     }
