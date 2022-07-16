@@ -48,37 +48,43 @@ public class DieTexturer : MonoBehaviour {
             };
 
             for (int j = 0; j < 3; ++j) {
-                TextureCoords coords;
+                float x, y;
                 {
+                    TextureCoords coords;
                     var n = mesh.normals[t[j]];
+                    var v = mesh.vertices[t[j]];
 
                     if (Mathf.Abs(n.x) > 0.5) {
-                        if (mesh.vertices[t[0]].x > 0) {
+                        if (v.x > 0) {
                             coords = right;
                         } else {
                             coords = left;
                         }
+
+                        x = v.z > 0 ? coords.xStop : coords.xStart;
+                        y = v.y > 0 ? coords.yStop : coords.yStart;
                     } else if (Mathf.Abs(n.y) > 0.5) {
-                        if (mesh.vertices[t[0]].y > 0) {
+                        if (v.y > 0) {
                             coords = top;
                         } else {
                             coords = bottom;
                         }
+
+                        x = v.x > 0 ? coords.xStop : coords.xStart;
+                        y = v.z > 0 ? coords.yStop : coords.yStart;
                     } else {
-                        if (mesh.vertices[t[0]].z > 0) {
+                        if (v.z > 0) {
                             coords = front;
                         } else {
                             coords = back;
                         }
+
+                        x = v.x > 0 ? coords.xStop : coords.xStart;
+                        y = v.y > 0 ? coords.yStop : coords.yStart;
                     }
                 }
 
-                var vec = new Vector2();
-
-                vec.x = meshUvs[t[j]].x < 0.5 ? coords.xStart : coords.xStop;
-                vec.y = meshUvs[t[j]].y < 0.5 ? coords.yStart : coords.yStop;
-
-                uvs[t[j]] = vec;
+                uvs[t[j]] = new Vector2(x, y);
             }
         }
 

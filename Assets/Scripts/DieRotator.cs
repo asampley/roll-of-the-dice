@@ -9,17 +9,19 @@ public class DieRotator : MonoBehaviour {
     private float startTime;
     private float duration;
 
-    private Vector3 localUp;
-    private Vector3 localForward;
-    private Vector3 localRight;
+    private static Vector3 localUp;
+    private static Vector3 localForward;
+    private static Vector3 localRight;
 
     void Awake() {
-        this.current = this.transform.rotation;
-        this.target = this.transform.rotation;
+        this.current = this.transform.localRotation;
+        this.target = this.transform.localRotation;
 
-        this.localUp = this.current * Vector3.up;
-        this.localForward = this.current * Vector3.forward;
-        this.localRight = this.current * Vector3.right;
+        if (localUp == Vector3.zero) {
+            localUp = this.current * Vector3.up;
+            localForward = this.current * Vector3.forward;
+            localRight = this.current * Vector3.right;
+        }
     }
 
     private void Rotate(Quaternion rotation, int count) {
@@ -31,7 +33,7 @@ public class DieRotator : MonoBehaviour {
             target *= rotation;
         }
 
-        this.current = this.transform.rotation;
+        this.current = this.transform.localRotation;
         this.startTime = Time.fixedTime;
     }
 
@@ -51,9 +53,9 @@ public class DieRotator : MonoBehaviour {
 
     public void Update() {
         if (Time.fixedTime < startTime + Globals.MOVEMENT_TIME) {
-            this.transform.rotation = Quaternion.Slerp(current, target, (Time.fixedTime - startTime) / Globals.MOVEMENT_TIME);
+            this.transform.localRotation = Quaternion.Slerp(current, target, (Time.fixedTime - startTime) / Globals.MOVEMENT_TIME);
         } else {
-            this.transform.rotation = target;
+            this.transform.localRotation = target;
         }
     }
 }
