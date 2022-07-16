@@ -13,7 +13,7 @@ public class DieRotator : MonoBehaviour {
     private Vector3 localForward;
     private Vector3 localRight;
 
-    void Start() {
+    void Awake() {
         this.current = this.transform.rotation;
         this.target = this.transform.rotation;
 

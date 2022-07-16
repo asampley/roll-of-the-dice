@@ -27,7 +27,8 @@ public class GhostManager : MonoBehaviour {
     public bool CreateGhost(GameObject toGhost, Vector2Int pos, int xRot, int yRot) {
         if (ghosts.ContainsKey(pos)) return false;
 
-        var ghost = Instantiate(toGhost, MapManager.Instance.GetTileWorldSpace(pos), Quaternion.identity, this.transform);
+        var ghost = Instantiate(toGhost, MapManager.Instance.GetTileWorldSpace(pos), toGhost.transform.rotation, this.transform);
+        ghost.GetComponentInChildren<MeshRenderer>().sharedMaterial = ghostMaterial;
         var rotator = ghost.GetComponentInChildren<DieRotator>();
 
         rotator.RotateX(xRot);
@@ -39,8 +40,6 @@ public class GhostManager : MonoBehaviour {
         }
 
         ghostsByContext[toGhost].Add(ghost);
-
-        ghost.GetComponentInChildren<MeshRenderer>().sharedMaterial = ghostMaterial;
 
         return true;
     }
