@@ -85,12 +85,13 @@ public class DieManager : MonoBehaviour
     {
         List<DieManager> toKill = new List<DieManager>();
 
-        foreach (OverlayTile tile in _tilesInRange)
+        foreach (OverlayTile tile in GetTilesAdjacent())
         {
-            if (tile.occupyingDie != null && tile.occupyingDie.isEnemy)
+            if (tile.occupyingDie != null && isEnemy != tile.occupyingDie.isEnemy)
             {
                 DieManager enemyDie = tile.occupyingDie;
                 DiceState enemyState = enemyDie.state;
+
                 switch (state)
                 {
                     case DiceState.Rock:
@@ -187,7 +188,11 @@ public class DieManager : MonoBehaviour
     {
         _tilesInRange.Clear();
         if (_currentRange <= 0) return;
-        _tilesInRange = MapManager.Instance.GetSurroundingTiles(new Vector2Int(parentTile.gridLocation.x, parentTile.gridLocation.y));
+        _tilesInRange = GetTilesAdjacent();
+    }
+
+    private List<OverlayTile> GetTilesAdjacent() {
+        return MapManager.Instance.GetSurroundingTiles(new Vector2Int(parentTile.gridLocation.x, parentTile.gridLocation.y));
     }
 
     public void ResetRange()
@@ -246,11 +251,12 @@ public class DieManager : MonoBehaviour
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
         _currentRange--;
+        GetTilesInRange();
+        Fight();
+
         if (!isEnemy && _currentRange == 0) {
             GameManager.Instance.CurrentTurn = Turn.Enemy;
         }
-        GetTilesInRange();
-        Fight();
     }
 
     void TurnChange(Turn turn) {
