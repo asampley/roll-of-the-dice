@@ -69,10 +69,10 @@ public class DieManager : MonoBehaviour
 
         ResetRange();
         _dieRotator = GetComponentInChildren<DieRotator>();
-        state = _dieRotator.UpFace();
         _dieRotator.RotateX(orientation.xRolls);
         _dieRotator.RotateY(orientation.yRolls);
         _dieRotator.RotateZ(orientation.zRolls);
+        state = _dieRotator.UpFace();
     }
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
