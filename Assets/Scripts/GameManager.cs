@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { return _instance; } }
 
     public GameObject normalPrefab;
-    public GameObject enemyPrefab;
     public StartPositions startPositions;
     public GameObject diceParent;
 
@@ -51,7 +50,6 @@ public class GameManager : MonoBehaviour
         StartGame();
         CurrentTurn = Turn.Player;
     }
-
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
     {
@@ -135,6 +133,8 @@ public class GameManager : MonoBehaviour
         {
             GameObject.Destroy(child.gameObject);
         }
+        MapManager.Instance.ClearMap();
+        MapManager.Instance.GenerateMap();
     }
     public void ClearDictionaries()
     {
