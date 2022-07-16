@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class MainMenuManager : MonoBehaviour
     public GameObject instructions;
     public GameObject options;
 
+    // MAIN MENU -------------------------------------------------
     public void PlayGame()
     {
         mainMenu.SetActive(false);
@@ -41,5 +44,12 @@ public class MainMenuManager : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
         Application.Quit();
+    }
+
+
+    // LEVEL SELECT ----------------------------------------------------------
+    public void Level1()
+    {
+        Loader.Load(Loader.Scene.Level1);
     }
 }
