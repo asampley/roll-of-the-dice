@@ -330,10 +330,6 @@ PrefabInstance:
       value: GAME
       objectReference: {fileID: 0}
     - target: {fileID: 6007631994916663089, guid: 3c6fbaba7346f494b91afb6ec883c57a, type: 3}
-      propertyPath: rockPrefab
-      value: 
-      objectReference: {fileID: 4210247315298935970, guid: 3171ba44c3fa38c468efb4cee86ecadf, type: 3}
-    - target: {fileID: 6007631994916663089, guid: 3c6fbaba7346f494b91afb6ec883c57a, type: 3}
       propertyPath: startPositions
       value: 
       objectReference: {fileID: 11400000, guid: d16efe67a79b1aa4a825f7ba70233aec, type: 2}
