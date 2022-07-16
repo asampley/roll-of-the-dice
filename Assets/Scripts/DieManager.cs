@@ -44,13 +44,28 @@ public class DieManager : MonoBehaviour
         state = _dieRotator.UpFace();
     }
 
-    public void Move(OverlayTile newTile)
-    {
-        if (!_tilesInRange.Contains(newTile) || isEnemy)
-            return;
-        CalculateDirection(newTile);
-        state = _dieRotator.UpFace();
-        StartCoroutine(UpdateTilePos(newTile));
+    private IEnumerator MoveMany(List<OverlayTile> tiles) {
+        GetTilesInRange();
+        foreach (var tile in tiles) {
+            if (!_tilesInRange.Contains(tile)) {
+                Debug.Log("Nothing in range");
+                yield break;
+            }
+            CalculateDirection(tile);
+            state = _dieRotator.UpFace();
+            Debug.Log(tile);
+            yield return StartCoroutine(UpdateTilePos(tile));
+        }
+
+        MoveFinished?.Invoke(tiles[tiles.Count - 1]);
+    }
+
+    public void Move(OverlayTile newTile) {
+        StartCoroutine(MoveMany(new List<OverlayTile> { newTile }));
+    }
+
+    public void Move(List<OverlayTile> tiles) {
+        StartCoroutine(MoveMany(tiles));
     }
 
     public void Select()
@@ -235,8 +250,6 @@ public class DieManager : MonoBehaviour
         }
         GetTilesInRange();
         Fight();
-
-        MoveFinished?.Invoke(newTile);
     }
 
     void TurnChange(Turn turn) {
