@@ -153,48 +153,48 @@ public class DieManager : MonoBehaviour
                         if (enemyState == DiceState.Scissors)
                         {
                             toKill.Add(enemyDie);
-                            Debug.Log(state);
-                            Debug.Log(enemyState);
+                            EventManager.TriggerEvent("AllyRockBeatsScissors");
                         }
                         else if (enemyState == DiceState.Paper)
                         {
                             toKill.Add(this);
+                            EventManager.TriggerEvent("AllyRockBeatenByPaper");
                         }
                         else if (enemyState == DiceState.Rock)
                         {
-                            //Draw
+                            EventManager.TriggerEvent("Draw");
                         }
                         break;
                     case DiceState.Paper:
                         if (enemyState == DiceState.Rock)
                         {
                             toKill.Add(enemyDie);
-                            Debug.Log(state);
-                            Debug.Log(enemyState);
+                            EventManager.TriggerEvent("AllyPaperBeatsRock");
                         }
                         else if (enemyState == DiceState.Scissors)
                         {
                             toKill.Add(this);
+                            EventManager.TriggerEvent("AllyPaperBeatenByScissors");
                         }
                         else if (enemyState == DiceState.Paper)
                         {
-                            //Draw
+                            EventManager.TriggerEvent("Draw");
                         }
                         break;
                     case DiceState.Scissors:
                         if (enemyState == DiceState.Paper)
                         {
                             toKill.Add(enemyDie);
-                            Debug.Log(state);
-                            Debug.Log(enemyState);
+                            EventManager.TriggerEvent("AllyScissorsBeatsPaper");
                         }
                         else if (enemyState == DiceState.Rock)
                         {
                             toKill.Add(this);
+                            EventManager.TriggerEvent("AllyScissorsBeatenByRock");
                         }
                         else if (enemyState == DiceState.Scissors)
                         {
-                            //Draw
+                            EventManager.TriggerEvent("Draw");
                         }
                         break;
                 }
@@ -302,6 +302,7 @@ public class DieManager : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+        EventManager.TriggerEvent("Move");
     }
 
     private IEnumerator UpdateTilePos(OverlayTile newTile)
