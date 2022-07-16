@@ -16,9 +16,13 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
 
-    public GameObject normalPrefab;
+    //Dice
     public StartPositions startPositions;
     public GameObject diceParent;
+
+    //Dice Prefabs
+    public GameObject normalPrefab;
+    public GameObject rockPrefab;
 
     private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
@@ -74,6 +78,9 @@ public class GameManager : MonoBehaviour
         {
             case DiceClass.Normal:
                 prefab = normalPrefab;
+                break;
+            case DiceClass.Rock:
+                prefab = rockPrefab;
                 break;
             default:
                 prefab = normalPrefab;

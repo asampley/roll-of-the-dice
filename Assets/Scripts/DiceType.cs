@@ -4,6 +4,7 @@ using UnityEngine;
 public enum DiceClass
 {
     Normal,
+    Rock,
 }
 [System.Serializable]
 public class DiceSpawn

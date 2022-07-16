@@ -99,10 +99,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frontIndex: 0
   backIndex: 0
-  leftIndex: 1
-  rightIndex: 1
-  topIndex: 2
-  bottomIndex: 2
+  leftIndex: 0
+  rightIndex: 0
+  topIndex: 0
+  bottomIndex: 0
 --- !u!114 &5074197080693599334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 6716495750821013030}
   - component: {fileID: 255127251107806683}
   m_Layer: 0
-  m_Name: Die
+  m_Name: Rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
