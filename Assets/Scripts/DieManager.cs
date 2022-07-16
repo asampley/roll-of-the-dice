@@ -25,7 +25,7 @@ public class DieManager : MonoBehaviour
         CalculateDirection(newTile);
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
-
+        
         _currentRange--;
         HideTilesInRange();
         GetTilesInRange();
@@ -47,10 +47,10 @@ public class DieManager : MonoBehaviour
 
     public void ShowTilesInRange()
     {
-       foreach (OverlayTile tile in _tilesInRange)
+        GhostManager.Instance.RemoveGhosts(gameObject);
+        foreach (OverlayTile tile in _tilesInRange)
         {
-            tile.ShowTile();
-            GhostManager.Instance.RemoveGhosts(gameObject);
+            tile.ShowTile();            
             GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), 1, 1);
         }
     }
@@ -78,8 +78,25 @@ public class DieManager : MonoBehaviour
     public void CalculateDirection(OverlayTile newTile)
     {
         StartCoroutine(MoveToPos(parentTile.transform.position, newTile.transform.position));
-        Vector2 dir = parentTile.transform.position - newTile.transform.position;
+        Vector3Int dir = parentTile.gridLocation - newTile.gridLocation;
+        Debug.Log(dir);
 
+        if (dir == new Vector3Int(1, 0))
+        {
+            GetComponentInChildren<DieRotator>().RotateX(1);
+        }
+        else if (dir == new Vector3Int(-1, 0))
+        {
+            GetComponentInChildren<DieRotator>().RotateX(-1);
+        }
+        else if (dir == new Vector3Int(0, 1))
+        {
+            GetComponentInChildren<DieRotator>().RotateY(1);
+        }
+        else if (dir == new Vector3Int(0, -1))
+        {
+            GetComponentInChildren<DieRotator>().RotateY(-1);
+        }
     }
 
     private IEnumerator MoveToPos(Vector2 startPos, Vector2 endPos)
