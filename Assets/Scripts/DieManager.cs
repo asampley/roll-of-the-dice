@@ -36,12 +36,15 @@ public class DieManager : MonoBehaviour
         GameManager.Instance.TurnChange += turnChange;
     }
 
-    public void Initialize(bool enemy)
+    public void Initialize(bool enemy, DiceOrientation orientation)
     {
         isEnemy = enemy;
         ResetRange();
         _dieRotator = GetComponentInChildren<DieRotator>();
         state = _dieRotator.UpFace();
+        _dieRotator.RotateX(orientation.xRolls);
+        _dieRotator.RotateY(orientation.yRolls);
+        _dieRotator.RotateZ(orientation.zRolls);
     }
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "StartPosition", menuName = "Scriptable Objects/StartPosition", order = 1)]
-public class StartPosition : ScriptableObject
+public class StartPositions : ScriptableObject
 {
     public DiceSpawn[] alliedDice;
 

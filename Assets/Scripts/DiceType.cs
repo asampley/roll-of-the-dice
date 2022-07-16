@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum DiceType
+public enum DiceClass
 {
     Normal,
 }
 [System.Serializable]
 public class DiceSpawn
 {
-    public DiceType diceClass;
+    public DiceClass diceClass;
     public Vector2Int tilePosition;
     [HideInInspector]
     public bool isEnemy;

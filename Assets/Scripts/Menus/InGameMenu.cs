@@ -9,7 +9,6 @@ public class InGameMenu : MonoBehaviour
     public GameObject menus;
     public GameObject menu;
     public GameObject options;
-
     public GameObject menuButton;
 
 
@@ -22,12 +21,14 @@ public class InGameMenu : MonoBehaviour
     // MENU -------------------------------------------------
     public void RestartLevel()
     {
-
+        Back();
+        GameManager.Instance.StartGame();
     }
 
     public void RerollLevel()
     {
-
+        Back();
+        GameManager.Instance.RerollGame();
     }
 
     public void Options()
