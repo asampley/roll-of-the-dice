@@ -23,14 +23,7 @@ public class DieManager : MonoBehaviour
         if (!_tilesInRange.Contains(newTile))
             return;
         CalculateDirection(newTile);
-        parentTile.RemoveDiceFromTile();
-        newTile.MoveDiceToTile(this);
-        
-        _currentRange--;
-        HideTilesInRange();
-        GetTilesInRange();
-        ShowTilesInRange();
-
+        StartCoroutine(UpdateTilePos(newTile));
     }
 
     public void Select()
@@ -79,7 +72,6 @@ public class DieManager : MonoBehaviour
     {
         StartCoroutine(MoveToPos(parentTile.transform.position, newTile.transform.position));
         Vector3Int dir = parentTile.gridLocation - newTile.gridLocation;
-        Debug.Log(dir);
 
         if (dir == new Vector3Int(1, 0))
         {
@@ -109,5 +101,18 @@ public class DieManager : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+    }
+
+    private IEnumerator UpdateTilePos(OverlayTile newTile)
+    {        
+        yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
+
+        parentTile.RemoveDiceFromTile();
+        newTile.MoveDiceToTile(this);
+
+        _currentRange--;
+        HideTilesInRange();
+        GetTilesInRange();
+        ShowTilesInRange();
     }
 }
