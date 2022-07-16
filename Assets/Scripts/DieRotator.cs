@@ -9,6 +9,7 @@ public class DieRotator : MonoBehaviour {
     private float startTime;
     private float duration;
 
+    private static Quaternion originalOffset;
     private static Vector3 localUp;
     private static Vector3 localForward;
     private static Vector3 localRight;
@@ -18,6 +19,7 @@ public class DieRotator : MonoBehaviour {
         this.target = this.transform.localRotation;
 
         if (localUp == Vector3.zero) {
+            originalOffset = this.current;
             localUp = this.current * Vector3.up;
             localForward = this.current * Vector3.forward;
             localRight = this.current * Vector3.right;
@@ -56,6 +58,25 @@ public class DieRotator : MonoBehaviour {
             this.transform.localRotation = Quaternion.Slerp(current, target, (Time.fixedTime - startTime) / Globals.MOVEMENT_TIME);
         } else {
             this.transform.localRotation = target;
+        }
+    }
+
+    public DiceState UpFace() {
+        var topFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(originalOffset * this.target) * localUp);
+
+        var texturer = GetComponent<DieTexturer>();
+        if (topFaceDir.x == 1) {
+            return texturer.rightIndex;
+        } else if (topFaceDir.x == -1) {
+            return texturer.leftIndex;
+        } else if (topFaceDir.y == 1) {
+            return texturer.topIndex;
+        } else if (topFaceDir.y == -1) {
+            return texturer.bottomIndex;
+        } else if (topFaceDir.z == 1) {
+            return texturer.frontIndex;
+        } else {
+            return texturer.backIndex;
         }
     }
 }

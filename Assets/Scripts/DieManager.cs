@@ -33,8 +33,6 @@ public class DieManager : MonoBehaviour
 
     private void SetTexture()
     {
-        if (isEnemy)
-            _meshRenderer.materials[] = Resources.Load("Materials/EnemyDie") as Material;
     }
 
     public void Move(OverlayTile newTile)
@@ -147,6 +145,8 @@ public class DieManager : MonoBehaviour
         {
             GetComponentInChildren<DieRotator>().RotateY(-1);
         }
+
+        Debug.Log(GetComponentInChildren<DieRotator>().UpFace());
     }
 
     private IEnumerator MoveToPos(Vector2 startPos, Vector2 endPos)
