@@ -30,7 +30,7 @@ public class DieManager : MonoBehaviour
     [SerializeField]
     private EnemyAI enemyAI;
 
-    
+
 
     //Materials
     [HideInInspector]
@@ -105,7 +105,6 @@ public class DieManager : MonoBehaviour
                 }
                 CalculateDirection(tile);
                 state = _dieRotator.UpFace();
-                Debug.Log(tile);
                 yield return StartCoroutine(UpdateTilePos(tile));
             }
 
@@ -154,15 +153,18 @@ public class DieManager : MonoBehaviour
                         {
                             toKill.Add(enemyDie);
                             EventManager.TriggerEvent("AllyRockBeatsScissors");
+                            Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
                         }
                         else if (enemyState == DiceState.Paper)
                         {
                             toKill.Add(this);
                             EventManager.TriggerEvent("AllyRockBeatenByPaper");
+                            Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
                         }
                         else if (enemyState == DiceState.Rock)
                         {
                             EventManager.TriggerEvent("Draw");
+                            Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
                         }
                         break;
                     case DiceState.Paper:
@@ -170,15 +172,18 @@ public class DieManager : MonoBehaviour
                         {
                             toKill.Add(enemyDie);
                             EventManager.TriggerEvent("AllyPaperBeatsRock");
+                            Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
                         }
                         else if (enemyState == DiceState.Scissors)
                         {
                             toKill.Add(this);
                             EventManager.TriggerEvent("AllyPaperBeatenByScissors");
+                            Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
                         }
                         else if (enemyState == DiceState.Paper)
                         {
                             EventManager.TriggerEvent("Draw");
+                            Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
                         }
                         break;
                     case DiceState.Scissors:
@@ -186,15 +191,18 @@ public class DieManager : MonoBehaviour
                         {
                             toKill.Add(enemyDie);
                             EventManager.TriggerEvent("AllyScissorsBeatsPaper");
+                            Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
                         }
                         else if (enemyState == DiceState.Rock)
                         {
                             toKill.Add(this);
                             EventManager.TriggerEvent("AllyScissorsBeatenByRock");
+                            Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
                         }
                         else if (enemyState == DiceState.Scissors)
                         {
                             EventManager.TriggerEvent("Draw");
+                            Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
                         }
                         break;
                 }
@@ -331,7 +339,11 @@ public class DieManager : MonoBehaviour
 
     void OnDestroy() {
         GhostManager.Instance.RemoveGhosts(gameObject);
-        GameManager.Instance.TurnChange -= turnChange;
+
+        if (turnChange != null) {
+            GameManager.Instance.TurnChange -= turnChange;
+        }
+
         if (isEnemy) {
             GameManager.Instance.EnemyCount--;
         } else {

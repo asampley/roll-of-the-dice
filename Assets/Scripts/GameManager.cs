@@ -97,6 +97,7 @@ public class GameManager : MonoBehaviour
         Vector3 pos = MapManager.Instance.GetTileWorldSpace(startPos);
         GameObject die = Instantiate(prefab, pos, Quaternion.identity);
         die.transform.SetParent(diceParent.transform);
+        die.name = prefab.name + (isEnemy ? " Enemy" : " Player");
         DieManager dieManager = die.GetComponent<DieManager>();
         var placedOnTile = MapManager.Instance.GetTileAtPos(startPos);
 
@@ -150,6 +151,7 @@ public class GameManager : MonoBehaviour
         {
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         }
+        Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
     }
 
     public void RerollGame()
