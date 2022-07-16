@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum DiceState
+public enum DiceState : uint
 {
-    Rock,
-    Paper,
-    Scissors
+    Rock = 0,
+    Paper = 1,
+    Scissors = 2
 }
 
 public class DieManager : MonoBehaviour
@@ -149,7 +149,7 @@ public class DieManager : MonoBehaviour
     }
 
     private IEnumerator UpdateTilePos(OverlayTile newTile)
-    {        
+    {
         yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
 
         parentTile.RemoveDiceFromTile();
