@@ -108,7 +108,6 @@ public class EnemyAI : MonoBehaviour {
 
     void OnDestroy() {
         if (turnChange != null) {
-            Debug.Log("running");
             GameManager.Instance.TurnChange -= turnChange;
         }
 
