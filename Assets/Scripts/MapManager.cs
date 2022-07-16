@@ -133,4 +133,44 @@ public class MapManager : MonoBehaviour
 
         return surroundingTiles;
     }
+
+    public List<OverlayTile> GetTilesStraightLine(Vector2Int originTile)
+    {
+        var surroundingTiles = new List<OverlayTile>();
+
+
+        Vector2Int TileToCheck = new Vector2Int(originTile.x + 1, originTile.y);
+        while (map.ContainsKey(TileToCheck))
+        {
+            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1) { }
+                surroundingTiles.Add(map[TileToCheck]);
+            TileToCheck.x += 1;
+        }
+
+        TileToCheck = new Vector2Int(originTile.x - 1, originTile.y);
+        while (map.ContainsKey(TileToCheck))
+        {
+            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+                surroundingTiles.Add(map[TileToCheck]);
+            TileToCheck.x -= 1;
+        }
+
+        TileToCheck = new Vector2Int(originTile.x, originTile.y + 1);
+        while (map.ContainsKey(TileToCheck))
+        {
+            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+                surroundingTiles.Add(map[TileToCheck]);
+            TileToCheck.y += 1;
+        }
+
+        TileToCheck = new Vector2Int(originTile.x, originTile.y - 1);
+        while (map.ContainsKey(TileToCheck))
+        {
+            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+                surroundingTiles.Add(map[TileToCheck]);
+            TileToCheck.y -= 1;
+        }
+
+        return surroundingTiles;
+    }
 }

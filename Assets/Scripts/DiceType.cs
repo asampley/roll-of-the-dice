@@ -5,6 +5,7 @@ public enum DiceClass
 {
     Normal,
     Rock,
+    Line,
 }
 [System.Serializable]
 public class DiceSpawn
