@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public struct TextureCoords {
@@ -17,7 +19,7 @@ public struct TextureCoords {
 }
 
 public class DieTexturer : MonoBehaviour {
-    private const int WIDTH = 3;
+    private static readonly uint WIDTH = Enum.GetValues(typeof(DiceState)).Cast<uint>().Max() + 1;
 
     public DiceState frontIndex;
     public DiceState backIndex;
