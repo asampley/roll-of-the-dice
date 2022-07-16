@@ -26,7 +26,15 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        GameObject die = Instantiate(diePrefab, startPos, Quaternion.identity);
+        SpawnDie(new Vector2Int(0, 0), false);
+        SpawnDie(new Vector2Int(2, 2));
+    }
+
+
+    public void SpawnDie(Vector2Int startPos, bool isEnemy = true)
+    {
+        Vector3 pos = MapManager.Instance.GetTileWorldSpace(startPos);
+        GameObject die = Instantiate(diePrefab, pos, Quaternion.identity);
         DieManager dieManager = die.GetComponent<DieManager>();
         var placedOnTile = MapManager.Instance.GetTileAtPos(startPos);
 
@@ -38,5 +46,7 @@ public class GameManager : MonoBehaviour
             die.transform.position = placedOnTile.transform.position;
             overlayTileManager.MoveDiceToTile(dieManager);
         }
+
+        dieManager.isEnemy = isEnemy;
     }
 }

@@ -72,8 +72,7 @@ public class MapManager : MonoBehaviour
 
     public Collider2D GetTileAtPos(Vector2 pos)
     {
-        Collider2D[] col = Physics2D.OverlapCircleAll(pos, 1.0f);
-        Debug.Log(col[0]);
+        Collider2D[] col = Physics2D.OverlapCircleAll(pos, 1.0f, Globals.OVERLAY_TILE);
 
         return col.OrderByDescending(i => Vector2.Distance(i.transform.position, pos)).Last();
     }

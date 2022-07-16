@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum DiceState
+{
+    Rock,
+    Paper,
+    Scissors
+}
+
 public class DieManager : MonoBehaviour
 {
     private List<OverlayTile> _tilesInRange = new List<OverlayTile>();
@@ -11,6 +18,8 @@ public class DieManager : MonoBehaviour
     [SerializeField]
     private int _maxRange;
     private int _currentRange;
+    public bool isEnemy;
+    public DiceState state;
 
 
     public void Start()
@@ -23,6 +32,7 @@ public class DieManager : MonoBehaviour
         if (!_tilesInRange.Contains(newTile))
             return;
         CalculateDirection(newTile);
+        Fight();
         StartCoroutine(UpdateTilePos(newTile));
     }
 
@@ -36,6 +46,42 @@ public class DieManager : MonoBehaviour
     public void Deselect()
     {
         HideTilesInRange();
+    }
+
+    public void Fight()
+    {
+        List<DieManager> deadDie = new List<DieManager>();
+
+        foreach (OverlayTile tile in _tilesInRange)
+        {
+            if (tile.occupyingDie != null && isEnemy)
+            {
+                DieManager enemyDie = tile.occupyingDie;
+                DiceState enemyState = enemyDie.state;
+                if ((state == DiceState.Rock && enemyState == DiceState.Scissors) || (state == DiceState.Paper || enemyState == DiceState.Rock) || (state == DiceState.Scissors && enemyState == DiceState.Paper))
+                {
+                    deadDie.Add(enemyDie);
+                }
+                else if ((state == DiceState.Rock && enemyState == DiceState.Paper) || (state == DiceState.Paper || enemyState == DiceState.Scissors) || (state == DiceState.Scissors && enemyState == DiceState.Rock))
+                {
+                    deadDie.Add(this);
+                }
+                else if ((state == DiceState.Rock && enemyState == DiceState.Rock) || (state == DiceState.Paper || enemyState == DiceState.Paper) || (state == DiceState.Scissors && enemyState == DiceState.Scissors))
+                {
+                    //Draw
+                }
+            }
+        }
+
+        foreach (DieManager die in deadDie)
+        {
+            die.Die();
+        }
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
     }
 
     public void ShowTilesInRange()
