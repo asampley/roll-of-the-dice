@@ -43,17 +43,16 @@ public class DieManager : MonoBehaviour
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
         {
-            tile.ShowTile();            
-            GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), 1, 1);
+            tile.ShowTile();
+            Vector3Int rot = parentTile.gridLocation - tile.gridLocation;
+            GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), rot.x, rot.y);
         }
     }
 
     public void HideTilesInRange()
     {
         foreach (OverlayTile tile in _tilesInRange)
-        {
             tile.HideTile();
-        }
     }
 
     private void GetTilesInRange()
