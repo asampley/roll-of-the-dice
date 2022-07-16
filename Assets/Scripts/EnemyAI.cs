@@ -107,11 +107,10 @@ public class EnemyAI : MonoBehaviour {
 
 
     void OnDestroy() {
-        if (enabled)
-        {
+        if (enabled) {
             GameManager.Instance.TurnChange -= turnChange;
             GameManager.Instance.EnemiesWaiting.Remove(this);
             dieManager.MoveFinished -= moveFinished;
-        }       
+        }
     }
 }

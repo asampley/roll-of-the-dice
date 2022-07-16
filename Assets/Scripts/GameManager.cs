@@ -24,6 +24,20 @@ public class GameManager : MonoBehaviour
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
 
     public HashSet<EnemyAI> EnemiesWaiting = new HashSet<EnemyAI>();
+    private int _enemies;
+    public int EnemyCount {
+        get { return _enemies; }
+        set { _enemies = value; if (_enemies == 0) EnemiesGone?.Invoke(); }
+    }
+
+    private int _players;
+    public int PlayerCount {
+        get { return _players; }
+        set { _players = value; if (_players == 0) PlayerDead?.Invoke(); }
+    }
+
+    public event Action EnemiesGone;
+    public event Action PlayerDead;
 
     private Turn _turn;
     public Turn CurrentTurn {
@@ -42,6 +56,8 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
         }
+
+        EnemiesGone += () => Debug.Log("All enemies dead");
     }
 
     private void Start()

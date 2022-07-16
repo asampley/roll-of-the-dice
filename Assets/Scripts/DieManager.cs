@@ -45,19 +45,23 @@ public class DieManager : MonoBehaviour
     void Start() {
         turnChange = t => this.TurnChange(t);
         GameManager.Instance.TurnChange += turnChange;
+
     }
 
     public void Initialize(bool enemy, DiceOrientation orientation)
     {
         isEnemy = enemy;
+
         if (isEnemy)
         {
+            GameManager.Instance.EnemyCount++;
             enemyAI.enabled = true;
             ghostMaterial = enemyGhostMaterial;
             GetComponentInChildren<MeshRenderer>().sharedMaterial = enemyMaterial;
-        }            
+        }
         else
         {
+            GameManager.Instance.PlayerCount++;
             enemyAI.enabled = false;
             Destroy(enemyAI);
             ghostMaterial = alliedGhostMaterial;
