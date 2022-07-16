@@ -70,11 +70,9 @@ public class MapManager : MonoBehaviour
         return null;
     }
 
-    public Collider2D GetTileAtPos(Vector2 pos)
+    public OverlayTile GetTileAtPos(Vector2Int pos)
     {
-        Collider2D[] col = Physics2D.OverlapCircleAll(pos, 1.0f, Globals.OVERLAY_TILE);
-
-        return col.OrderByDescending(i => Vector2.Distance(i.transform.position, pos)).Last();
+        return map[pos];
     }
 
     public Vector3 GetTileWorldSpace(Vector2Int pos)
