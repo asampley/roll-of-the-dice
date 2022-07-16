@@ -59,6 +59,7 @@ public class DieManager : MonoBehaviour
         else
         {
             enemyAI.enabled = false;
+            Destroy(enemyAI);
             ghostMaterial = alliedGhostMaterial;
             GetComponentInChildren<MeshRenderer>().sharedMaterial = alliedMaterial; ;
         }
@@ -69,11 +70,6 @@ public class DieManager : MonoBehaviour
         _dieRotator.RotateX(orientation.xRolls);
         _dieRotator.RotateY(orientation.yRolls);
         _dieRotator.RotateZ(orientation.zRolls);
-    }
-
-    public void SetMaterial()
-    {
-
     }
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
