@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: Map1
   m_EditorClassIdentifier: Assembly-CSharp::StartPosition
-  tilePosition: []
   diceType:
   - diceClass: 0
     state: 0
+    tilePosition: {x: 0, y: 0}
+    isEnemy: 0
+  - diceClass: 0
+    state: 0
+    tilePosition: {x: 0, y: 2}
     isEnemy: 0
