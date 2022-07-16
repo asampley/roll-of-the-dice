@@ -76,18 +76,20 @@ public class DieManager : MonoBehaviour
     }
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
-        foreach (var tile in tiles) {
-            GetTilesInRange();
-            if (!_tilesInRange.Contains(tile)) {
-                yield break;
+        if (tiles.Count > 0) {
+            foreach (var tile in tiles) {
+                GetTilesInRange();
+                if (!_tilesInRange.Contains(tile)) {
+                    yield break;
+                }
+                CalculateDirection(tile);
+                state = _dieRotator.UpFace();
+                Debug.Log(tile);
+                yield return StartCoroutine(UpdateTilePos(tile));
             }
-            CalculateDirection(tile);
-            state = _dieRotator.UpFace();
-            Debug.Log(tile);
-            yield return StartCoroutine(UpdateTilePos(tile));
-        }
 
-        MoveFinished?.Invoke(tiles[tiles.Count - 1]);
+            MoveFinished?.Invoke(tiles[tiles.Count - 1]);
+        }
     }
 
     public void Move(OverlayTile newTile) {
