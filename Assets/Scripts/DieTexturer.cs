@@ -19,12 +19,12 @@ public struct TextureCoords {
 public class DieTexturer : MonoBehaviour {
     private const int WIDTH = 3;
 
-    public int frontIndex;
-    public int backIndex;
-    public int leftIndex;
-    public int rightIndex;
-    public int topIndex;
-    public int bottomIndex;
+    public DiceState frontIndex;
+    public DiceState backIndex;
+    public DiceState leftIndex;
+    public DiceState rightIndex;
+    public DiceState topIndex;
+    public DiceState bottomIndex;
 
     void Start() {
         var mesh = this.GetComponent<MeshFilter>().mesh;
@@ -91,7 +91,7 @@ public class DieTexturer : MonoBehaviour {
         mesh.SetUVs(0, uvs);
     }
 
-    static TextureCoords GetCoords(int index) {
+    static TextureCoords GetCoords(DiceState index) {
         return new TextureCoords((float)index / WIDTH, (float)(index + 1) / WIDTH, 0, 1);
     }
 }
