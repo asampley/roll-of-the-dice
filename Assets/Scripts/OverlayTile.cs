@@ -31,4 +31,17 @@ public class OverlayTile : MonoBehaviour
     {
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
     }
+
+    public void MoveDiceToTile(DieManager die)
+    {
+        occupyingDie = die;
+        die.parentTile = this;
+        isBlocked = true;
+    }
+
+    public void RemoveDiceFromTile()
+    {
+        occupyingDie = null;
+        isBlocked = false;
+    }
 }

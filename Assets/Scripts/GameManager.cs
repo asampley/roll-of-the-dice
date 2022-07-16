@@ -36,9 +36,7 @@ public class GameManager : MonoBehaviour
             OverlayTile overlayTileManager = overlayTile.GetComponent<OverlayTile>();
 
             die.transform.position = placedOnTile.transform.position;
-            overlayTileManager.occupyingDie = dieManager;
+            overlayTileManager.MoveDiceToTile(dieManager);
         }
     }
-
-
 }
