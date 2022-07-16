@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c2bae854c944fc41b1c52403c51f309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  diePrefab: {fileID: 4210247315298935970, guid: 3344109ed0d897b4184082d9de0ad786, type: 3}
+  normalPrefab: {fileID: 4210247315298935970, guid: 3344109ed0d897b4184082d9de0ad786, type: 3}
   enemyPrefab: {fileID: 4210247315298935970, guid: 873d1b4d8478f9c44ae0bf86a7031d9a, type: 3}
   startPositions: {fileID: 0}
   diceParent: {fileID: 584924817115488174}

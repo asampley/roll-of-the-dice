@@ -28,6 +28,11 @@ public class MapManager : MonoBehaviour
 
     private void Start()
     {
+        GenerateMap();
+    }
+
+    public void GenerateMap()
+    {
         BoundsInt bounds = tileMap.cellBounds;
         map = new Dictionary<Vector2Int, OverlayTile>();
 
@@ -53,6 +58,14 @@ public class MapManager : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    public void ClearMap()
+    {
+        foreach (Transform child in tileParent.transform)
+        {
+            GameObject.Destroy(child.gameObject);
         }
     }
 
