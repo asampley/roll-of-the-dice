@@ -14,6 +14,8 @@ public class DieManager : MonoBehaviour
 {
     private List<OverlayTile> _tilesInRange = new List<OverlayTile>();
     public OverlayTile parentTile;
+    [SerializeField]
+    private MeshRenderer _meshRenderer;
 
     [SerializeField]
     private int _maxRange;
@@ -22,14 +24,22 @@ public class DieManager : MonoBehaviour
     public DiceState state;
 
 
-    public void Start()
+
+    public void Initialize()
     {
         ResetRange();
+        SetTexture();
+    }
+
+    private void SetTexture()
+    {
+        if (isEnemy)
+            _meshRenderer.materials[] = Resources.Load("Materials/EnemyDie") as Material;
     }
 
     public void Move(OverlayTile newTile)
     {
-        if (!_tilesInRange.Contains(newTile))
+        if (!_tilesInRange.Contains(newTile) || isEnemy)
             return;
         CalculateDirection(newTile);
         Fight();
@@ -38,6 +48,8 @@ public class DieManager : MonoBehaviour
 
     public void Select()
     {
+        if (Globals.SELECTED_UNIT != null)
+            Globals.SELECTED_UNIT.Deselect();
         Globals.SELECTED_UNIT = this;
         GetTilesInRange();
         ShowTilesInRange();
@@ -97,6 +109,7 @@ public class DieManager : MonoBehaviour
 
     public void HideTilesInRange()
     {
+        GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
             tile.HideTile();
     }

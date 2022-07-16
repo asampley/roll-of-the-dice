@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
         DieManager dieManager = die.GetComponent<DieManager>();
         var placedOnTile = MapManager.Instance.GetTileAtPos(startPos);
 
+        dieManager.Initialize();
+
         if (placedOnTile != null)
         {
             GameObject overlayTile = placedOnTile.gameObject;

@@ -161,4 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentTile: {fileID: 0}
+  _meshRenderer: {fileID: 6281394592449126351}
   _maxRange: 100
+  isEnemy: 0
+  state: 0
