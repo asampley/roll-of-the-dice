@@ -82,4 +82,44 @@ public class MapManager : MonoBehaviour
     {
         return this.tileMap.GetCellCenterWorld((Vector3Int)pos);
     }
+
+    public List<OverlayTile> GetSurroundingTiles(Vector2Int originTile)
+    {
+        var surroundingTiles = new List<OverlayTile>();
+
+
+        Vector2Int TileToCheck = new Vector2Int(originTile.x + 1, originTile.y);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+                if (!map[TileToCheck].isBlocked)
+                    surroundingTiles.Add(map[TileToCheck]);
+        }
+
+        TileToCheck = new Vector2Int(originTile.x - 1, originTile.y);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+                if (!map[TileToCheck].isBlocked)
+                    surroundingTiles.Add(map[TileToCheck]);
+        }
+
+        TileToCheck = new Vector2Int(originTile.x, originTile.y + 1);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+                if (!map[TileToCheck].isBlocked)
+                    surroundingTiles.Add(map[TileToCheck]);
+        }
+
+        TileToCheck = new Vector2Int(originTile.x, originTile.y - 1);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+                if (!map[TileToCheck].isBlocked)
+                    surroundingTiles.Add(map[TileToCheck]);
+        }
+
+        return surroundingTiles;
+    }
 }
