@@ -22,8 +22,8 @@ public class GhostManager : MonoBehaviour {
         rotator.RotateY(yRot);
 
         ghosts.Add(pos, ghost);
-        if (ghostsByContext[toGhost] == null) {
-            ghostsByContext[toGhost] = new List<GameObject>();
+        if (!ghostsByContext.ContainsKey(toGhost)) {
+            ghostsByContext.Add(ghost, new List<GameObject>());
         }
 
         ghost.GetComponentInChildren<MeshRenderer>().sharedMaterial = ghostMaterial;
