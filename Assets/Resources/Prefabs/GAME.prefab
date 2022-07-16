@@ -128,6 +128,7 @@ MonoBehaviour:
   diceParent: {fileID: 584924817115488174}
   normalPrefab: {fileID: 4210247315298935970, guid: 3344109ed0d897b4184082d9de0ad786, type: 3}
   rockPrefab: {fileID: 4210247315298935970, guid: 3171ba44c3fa38c468efb4cee86ecadf, type: 3}
+  linePrefab: {fileID: 4210247315298935970, guid: 4748fede1ede16f48813ab46610a1a76, type: 3}
 --- !u!1 &6593136774172439638
 GameObject:
   m_ObjectHideFlags: 0

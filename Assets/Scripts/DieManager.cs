@@ -18,6 +18,7 @@ public class DieManager : MonoBehaviour
     [SerializeField]
     private int _maxRange;
     public int movesAvailable;
+    public bool movesInStraightLine;
     public bool isEnemy;
     public DiceState state;
 
@@ -245,11 +246,24 @@ public class DieManager : MonoBehaviour
     {
         _tilesInRange.Clear();
         if (movesAvailable <= 0) return;
-        _tilesInRange = GetTilesAdjacent();
+
+        if (movesInStraightLine)
+        {
+            _tilesInRange = GetTilesStraightLine();
+        }
+        else if (!movesInStraightLine)
+        {
+            _tilesInRange = GetTilesAdjacent();
+        }
     }
 
     private List<OverlayTile> GetTilesAdjacent() {
         return MapManager.Instance.GetSurroundingTiles(new Vector2Int(parentTile.gridLocation.x, parentTile.gridLocation.y));
+    }
+
+    private List<OverlayTile> GetTilesStraightLine()
+    {
+        return MapManager.Instance.GetTilesStraightLine(new Vector2Int(parentTile.gridLocation.x, parentTile.gridLocation.y));
     }
 
     public void ResetRange()

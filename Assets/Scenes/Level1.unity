@@ -329,6 +329,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GAME
       objectReference: {fileID: 0}
+    - target: {fileID: 6007631994916663089, guid: 3c6fbaba7346f494b91afb6ec883c57a, type: 3}
+      propertyPath: startPositions
+      value: 
+      objectReference: {fileID: 11400000, guid: 5add61967d911994cbaad2e8c812522e, type: 2}
     - target: {fileID: 7320898637395244622, guid: 3c6fbaba7346f494b91afb6ec883c57a, type: 3}
       propertyPath: m_RootOrder
       value: 3
