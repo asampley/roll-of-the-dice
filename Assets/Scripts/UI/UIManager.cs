@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-public class InGameMenu : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
     public GameObject menus;
     public GameObject menu;
