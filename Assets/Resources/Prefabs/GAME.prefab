@@ -1,5 +1,81 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &584924817115488174
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2349412705335888418}
+  m_Layer: 0
+  m_Name: Dice
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2349412705335888418
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 584924817115488174}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7320898637395244622}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5319464324147684009
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5272881392429853807}
+  - component: {fileID: 1265137401861838008}
+  m_Layer: 0
+  m_Name: Ghosts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5272881392429853807
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5319464324147684009}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7320898637395244622}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1265137401861838008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5319464324147684009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2442498c0f5798040ac7a3903b0e43a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostContainer: {fileID: 3221832865650697799, guid: 4cc9d1ed88c72c441a8db6b2717651ad, type: 3}
 --- !u!1 &5726423595066037711
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,7 +86,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7320898637395244622}
   - component: {fileID: 6007631994916663089}
-  - component: {fileID: 8721377018529874340}
   m_Layer: 0
   m_Name: GAME
   m_TagString: Untagged
@@ -29,7 +104,9 @@ Transform:
   m_LocalPosition: {x: -0.21792182, y: -0.10855173, z: -4.93041}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2349412705335888418}
+  - {fileID: 5272881392429853807}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -47,16 +124,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diePrefab: {fileID: 4210247315298935970, guid: 3344109ed0d897b4184082d9de0ad786, type: 3}
   enemyPrefab: {fileID: 4210247315298935970, guid: 873d1b4d8478f9c44ae0bf86a7031d9a, type: 3}
---- !u!114 &8721377018529874340
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5726423595066037711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2442498c0f5798040ac7a3903b0e43a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghostContainer: {fileID: 3221832865650697799, guid: 4cc9d1ed88c72c441a8db6b2717651ad, type: 3}
+  startPositions: {fileID: 0}
+  diceParent: {fileID: 584924817115488174}

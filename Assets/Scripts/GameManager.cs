@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum Turn {
+
+public enum Turn
+{
     Player,
     Enemy,
 }
@@ -14,10 +16,22 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
 
-    public GameObject diePrefab;
+    public GameObject normalPrefab;
     public GameObject enemyPrefab;
+    public StartPositions startPositions;
+    public GameObject diceParent;
+
+    private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
+    private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
 
     public HashSet<EnemyAI> EnemiesWaiting = new HashSet<EnemyAI>();
+
+    private Turn _turn;
+    public Turn CurrentTurn {
+        get { return _turn; }
+        set { _turn = value; TurnChange?.Invoke(_turn); }
+    }
+    public event Action<Turn> TurnChange;
 
     private void Awake()
     {
@@ -31,36 +45,34 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private Turn _turn;
-    public Turn CurrentTurn {
-        get { return _turn; }
-        set { _turn = value; TurnChange?.Invoke(_turn); }
-    }
-    public event Action<Turn> TurnChange;
-
     private void Start()
     {
+        RollPositions();
+        StartGame();
         CurrentTurn = Turn.Player;
-
-        SpawnDie(new Vector2Int(0, 0), false);
-        SpawnDie(new Vector2Int(2, 2));
-        SpawnDie(new Vector2Int(3, 3));
-
-        TurnChange += t => Debug.Log("Turn: " + t);
     }
 
 
-    public void SpawnDie(Vector2Int startPos, bool isEnemy = true)
+    public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
     {
-        GameObject prefab = isEnemy ? enemyPrefab : diePrefab;
+        GameObject prefab;
+        switch (diceClass)
+        {
+            case DiceClass.Normal:
+                prefab = normalPrefab;
+                break;
+            default:
+                prefab = normalPrefab;
+                break;
+        }
 
         Vector3 pos = MapManager.Instance.GetTileWorldSpace(startPos);
         GameObject die = Instantiate(prefab, pos, Quaternion.identity);
+        die.transform.SetParent(diceParent.transform);
         DieManager dieManager = die.GetComponent<DieManager>();
         var placedOnTile = MapManager.Instance.GetTileAtPos(startPos);
 
-        dieManager.Initialize(isEnemy);
-
+        dieManager.Initialize(isEnemy, orientation);
         if (placedOnTile != null)
         {
             GameObject overlayTile = placedOnTile.gameObject;
@@ -68,7 +80,65 @@ public class GameManager : MonoBehaviour
 
             overlayTileManager.MoveDiceToTile(dieManager);
         }
+        else
+        {
+            Debug.LogError("Dice spawning off map.");
+        }
+    }
 
-        dieManager.isEnemy = isEnemy;
+    public void RollPositions()
+    {
+        ClearDictionaries();
+        foreach (DiceSpawn spawn in startPositions.alliedDice)
+        {
+            alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
+        }
+        foreach (DiceSpawn spawn in startPositions.enemyDice)
+        {
+            alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
+        }
+    }
+
+    public DiceOrientation GenerateDiceOrientation()
+    {
+        DiceOrientation orientation = new DiceOrientation();
+
+        orientation.xRolls = UnityEngine.Random.Range(0, 4);
+        orientation.yRolls = UnityEngine.Random.Range(0, 4);
+        orientation.zRolls = UnityEngine.Random.Range(0, 4);
+
+        return orientation;
+    }
+
+    public void StartGame()
+    {
+        ClearMap();
+        foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in alliedSpawnPositions)
+        {
+            SpawnDie(die.Key.tilePosition, die.Key.diceClass, false, die.Value);
+        }
+        foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in enemySpawnPositions)
+        {
+            SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
+        }
+    }
+
+    public void RerollGame()
+    {
+        RollPositions();
+        StartGame();
+    }
+
+    public void ClearMap()
+    {
+        foreach(Transform child in diceParent.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+    }
+    public void ClearDictionaries()
+    {
+        alliedSpawnPositions.Clear();
+        enemySpawnPositions.Clear();
     }
 }
