@@ -67,7 +67,7 @@ public class DieManager : MonoBehaviour
 
     public void Fight()
     {
-        List<DieManager> deadDie = new List<DieManager>();
+        List<DieManager> toKill = new List<DieManager>();
 
         foreach (OverlayTile tile in _tilesInRange)
         {
@@ -75,29 +75,71 @@ public class DieManager : MonoBehaviour
             {
                 DieManager enemyDie = tile.occupyingDie;
                 DiceState enemyState = enemyDie.state;
-                if ((state == DiceState.Rock && enemyState == DiceState.Scissors) || (state == DiceState.Paper || enemyState == DiceState.Rock) || (state == DiceState.Scissors && enemyState == DiceState.Paper))
+                switch (state)
                 {
-                    deadDie.Add(enemyDie);
-                }
-                else if ((state == DiceState.Rock && enemyState == DiceState.Paper) || (state == DiceState.Paper || enemyState == DiceState.Scissors) || (state == DiceState.Scissors && enemyState == DiceState.Rock))
-                {
-                    deadDie.Add(this);
-                }
-                else if ((state == DiceState.Rock && enemyState == DiceState.Rock) || (state == DiceState.Paper || enemyState == DiceState.Paper) || (state == DiceState.Scissors && enemyState == DiceState.Scissors))
-                {
-                    //Draw
+                    case DiceState.Rock:
+                        if (enemyState == DiceState.Scissors)
+                        {
+                            toKill.Add(enemyDie);
+                            Debug.Log(state);
+                            Debug.Log(enemyState);
+                        }
+                        else if (enemyState == DiceState.Paper)
+                        {
+                            toKill.Add(this);
+                        }
+                        else if (enemyState == DiceState.Rock)
+                        {
+                            //Draw
+                        }
+                        break;
+                    case DiceState.Paper:
+                        if (enemyState == DiceState.Rock)
+                        {
+                            toKill.Add(enemyDie);
+                            Debug.Log(state);
+                            Debug.Log(enemyState);
+                        }
+                        else if (enemyState == DiceState.Scissors)
+                        {
+                            toKill.Add(this);
+                        }
+                        else if (enemyState == DiceState.Paper)
+                        {
+                            //Draw
+                        }
+                        break;
+                    case DiceState.Scissors:
+                        if (enemyState == DiceState.Paper)
+                        {
+                            toKill.Add(enemyDie);
+                            Debug.Log(state);
+                            Debug.Log(enemyState);
+                        }
+                        else if (enemyState == DiceState.Rock)
+                        {
+                            toKill.Add(this);
+                        }
+                        else if (enemyState == DiceState.Scissors)
+                        {
+                            //Draw
+                        }
+                        break;
                 }
             }
         }
 
-        foreach (DieManager die in deadDie)
+        foreach (DieManager die in toKill)
         {
-            die.Die();
+            die.Kill();
         }
+        if (!toKill.Contains(this))
+            Select();
     }
 
-    public void Die()
+    public void Kill()
     {
+        Deselect();
         parentTile.RemoveDiceFromTile();
         Destroy(gameObject);
     }
@@ -107,8 +149,9 @@ public class DieManager : MonoBehaviour
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
         {
-            if (tile.isBlocked) return;
-
+            Debug.Log("running");
+            if (tile.isBlocked) continue;
+            Debug.Log("Not blocked");
             tile.ShowTile();
             Vector3Int rot = parentTile.gridLocation - tile.gridLocation;
             GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), rot.x, rot.y);
@@ -178,13 +221,8 @@ public class DieManager : MonoBehaviour
 
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
-
-
-        _currentRange--;
-        
+        _currentRange--;        
         GetTilesInRange();
         Fight();
-        GetTilesInRange();
-        ShowTilesInRange();
     }
 }
