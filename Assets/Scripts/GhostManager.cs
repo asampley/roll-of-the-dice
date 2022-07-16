@@ -4,13 +4,25 @@ using System.Linq;
 using UnityEngine;
 
 public class GhostManager : MonoBehaviour {
-    private GhostManager _instance;
-    public GhostManager Instance { get { return _instance; } }
+    private static GhostManager _instance;
+    public static GhostManager Instance { get { return _instance; } }
 
     public Material ghostMaterial;
 
     private Dictionary<Vector2Int, GameObject> ghosts = new Dictionary<Vector2Int, GameObject>();
     private Dictionary<GameObject, List<GameObject>> ghostsByContext = new Dictionary<GameObject, List<GameObject>>();
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
 
     public bool CreateGhost(GameObject toGhost, Vector2Int pos, int xRot, int yRot) {
         if (ghosts.ContainsKey(pos)) return false;
