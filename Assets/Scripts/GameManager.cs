@@ -31,17 +31,17 @@ public class GameManager : MonoBehaviour
     private int _enemies;
     public int EnemyCount {
         get { return _enemies; }
-        set { _enemies = value; if (_enemies == 0) EnemiesGone?.Invoke(); }
+        set { _enemies = value; if (_enemies == 0) EnemyCountChange?.Invoke(value); }
     }
 
     private int _players;
     public int PlayerCount {
         get { return _players; }
-        set { _players = value; if (_players == 0) PlayerDead?.Invoke(); }
+        set { _players = value; if (_players == 0) PlayerCountChange?.Invoke(value); }
     }
 
-    public event Action EnemiesGone;
-    public event Action PlayerDead;
+    public event Action<int> EnemyCountChange;
+    public event Action<int> PlayerCountChange;
 
     private Turn _turn;
     public Turn CurrentTurn {
@@ -61,7 +61,8 @@ public class GameManager : MonoBehaviour
             _instance = this;
         }
 
-        EnemiesGone += () => Debug.Log("All enemies dead");
+        EnemyCountChange += c => Debug.Log(c + " enemies remain");
+        PlayerCountChange += c => Debug.Log(c + " players remain");
     }
 
     private void Start()

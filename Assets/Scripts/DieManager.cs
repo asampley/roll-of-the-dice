@@ -305,5 +305,10 @@ public class DieManager : MonoBehaviour
     void OnDestroy() {
         GhostManager.Instance.RemoveGhosts(gameObject);
         GameManager.Instance.TurnChange -= turnChange;
+        if (isEnemy) {
+            GameManager.Instance.EnemyCount--;
+        } else {
+            GameManager.Instance.PlayerCount--;
+        }
     }
 }
