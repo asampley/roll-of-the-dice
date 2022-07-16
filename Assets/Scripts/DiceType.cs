@@ -9,7 +9,7 @@ public enum DiceType
 public class DiceSpawn
 {
     public DiceType diceClass;
-    public DiceState state;
     public Vector2Int tilePosition;
+    [HideInInspector]
     public bool isEnemy;
 }
