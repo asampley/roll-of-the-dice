@@ -7,15 +7,26 @@ public class GhostManager : MonoBehaviour {
     private GhostManager _instance;
     public GhostManager Instance { get { return _instance; } }
 
-    public GameObject GhostPrefab;
+    public Material ghostMaterial;
 
     private Dictionary<Vector2Int, GameObject> ghosts = new Dictionary<Vector2Int, GameObject>();
-    private Dictionary<GameObject, GameObject[]> ghostsByContext = new Dictionary<GameObject, GameObject[]>();
+    private Dictionary<GameObject, List<GameObject>> ghostsByContext = new Dictionary<GameObject, List<GameObject>>();
 
-    public bool CreateGhost(GameObject context, Vector2Int pos, Quaternion rot) {
+    public bool CreateGhost(GameObject toGhost, Vector2Int pos, int xRot, int yRot) {
         if (ghosts.ContainsKey(pos)) return false;
 
-        Instantiate(GhostPrefab, MapManager.Instance.GetTileWorldSpace(pos), rot, this.transform);
+        var ghost = Instantiate(toGhost, MapManager.Instance.GetTileWorldSpace(pos), Quaternion.identity, this.transform);
+        var rotator = ghost.GetComponentInChildren<DieRotator>();
+
+        rotator.RotateX(xRot);
+        rotator.RotateY(yRot);
+
+        ghosts.Add(pos, ghost);
+        if (ghostsByContext[toGhost] == null) {
+            ghostsByContext[toGhost] = new List<GameObject>();
+        }
+
+        ghost.GetComponentInChildren<MeshRenderer>().sharedMaterial = ghostMaterial;
 
         return true;
     }
