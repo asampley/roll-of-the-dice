@@ -141,6 +141,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         ClearMap();
+        Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
         foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in alliedSpawnPositions)
         {
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, false, die.Value);
