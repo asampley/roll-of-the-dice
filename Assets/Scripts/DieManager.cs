@@ -208,7 +208,9 @@ public class DieManager : MonoBehaviour
 
         while (elapsedTime < Globals.MOVEMENT_TIME)
         {
-            transform.position = Vector3.Lerp(startPos, endPos, (elapsedTime / Globals.MOVEMENT_TIME));
+            Vector3 start = MapManager.Instance.GetWorldSpace(startPos);
+            Vector3 end = MapManager.Instance.GetWorldSpace(endPos);
+            transform.position = Vector3.Lerp(start, end, (elapsedTime / Globals.MOVEMENT_TIME));
             elapsedTime += Time.deltaTime;
             yield return null;
         }
