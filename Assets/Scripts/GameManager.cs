@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
         }
         foreach (DiceSpawn spawn in startPositions.enemyDice)
         {
-            alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
+            enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
         }
     }
 

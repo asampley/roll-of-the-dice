@@ -17,6 +17,8 @@ public class DieManager : MonoBehaviour
     public OverlayTile parentTile;
     [SerializeField]
     private MeshRenderer _meshRenderer;
+    [SerializeField]
+    private EnemyAI enemyAI;
 
     [SerializeField]
     private int _maxRange;
@@ -31,6 +33,7 @@ public class DieManager : MonoBehaviour
 
     public event Action<OverlayTile> MoveFinished;
 
+
     void Start() {
         turnChange = t => this.TurnChange(t);
         GameManager.Instance.TurnChange += turnChange;
@@ -39,6 +42,10 @@ public class DieManager : MonoBehaviour
     public void Initialize(bool enemy, DiceOrientation orientation)
     {
         isEnemy = enemy;
+        if (isEnemy)
+            enemyAI.enabled = true;
+        else
+            enemyAI.enabled = false;
         ResetRange();
         _dieRotator = GetComponentInChildren<DieRotator>();
         state = _dieRotator.UpFace();

@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StartPosition
   alliedDice:
   - diceClass: 0
-    tilePosition: {x: 0, y: 0}
+    tilePosition: {x: 0, y: -2}
     isEnemy: 0
-  enemyDice: []
+  enemyDice:
+  - diceClass: 0
+    tilePosition: {x: 1, y: 3}
+    isEnemy: 1

@@ -125,6 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7103340230149900096}
   - component: {fileID: 6716495750821013030}
+  - component: {fileID: 255127251107806683}
   m_Layer: 0
   m_Name: Die
   m_TagString: Untagged
@@ -162,8 +163,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentTile: {fileID: 0}
   _meshRenderer: {fileID: 6281394592449126351}
+  enemyAI: {fileID: 255127251107806683}
   _maxRange: 3
   isEnemy: 0
   state: 0
   ghostMaterial: {fileID: 2100000, guid: 3a44730b7b62eaf4ab1c4fb986cb9077, type: 2}
   ghostComponents: {fileID: 2565298508812411040}
+--- !u!114 &255127251107806683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4210247315298935970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9104871e44931a94ea269a17aea46018, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
