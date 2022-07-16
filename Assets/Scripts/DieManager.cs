@@ -26,6 +26,7 @@ public class DieManager : MonoBehaviour
     public bool isEnemy;
     public DiceState state;
     public Material ghostMaterial;
+
     public GameObject ghostComponents;
     private DieRotator _dieRotator;
 
