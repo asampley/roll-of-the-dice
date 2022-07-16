@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
 
 
@@ -12,10 +13,29 @@ public class UIManager : MonoBehaviour
     public GameObject options;
     public GameObject menuButton;
 
+    // victory menu
+    public GameObject victoryMenu;
+    public TextMeshProUGUI victoryText;
+    public Button nextLevelButton;
+
     //GameInfo
     public GameObject gameInfo;
     public TextMeshProUGUI diceName;
     public TextMeshProUGUI movesAvailable;
+
+    public void Start() {
+        GameManager.Instance.EnemyCountChange += c => {
+            if (c == 0) {
+                ShowVictoryScreen(true);
+            }
+        };
+
+        GameManager.Instance.PlayerCountChange += c => {
+            if (c == 0) {
+                ShowVictoryScreen(false);
+            }
+        };
+    }
 
     public void OpenMenu()
     {
@@ -69,6 +89,7 @@ public class UIManager : MonoBehaviour
 
     public void Back()
     {
+        victoryMenu.SetActive(false);
         menus.SetActive(false);
         menuButton.SetActive(true);
     }
@@ -80,5 +101,22 @@ public class UIManager : MonoBehaviour
         gameInfo.SetActive(true);
         diceName.text = Globals.SELECTED_UNIT.diceName;
         movesAvailable.text = "Moves Available: " + Globals.SELECTED_UNIT.movesAvailable.ToString();
+    }
+
+    public void NextLevel() {
+        Loader.LoadNext();
+    }
+
+    public void ShowVictoryScreen(bool victory) {
+        victoryText.text = victory ? "Victory" : "Defeat";
+        victoryText.color = victory
+            ? new Color32(0, 255, 0, 255)
+            : new Color32(255, 0, 0, 255);
+
+        nextLevelButton.interactable = victory;
+
+        menus.SetActive(false);
+        menuButton.SetActive(false);
+        victoryMenu.SetActive(true);
     }
 }
