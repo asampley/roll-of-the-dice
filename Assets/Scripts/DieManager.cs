@@ -25,7 +25,14 @@ public class DieManager : MonoBehaviour
     private int _currentRange;
     public bool isEnemy;
     public DiceState state;
+
+    //Materials
+    [HideInInspector]
     public Material ghostMaterial;
+    public Material alliedMaterial;
+    public Material enemyMaterial;
+    public Material alliedGhostMaterial;
+    public Material enemyGhostMaterial;
 
     public GameObject ghostComponents;
     private DieRotator _dieRotator;
@@ -44,15 +51,29 @@ public class DieManager : MonoBehaviour
     {
         isEnemy = enemy;
         if (isEnemy)
+        {
             enemyAI.enabled = true;
+            ghostMaterial = enemyGhostMaterial;
+            GetComponentInChildren<MeshRenderer>().sharedMaterial = enemyMaterial;
+        }            
         else
+        {
             enemyAI.enabled = false;
+            ghostMaterial = alliedGhostMaterial;
+            GetComponentInChildren<MeshRenderer>().sharedMaterial = alliedMaterial; ;
+        }
+
         ResetRange();
         _dieRotator = GetComponentInChildren<DieRotator>();
         state = _dieRotator.UpFace();
         _dieRotator.RotateX(orientation.xRolls);
         _dieRotator.RotateY(orientation.yRolls);
         _dieRotator.RotateZ(orientation.zRolls);
+    }
+
+    public void SetMaterial()
+    {
+
     }
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
