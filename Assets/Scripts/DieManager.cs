@@ -25,7 +25,7 @@ public class DieManager : MonoBehaviour
         CalculateDirection(newTile);
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
-        
+
         _currentRange--;
         HideTilesInRange();
         GetTilesInRange();
@@ -50,6 +50,7 @@ public class DieManager : MonoBehaviour
        foreach (OverlayTile tile in _tilesInRange)
         {
             tile.ShowTile();
+            GhostManager.Instance.RemoveGhosts(gameObject);
             GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), 1, 1);
         }
     }

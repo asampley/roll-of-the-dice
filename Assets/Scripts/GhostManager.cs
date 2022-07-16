@@ -35,8 +35,10 @@ public class GhostManager : MonoBehaviour {
 
         ghosts.Add(pos, ghost);
         if (!ghostsByContext.ContainsKey(toGhost)) {
-            ghostsByContext.Add(ghost, new List<GameObject>());
+            ghostsByContext.Add(toGhost, new List<GameObject>());
         }
+
+        ghostsByContext[toGhost].Add(ghost);
 
         ghost.GetComponentInChildren<MeshRenderer>().sharedMaterial = ghostMaterial;
 
@@ -44,9 +46,9 @@ public class GhostManager : MonoBehaviour {
     }
 
     public void RemoveGhosts(GameObject context) {
-        var ghostsToRemove = ghostsByContext[context];
+        if (!ghostsByContext.ContainsKey(context)) return;
 
-        if (ghostsToRemove == null) return;
+        var ghostsToRemove = ghostsByContext[context];
 
         foreach (var ghostKeyVal in ghosts.Where(kvp => ghostsToRemove.Contains(kvp.Value)).ToList()) {
             ghosts.Remove(ghostKeyVal.Key);
