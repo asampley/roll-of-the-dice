@@ -45,10 +45,9 @@ public class DieManager : MonoBehaviour
     }
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
-        GetTilesInRange();
         foreach (var tile in tiles) {
+            GetTilesInRange();
             if (!_tilesInRange.Contains(tile)) {
-                Debug.Log("Nothing in range");
                 yield break;
             }
             CalculateDirection(tile);
@@ -163,12 +162,12 @@ public class DieManager : MonoBehaviour
 
     public void ShowTilesInRange()
     {
+        if (isEnemy) return;
+
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
         {
-            Debug.Log("running");
             if (tile.isBlocked) continue;
-            Debug.Log("Not blocked");
             tile.ShowTile();
             Vector3Int rot = parentTile.gridLocation - tile.gridLocation;
             GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), rot.x, rot.y);
@@ -177,6 +176,8 @@ public class DieManager : MonoBehaviour
 
     public void HideTilesInRange()
     {
+        if (isEnemy) return;
+
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
             tile.HideTile();
@@ -258,6 +259,7 @@ public class DieManager : MonoBehaviour
         } else if (!isEnemy && turn == Turn.Player) {
             ResetRange();
         }
+        Debug.Log("Turn change " + this + ":"+ _currentRange + "/" + _maxRange);
     }
 
     void OnDestroy() {

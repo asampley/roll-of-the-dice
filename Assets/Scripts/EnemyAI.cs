@@ -23,12 +23,7 @@ public class EnemyAI : MonoBehaviour {
         moveFinished = t => this.MoveFinished(t);
         dieManager.MoveFinished += moveFinished;
 
-        CreatePath();
-    }
-
-    // Update is called once per frame
-    void Update() {
-
+        TurnChange(GameManager.Instance.CurrentTurn);
     }
 
     private List<OverlayTile> GetTilesBeside(Vector2Int pos) {
@@ -36,6 +31,8 @@ public class EnemyAI : MonoBehaviour {
     }
 
     public void CreatePath() {
+        Debug.Log("Create Path");
+
         Vector2Int pos = new Vector2Int(dieManager.parentTile.gridLocation.x, dieManager.parentTile.gridLocation.y);
         int currentRange = dieManager.MaxRange();
 
@@ -68,12 +65,12 @@ public class EnemyAI : MonoBehaviour {
             pos = next;
         }
 
-        string pathstr = "";
-        foreach (var p in path) pathstr += p;
-        Debug.Log("Path: " + pathstr);
+        Debug.Log("Path: " + PathStr());
     }
 
     private void FollowPath() {
+        Debug.Log("Following Path: " + PathStr());
+
         GhostManager.Instance.RemoveGhosts(gameObject);
 
         var tiles = path.Select(x => MapManager.Instance.GetTileAtPos(x)).ToList();
@@ -83,6 +80,12 @@ public class EnemyAI : MonoBehaviour {
             taken.Remove(p);
         }
         path.Clear();
+    }
+
+    private string PathStr() {
+        string pathstr = "" + new Vector2Int(dieManager.parentTile.gridLocation.x, dieManager.parentTile.gridLocation.y) + " -> ";
+        foreach (var p in path) pathstr += p;
+        return pathstr;
     }
 
     private void TurnChange(Turn turn) {
