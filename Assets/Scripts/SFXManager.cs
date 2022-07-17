@@ -11,7 +11,7 @@ public class SFXManager : MonoBehaviour
     public AudioClip rockWins;
     public AudioClip paperWins;
     public AudioClip scissorsWins;
-    public AudioClip nuclearWins;
+    public AudioClip lichWins;
     public AudioClip kingWins;
     public AudioClip draw;
     public AudioClip move;
@@ -33,8 +33,8 @@ public class SFXManager : MonoBehaviour
             EventManager.AddListener("Ally" + val + "BeatenByScissors", _onScissorsWin);
         }
         foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.AddListener("AllyNuclearBeats" + val, _onNuclearWin);
-            EventManager.AddListener("Ally" + val + "BeatenByNuclear", _onNuclearWin);
+            EventManager.AddListener("AllyLichBeats" + val, _onLichWin);
+            EventManager.AddListener("Ally" + val + "BeatenByLich", _onLichWin);
         }
         foreach (var val in Enum.GetValues(typeof(DiceState))) {
             EventManager.AddListener("AllyKingBeats" + val, _onKingWin);
@@ -59,8 +59,8 @@ public class SFXManager : MonoBehaviour
             EventManager.RemoveListener("Ally" + val + "BeatenByScissors", _onScissorsWin);
         }
         foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.RemoveListener("AllyNuclearBeats" + val, _onNuclearWin);
-            EventManager.RemoveListener("Ally" + val + "BeatenByNuclear", _onNuclearWin);
+            EventManager.RemoveListener("AllyLichBeats" + val, _onLichWin);
+            EventManager.RemoveListener("Ally" + val + "BeatenByLich", _onLichWin);
         }
         foreach (var val in Enum.GetValues(typeof(DiceState))) {
             EventManager.RemoveListener("AllyKingBeats" + val, _onKingWin);
@@ -73,8 +73,8 @@ public class SFXManager : MonoBehaviour
         PlaySound(kingWins);
     }
 
-    private void _onNuclearWin() {
-        PlaySound(nuclearWins);
+    private void _onLichWin() {
+        PlaySound(lichWins);
     }
 
     private void _onRockWin() {
