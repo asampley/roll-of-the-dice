@@ -100,7 +100,8 @@ public class DieManager : MonoBehaviour
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
         if (tiles.Count > 0) {
             foreach (var tile in tiles) {
-                GetTilesInRange();
+                if (!movesInStraightLine)
+                    GetTilesInRange();
                 if (!_tilesInRange.Contains(tile)) {
                     yield break;
                 }
@@ -108,6 +109,12 @@ public class DieManager : MonoBehaviour
                 state = _dieRotator.UpFace();
                 yield return StartCoroutine(UpdateTilePos(tile));
             }
+
+            if (!isEnemy)
+            {
+                GameManager.Instance.PlayerMoveRemaining--;
+            }
+            movesAvailable--;
 
             MoveFinished?.Invoke(tiles[tiles.Count - 1]);
         }
@@ -134,6 +141,54 @@ public class DieManager : MonoBehaviour
     public void Deselect()
     {
         HideTilesInRange();
+    }
+
+    public List<OverlayTile> FollowPath(OverlayTile tile)
+    {
+        List<OverlayTile> list = new List<OverlayTile>();
+
+        if (parentTile.gridLocation.x < tile.gridLocation.x)
+        {
+            int x = parentTile.gridLocation.x + 1;
+            while (x <= tile.gridLocation.x)
+            {
+                OverlayTile tileToAdd = MapManager.Instance.GetTileAtPos(new Vector2Int(x, parentTile.gridLocation.y));
+                list.Add(tileToAdd);
+                x++;
+            }
+        }
+        else if (parentTile.gridLocation.x > tile.gridLocation.x)
+        {
+            int x = parentTile.gridLocation.x - 1;
+            while (x >= tile.gridLocation.x)
+            {
+                OverlayTile tileToAdd = MapManager.Instance.GetTileAtPos(new Vector2Int(x, parentTile.gridLocation.y));
+                list.Add(tileToAdd);
+                x--;
+            }
+        }
+        else if (parentTile.gridLocation.y < tile.gridLocation.y)
+        {
+            int y = parentTile.gridLocation.y + 1;
+            while (y <= tile.gridLocation.y)
+            {
+                OverlayTile tileToAdd = MapManager.Instance.GetTileAtPos(new Vector2Int(parentTile.gridLocation.x, y));
+                list.Add(tileToAdd);
+                y++;
+            }
+        }
+        else if (parentTile.gridLocation.y > tile.gridLocation.y)
+        {
+            int y = parentTile.gridLocation.y - 1;
+            while (y >= tile.gridLocation.y)
+            {
+                OverlayTile tileToAdd = MapManager.Instance.GetTileAtPos(new Vector2Int(parentTile.gridLocation.x, y));
+                list.Add(tileToAdd);
+                y--;
+            }
+        }
+
+        return list;
     }
 
     public void Fight()
@@ -253,7 +308,7 @@ public class DieManager : MonoBehaviour
     private void GetTilesInRange()
     {
         _tilesInRange.Clear();
-        if (movesAvailable <= 0) return;
+        if (movesAvailable <= 0 && !movesInStraightLine) return;
 
         if (movesInStraightLine)
         {
@@ -334,10 +389,7 @@ public class DieManager : MonoBehaviour
 
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
-        movesAvailable--;
-        if (!isEnemy) {
-            GameManager.Instance.PlayerMoveRemaining--;
-        }
+        
         GetTilesInRange();
         Fight();
     }

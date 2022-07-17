@@ -68,7 +68,7 @@ public class EnemyAI : MonoBehaviour {
         Debug.Log("Path: " + PathStr());
     }
 
-    private void FollowPath() {
+    public void FollowPath() {
         Debug.Log("Following Path: " + PathStr());
 
         GhostManager.Instance.RemoveGhosts(gameObject);
