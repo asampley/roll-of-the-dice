@@ -27,7 +27,15 @@ public class MouseController : MonoBehaviour
             {
                 if (!overlayTileManager.isBlocked && Globals.SELECTED_UNIT != null)
                 {
-                    Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(overlayTileManager);
+                    if (Globals.SELECTED_UNIT.movesInStraightLine)
+                    {
+                        List<OverlayTile> tiles = Globals.SELECTED_UNIT.GetComponent<DieManager>().FollowPath(overlayTileManager);
+                        Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(tiles);
+                    }
+                    else
+                    {
+                        Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(overlayTileManager);
+                    }
                 }
             }
         }
