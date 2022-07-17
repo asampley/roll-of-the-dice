@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23ae3ea75ab725f4e8f9e1a9f8bb62da, type: 3}
+  m_Name: Map6
+  m_EditorClassIdentifier: Assembly-CSharp::StartPosition
+  alliedDice:
+  - diceClass: 6
+    tilePosition: {x: 6, y: 7}
+    isEnemy: 0
+  - diceClass: 0
+    tilePosition: {x: 8, y: -3}
+    isEnemy: 0
+  - diceClass: 2
+    tilePosition: {x: 6, y: -3}
+    isEnemy: 0
+  - diceClass: 0
+    tilePosition: {x: 4, y: -3}
+    isEnemy: 0
+  enemyDice:
+  - diceClass: 3
+    tilePosition: {x: 4, y: 2}
+    isEnemy: 1
+  - diceClass: 3
+    tilePosition: {x: 8, y: 2}
+    isEnemy: 1
+  - diceClass: 5
+    tilePosition: {x: 6, y: 3}
+    isEnemy: 1
+  - diceClass: 0
+    tilePosition: {x: 6, y: 4}
+    isEnemy: 1
+  - diceClass: 4
+    tilePosition: {x: 2, y: -2}
+    isEnemy: 1
+  - diceClass: 4
+    tilePosition: {x: 10, y: -2}
+    isEnemy: 1

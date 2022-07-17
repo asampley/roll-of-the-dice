@@ -100,6 +100,10 @@ public class EnemyAI : MonoBehaviour {
 
         if (GameManager.Instance.EnemiesWaiting.Count == 0) {
             GameManager.Instance.CurrentTurn = Turn.Player;
+        } else {
+            string str = "";
+            foreach (var enemy in GameManager.Instance.EnemiesWaiting) str += "(" + enemy + ")";
+            Debug.Log("Still waiting for " + str);
         }
     }
 

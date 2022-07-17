@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
         get { return _playerMoveRemaining; }
         set {
             _playerMoveRemaining = value;
-            if (CurrentTurn == Turn.Player && value <= 0) {
+            if (CurrentTurn == Turn.Player && _playerMoveRemaining <= 0) {
                 CurrentTurn = Turn.Enemy;
             }
         }
