@@ -104,8 +104,7 @@ public class DieManager : MonoBehaviour
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
         if (tiles.Count > 0) {
             foreach (var tile in tiles) {
-                if (!movesInStraightLine)
-                    GetTilesInRange();
+                GetTilesInRange();
                 if (!_tilesInRange.Contains(tile)) {
                     yield break;
                 }
@@ -114,11 +113,12 @@ public class DieManager : MonoBehaviour
                 yield return StartCoroutine(UpdateTilePos(tile));
             }
 
+            movesAvailable--;
+            EventManager.TriggerEvent("SelectUnit");
             if (!isEnemy)
             {
                 GameManager.Instance.PlayerMoveRemaining--;
             }
-            movesAvailable--;
 
             MoveFinished?.Invoke(tiles[tiles.Count - 1]);
         }
@@ -397,7 +397,7 @@ public class DieManager : MonoBehaviour
     private void GetTilesInRange()
     {
         _tilesInRange.Clear();
-        if (movesAvailable <= 0 && !movesInStraightLine) return;
+        if (movesAvailable <= 0) return;
 
         if (movesInStraightLine)
         {

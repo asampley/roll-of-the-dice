@@ -26,21 +26,21 @@ MonoBehaviour:
   - diceClass: 0
     tilePosition: {x: 4, y: 5}
     isEnemy: 1
-  - diceClass: 1
+  - diceClass: 0
     tilePosition: {x: 7, y: 7}
     isEnemy: 1
-  - diceClass: 1
+  - diceClass: 3
     tilePosition: {x: 11, y: 3}
     isEnemy: 1
-  - diceClass: 1
+  - diceClass: 3
     tilePosition: {x: 11, y: -3}
     isEnemy: 1
-  - diceClass: 1
+  - diceClass: 3
     tilePosition: {x: 14, y: 5}
     isEnemy: 1
-  - diceClass: 1
+  - diceClass: 4
     tilePosition: {x: 10, y: 5}
     isEnemy: 1
-  - diceClass: 1
+  - diceClass: 3
     tilePosition: {x: 3, y: -6}
     isEnemy: 1
