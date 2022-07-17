@@ -198,6 +198,9 @@ public class GameManager : MonoBehaviour
 
     public void ClearMap()
     {
+        // seems necessary to fix a bug with persistent state
+        EnemyAI._ResetReserved();
+
         foreach(Transform child in diceParent.transform)
         {
             GameObject.Destroy(child.gameObject);

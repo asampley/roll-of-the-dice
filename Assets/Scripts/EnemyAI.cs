@@ -14,6 +14,10 @@ public class EnemyAI : MonoBehaviour {
     private Action<Turn> turnChange;
     private Action<OverlayTile> moveFinished;
 
+    public static void _ResetReserved() {
+        taken.Clear();
+    }
+
     // Start is called before the first frame update
     void Start() {
         dieManager = GetComponent<DieManager>();
