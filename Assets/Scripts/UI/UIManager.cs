@@ -122,10 +122,11 @@ public class UIManager : MonoBehaviour
         Vector3 pos = inspector.transform.position;
         pos.z -= 5;
         inspectorObject.transform.position = pos;
-        inspectorObject.transform.localScale += new Vector3(65, 65, 65);
+        inspectorObject.transform.localScale = new Vector3(95, 95, 95);
         inspectorObject.GetComponent<DieRotator>().enabled = false;
         inspectorObject.GetComponent<ObjectRotator>().enabled = true;
         inspectorObject.GetComponent<SortingGroup>().enabled = true;
+        Debug.Log(inspectorObject.GetComponent<SortingGroup>().enabled);
     }
 
     public void NextLevel() {
