@@ -10,22 +10,37 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23ae3ea75ab725f4e8f9e1a9f8bb62da, type: 3}
-  m_Name: Map1
+  m_Name: Map3
   m_EditorClassIdentifier: Assembly-CSharp::StartPosition
   alliedDice:
-  - diceClass: 0
-    tilePosition: {x: 0, y: -2}
+  - diceClass: 2
+    tilePosition: {x: 11, y: 0}
     isEnemy: 0
   - diceClass: 2
-    tilePosition: {x: 3, y: 2}
+    tilePosition: {x: 0, y: -3}
+    isEnemy: 0
+  - diceClass: 0
+    tilePosition: {x: 3, y: 8}
     isEnemy: 0
   enemyDice:
   - diceClass: 0
-    tilePosition: {x: 1, y: 3}
-    isEnemy: 1
-  - diceClass: 0
-    tilePosition: {x: 4, y: 0}
+    tilePosition: {x: 4, y: 5}
     isEnemy: 1
   - diceClass: 1
-    tilePosition: {x: 2, y: -1}
+    tilePosition: {x: 7, y: 7}
+    isEnemy: 1
+  - diceClass: 1
+    tilePosition: {x: 11, y: 3}
+    isEnemy: 1
+  - diceClass: 1
+    tilePosition: {x: 11, y: -3}
+    isEnemy: 1
+  - diceClass: 1
+    tilePosition: {x: 14, y: 5}
+    isEnemy: 1
+  - diceClass: 1
+    tilePosition: {x: 10, y: 5}
+    isEnemy: 1
+  - diceClass: 1
+    tilePosition: {x: 3, y: -6}
     isEnemy: 1
