@@ -127,6 +127,9 @@ public class DieManager : MonoBehaviour
             if (movesAvailable == 0) {
                 HideTilesInRange();
             }
+        } else {
+            // important if no path exists to still pass event
+            MoveFinished?.Invoke(null);
         }
     }
 

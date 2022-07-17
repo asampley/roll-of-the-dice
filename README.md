@@ -11,6 +11,7 @@ Roll your way to victory in this puzzler strategy game inspired by titles like I
 - Dice roll as they move, so plan which face lands up.
 - If an enemy is adjacent to your die, a winner will be determined and the losing die removed.
 - The enemies show where they plan to move, so you can move beside their path to defeat them when they move.
+- And very importantly, if you have a KING and it dies, YOU LOSE.
 - Take a look at this chart to see what beats what:
 
 ![Infographic of rock paper scissors chart](./info.png)
