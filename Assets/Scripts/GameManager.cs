@@ -63,7 +63,12 @@ public class GameManager : MonoBehaviour
     private int _playerMoveRemaining;
     public int PlayerMoveRemaining {
         get { return _playerMoveRemaining; }
-        set { _playerMoveRemaining = value; if (value <= 0) CurrentTurn = Turn.Enemy; }
+        set {
+            _playerMoveRemaining = value;
+            if (CurrentTurn == Turn.Player && value <= 0) {
+                CurrentTurn = Turn.Enemy;
+            }
+        }
     }
 
     private Turn _turn;
@@ -172,6 +177,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        CurrentTurn = Turn.Setup;
         ClearMap();
 
         PlayerKingDefeated = false;
@@ -187,6 +193,12 @@ public class GameManager : MonoBehaviour
         }
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
 
+
+        StartCoroutine(SleepyStart());
+    }
+
+    public IEnumerator SleepyStart() {
+        yield return new WaitForFixedUpdate();
         CurrentTurn = Turn.Player;
     }
 
@@ -199,7 +211,7 @@ public class GameManager : MonoBehaviour
     public void ClearMap()
     {
         // seems necessary to fix a bug with persistent state
-        EnemyAI._ResetReserved();
+        EnemyPathManager.Instance.ResetReserved();
 
         foreach(Transform child in diceParent.transform)
         {

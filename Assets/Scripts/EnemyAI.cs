@@ -5,18 +5,12 @@ using System.Linq;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour {
-    private static HashSet<Vector2Int> taken = new HashSet<Vector2Int>();
-
     private List<Vector2Int> path = new List<Vector2Int>();
 
     private DieManager dieManager;
 
     private Action<Turn> turnChange;
     private Action<OverlayTile> moveFinished;
-
-    public static void _ResetReserved() {
-        taken.Clear();
-    }
 
     // Start is called before the first frame update
     void Start() {
@@ -35,7 +29,7 @@ public class EnemyAI : MonoBehaviour {
     }
 
     public void CreatePath() {
-        Debug.Log("Create Path");
+        Debug.Log("Create Path: currently taken " + EnemyPathManager.Instance.TakenStr());
 
         Vector2Int pos = new Vector2Int(dieManager.parentTile.gridLocation.x, dieManager.parentTile.gridLocation.y);
         int currentRange = dieManager.MaxRange();
@@ -46,7 +40,7 @@ public class EnemyAI : MonoBehaviour {
             var adjacent = GetTilesBeside(pos)
                 .Where(a => !a.IsBlocked)
                 .Select(a => (Vector2Int)a.gridLocation)
-                .Where(a => !taken.Contains(a))
+                .Where(a => !EnemyPathManager.Instance.taken.Contains(a))
                 .ToList();
 
             if (adjacent.Count == 0) break;
@@ -54,7 +48,7 @@ public class EnemyAI : MonoBehaviour {
             Vector2Int next = adjacent[(int)(UnityEngine.Random.value * adjacent.Count) % adjacent.Count];
 
             path.Add(next);
-            taken.Add(next);
+            EnemyPathManager.Instance.taken.Add(next);
 
             rots.Add(pos - next);
 
@@ -81,7 +75,7 @@ public class EnemyAI : MonoBehaviour {
         dieManager.Move(tiles);
 
         foreach (var p in path) {
-            taken.Remove(p);
+            EnemyPathManager.Instance.taken.Remove(p);
         }
         path.Clear();
     }
@@ -109,7 +103,6 @@ public class EnemyAI : MonoBehaviour {
         }
     }
 
-
     void OnDestroy() {
         if (turnChange != null) {
             GameManager.Instance.TurnChange -= turnChange;
@@ -122,7 +115,7 @@ public class EnemyAI : MonoBehaviour {
         }
 
         foreach (var p in path) {
-            taken.Remove(p);
+            EnemyPathManager.Instance.taken.Remove(p);
         }
     }
 }
