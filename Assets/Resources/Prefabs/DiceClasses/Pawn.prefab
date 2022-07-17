@@ -175,8 +175,8 @@ MonoBehaviour:
   ghostMaterial: {fileID: 2100000, guid: 3a44730b7b62eaf4ab1c4fb986cb9077, type: 2}
   alliedMaterial: {fileID: 2100000, guid: f92fedead821bdf468e4821c57b5f8ca, type: 2}
   enemyMaterial: {fileID: 2100000, guid: a9542602a0f2e894081f0a5aa5118174, type: 2}
-  alliedGhostMaterial: {fileID: 2100000, guid: 3a44730b7b62eaf4ab1c4fb986cb9077, type: 2}
-  enemyGhostMaterial: {fileID: 2100000, guid: b648158e5e100074ea75cb1853acd282, type: 2}
+  alliedGhostMaterial: {fileID: 2100000, guid: 2e81e85928ee17246ab6355c5748ec16, type: 2}
+  enemyGhostMaterial: {fileID: 2100000, guid: aeb5a54d1cc9e224daa4b6e9fd656360, type: 2}
   ghostComponents: {fileID: 2565298508812411040}
 --- !u!114 &255127251107806683
 MonoBehaviour:
