@@ -22,6 +22,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI diceName;
     public TextMeshProUGUI movesAvailable;
     public TextMeshProUGUI piecesRemaining;
+    public Image img1;
+    public Image img2;
     public TextMeshProUGUI logText;
     public Transform inspector;
     public GameObject inspectorObject;
@@ -141,7 +143,11 @@ public class UIManager : MonoBehaviour
 
 
     private void _onABeatsB(DiceState a, DiceState b) {
+
+        img1.sprite = Resources.Load<Sprite>("Sprites/" + a);
+        Debug.Log("Sprites/" + a);
         logText.text = a + " beats " + b + "!";
+        img2.sprite = Resources.Load<Sprite>("Sprites/" + b);
     }
     private void _onAllyRockBeatsScissors()
     {
