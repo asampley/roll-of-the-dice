@@ -8,7 +8,9 @@ public enum DiceState : uint
 {
     Rock = 0,
     Paper = 1,
-    Scissors = 2
+    Scissors = 2,
+    Nuclear = 3,
+    Blank = 4,
 }
 
 public class DieManager : MonoBehaviour
