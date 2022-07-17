@@ -10,6 +10,7 @@ public enum DiceClass
     Trebuchet,
     ErrantKnight,
     Lich,
+    King,
 }
 
 [System.Serializable]
