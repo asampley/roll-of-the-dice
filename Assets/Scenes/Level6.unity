@@ -134,17 +134,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
-    - target: {fileID: 326394350890486038, guid: b14747696b772ff4c8d48e00b6944519, type: 3}
-      propertyPath: orthographic size
-      value: 3.1
-      objectReference: {fileID: 0}
     - target: {fileID: 326394350890486249, guid: b14747696b772ff4c8d48e00b6944519, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 326394350890486249, guid: b14747696b772ff4c8d48e00b6944519, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.8
+      value: -1.2
       objectReference: {fileID: 0}
     - target: {fileID: 326394350890486249, guid: b14747696b772ff4c8d48e00b6944519, type: 3}
       propertyPath: m_LocalPosition.y
@@ -490,6 +486,10 @@ PrefabInstance:
     - target: {fileID: 3638359080268762165, guid: cec5975899e82f04190be2a0d97073e5, type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3638359081932812001, guid: cec5975899e82f04190be2a0d97073e5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -53.306335
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cec5975899e82f04190be2a0d97073e5, type: 3}
