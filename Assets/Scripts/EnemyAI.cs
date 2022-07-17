@@ -40,7 +40,7 @@ public class EnemyAI : MonoBehaviour {
 
         while (currentRange > 0) {
             var adjacent = GetTilesBeside(pos)
-                .Where(a => a.occupyingDie == null)
+                .Where(a => !a.IsBlocked)
                 .Select(a => (Vector2Int)a.gridLocation)
                 .Where(a => !taken.Contains(a))
                 .ToList();
