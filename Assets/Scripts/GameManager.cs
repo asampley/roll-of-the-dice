@@ -51,6 +51,12 @@ public class GameManager : MonoBehaviour
         set { _players = value; CheckWin(); }
     }
 
+    private bool _playerKingDefeated;
+    public bool PlayerKingDefeated {
+        get { return _playerKingDefeated; }
+        set { _playerKingDefeated = value; CheckWin(); }
+    }
+
     public event Action<Win> WinEvent;
 
     private int _playerMoveRemaining;
@@ -201,7 +207,7 @@ public class GameManager : MonoBehaviour
     public void CheckWin() {
         if (CurrentTurn == Turn.Setup) return;
 
-        if (PlayerCount == 0) {
+        if (PlayerCount == 0 || PlayerKingDefeated) {
             WinEvent?.Invoke(Win.Enemy);
         } else if (EnemyCount == 0) {
             WinEvent?.Invoke(Win.Player);
