@@ -40,12 +40,20 @@ public static class Loader
     public static void LoadNext() {
         if (!Enum.TryParse(SceneManager.GetActiveScene().name, out Scene current)) return;
 
-        if ((int)current > 0) {
-            if (!Enum.IsDefined(typeof(Scene), (int)current + 1)) {
-                Load(Scene.MainMenu);
+        if (!LoadLevelNum((int)current + 1)) {
+            Load(Scene.MainMenu);
+        }
+    }
+
+    public static bool LoadLevelNum(int num) {
+        if (num > 0) {
+            if (!Enum.IsDefined(typeof(Scene), num)) {
+                return false;
             } else {
-                Load((Scene)Enum.ToObject(typeof(Scene), (int)current + 1));
+                Load((Scene)Enum.ToObject(typeof(Scene), num));
+                return true;
             }
         }
+        return false;
     }
 }

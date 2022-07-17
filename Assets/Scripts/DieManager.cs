@@ -232,6 +232,10 @@ public class DieManager : MonoBehaviour
                             case DiceState.Lich:
                                 eventName = "Ally" + state + "BeatenBy" + enemyState;
 
+                                if (!this.isEnemy) {
+                                    GameManager.Instance.PlayerKingDefeated = true;
+                                }
+
                                 toKill.Add(this);
                                 Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
 
@@ -244,11 +248,11 @@ public class DieManager : MonoBehaviour
                         break;
                     case DiceState.Lich:
                         switch (enemyState) {
+                            case DiceState.King:
                             case DiceState.Rock:
                             case DiceState.Paper:
                             case DiceState.Scissors:
                             case DiceState.Blank:
-                            case DiceState.King:
                                 eventName = "Ally" + state + "Beats" + enemyState;
 
                                 toKill.Add(enemyDie);
@@ -262,11 +266,11 @@ public class DieManager : MonoBehaviour
                         break;
                     case DiceState.Blank:
                         switch (enemyState) {
+                            case DiceState.King:
                             case DiceState.Rock:
                             case DiceState.Scissors:
                             case DiceState.Paper:
                             case DiceState.Lich:
-                            case DiceState.King:
                                 eventName = "Ally" + state + "BeatenBy" + enemyState;
 
                                 toKill.Add(this);
@@ -280,9 +284,9 @@ public class DieManager : MonoBehaviour
                         break;
                     case DiceState.Rock:
                         switch (enemyState) {
+                            case DiceState.King:
                             case DiceState.Scissors:
                             case DiceState.Blank:
-                            case DiceState.King:
                                 eventName = "Ally" + state + "Beats" + enemyState;
 
                                 toKill.Add(enemyDie);
@@ -303,9 +307,9 @@ public class DieManager : MonoBehaviour
                         break;
                     case DiceState.Paper:
                         switch (enemyState) {
+                            case DiceState.King:
                             case DiceState.Rock:
                             case DiceState.Blank:
-                            case DiceState.King:
                                 eventName = "Ally" + state + "Beats" + enemyState;
 
                                 toKill.Add(enemyDie);
@@ -327,9 +331,9 @@ public class DieManager : MonoBehaviour
                         break;
                     case DiceState.Scissors:
                         switch (enemyState) {
+                            case DiceState.King:
                             case DiceState.Paper:
                             case DiceState.Blank:
-                            case DiceState.King:
                                 eventName = "Ally" + state + "Beats" + enemyState;
 
                                 toKill.Add(enemyDie);
@@ -356,6 +360,9 @@ public class DieManager : MonoBehaviour
 
         foreach (DieManager die in toKill)
         {
+            if (!die.isEnemy && die.state == DiceState.King) {
+                GameManager.Instance.PlayerKingDefeated = true;
+            }
             die.Kill();
         }
         if (!toKill.Contains(this))

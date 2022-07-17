@@ -31,7 +31,7 @@ public class MainMenuManager : MonoBehaviour
     }
 
     public void Back()
-    {        
+    {
         levelSelect.SetActive(false);
         instructions.SetActive(false);
         options.SetActive(false);
@@ -48,8 +48,7 @@ public class MainMenuManager : MonoBehaviour
 
 
     // LEVEL SELECT ----------------------------------------------------------
-    public void Level1()
-    {
-        Loader.Load(Loader.Scene.Level1);
+    public void Level(int level) {
+        Loader.LoadLevelNum(level);
     }
 }

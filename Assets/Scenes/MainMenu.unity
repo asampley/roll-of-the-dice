@@ -348,6 +348,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1486055928}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Level
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
 --- !u!224 &201304608 stripped
@@ -449,6 +465,18 @@ PrefabInstance:
     - target: {fileID: 5488243452423618151, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1486055928}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Level
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
@@ -857,6 +885,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1486055928}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Level
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
 --- !u!224 &801991656 stripped
@@ -960,32 +1000,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1486055928}
     - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Level1
+      value: Level
       objectReference: {fileID: 0}
     - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MainMenuManager, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
@@ -1220,6 +1248,18 @@ PrefabInstance:
     - target: {fileID: 5488243452423618151, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1486055928}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Level
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642828807576085640, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79464cb5dc89ab342bc3c54f84e8796b, type: 3}
