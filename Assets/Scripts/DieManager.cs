@@ -400,13 +400,9 @@ public class DieManager : MonoBehaviour
         if (movesAvailable <= 0) return;
 
         if (movesInStraightLine)
-        {
             _tilesInRange = GetTilesStraightLine();
-        }
         else if (!movesInStraightLine)
-        {
             _tilesInRange = GetTilesAdjacent();
-        }
     }
 
     private List<OverlayTile> GetTilesAdjacent() {

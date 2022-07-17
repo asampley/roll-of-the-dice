@@ -21,8 +21,10 @@ public class UIManager : MonoBehaviour
     public GameObject gameInfo;
     public TextMeshProUGUI diceName;
     public TextMeshProUGUI movesAvailable;
-    public TextMeshProUGUI PiecesRemaining;
-    public TextMeshProUGUI LogText;
+    public TextMeshProUGUI piecesRemaining;
+    public TextMeshProUGUI logText;
+    public Transform inspector;
+    public GameObject inspectorObject;
 
     public void Start() {
         GameManager.Instance.EnemyCountChange += c => {
@@ -47,28 +49,27 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.AddListener("SelectUnit", OnSelectUnit);
-        EventManager.AddListener("Move", _onMove);
         foreach (DiceState a in Enum.GetValues(typeof(DiceState))) {
             foreach (DiceState b in Enum.GetValues(typeof(DiceState))) {
                 EventManager.AddListener("Ally" + a + "Beats" + b, () => _onABeatsB(a, b));
                 EventManager.AddListener("Ally" + b + "BeatenBy" + a, () => _onABeatsB(a, b));
             }
         }
+
+        EventManager.AddListener("SelectUnit", OnSelectUnit);
         EventManager.AddListener("Draw", _onDraw);
     }
 
     private void OnDisable()
     {
-        EventManager.RemoveListener("SelectUnit", OnSelectUnit);
-        EventManager.RemoveListener("Move", _onMove);
-
         foreach (DiceState a in Enum.GetValues(typeof(DiceState))) {
             foreach (DiceState b in Enum.GetValues(typeof(DiceState))) {
                 EventManager.RemoveListener("Ally" + a + "Beats" + b, () => _onABeatsB(a, b));
                 EventManager.RemoveListener("Ally" + b + "BeatenBy" + a, () => _onABeatsB(a, b));
             }
         }
+
+        EventManager.RemoveListener("SelectUnit", OnSelectUnit);
         EventManager.RemoveListener("Draw", _onDraw);
     }
 
@@ -115,9 +116,20 @@ public class UIManager : MonoBehaviour
     // UNIT SELECTION ------------------------
     private void OnSelectUnit()
     {
+        foreach (Transform child in inspector.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
         gameInfo.SetActive(true);
         diceName.text = Globals.SELECTED_UNIT.diceName;
         movesAvailable.text = "Moves Available: " + Globals.SELECTED_UNIT.movesAvailable.ToString();
+        GameObject inspectDie = Globals.SELECTED_UNIT.transform.Find("Mesh").gameObject;
+        inspectorObject = Instantiate(inspectDie);
+        inspectorObject.transform.parent = inspector;
+        Vector3 pos = inspector.transform.position;
+        pos.z -= 5;
+        inspectorObject.transform.position = pos;
+        inspectorObject.transform.localScale += new Vector3(65, 65, 65);
     }
 
     public void NextLevel() {
@@ -135,40 +147,37 @@ public class UIManager : MonoBehaviour
         OpenMenu();
     }
 
-    private void _onMove()
-    {
-        LogText.text = "";
-    }
+
     private void _onABeatsB(DiceState a, DiceState b) {
-        LogText.text = a + " beats " + b + "!";
+        logText.text = a + " beats " + b + "!";
     }
     private void _onAllyRockBeatsScissors()
     {
-        LogText.text = "Rock beats Scissors!";
+        logText.text = "Rock beats Scissors!";
     }
     private void _onAllyRockBeatenByPaper()
     {
-        LogText.text = "Rock beaten by paper!";
+        logText.text = "Rock beaten by paper!";
     }
     private void _onAllyPaperBeatsRock()
     {
-        LogText.text = "Paper beats Rock!";
+        logText.text = "Paper beats Rock!";
     }
     private void _onAllyPaperBeatenByScissors()
     {
-        LogText.text = "Paper beaten by Scissors!";
+        logText.text = "Paper beaten by Scissors!";
     }
     private void _onAllyScissorsBeatsPaper()
     {
-        LogText.text = "Scissors beats Paper!";
+        logText.text = "Scissors beats Paper!";
     }
     private void _onAllyScissorsBeatenByRock()
     {
-        LogText.text = "Scissors beaten by Rock!";
+        logText.text = "Scissors beaten by Rock!";
     }
 
     private void _onDraw()
     {
-        LogText.text = "Draw.";
+        logText.text = "Draw.";
     }
 }
