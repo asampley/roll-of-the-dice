@@ -166,7 +166,10 @@ public class MapManager : MonoBehaviour
         while (map.ContainsKey(TileToCheck))
         {
             if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
-                surroundingTiles.Add(map[TileToCheck]);
+                if (!map[TileToCheck].IsBlocked)
+                    surroundingTiles.Add(map[TileToCheck]);
+                else
+                    break;
             TileToCheck.x += 1;
         }
 
@@ -174,7 +177,10 @@ public class MapManager : MonoBehaviour
         while (map.ContainsKey(TileToCheck))
         {
             if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
-                surroundingTiles.Add(map[TileToCheck]);
+                if (!map[TileToCheck].IsBlocked)
+                    surroundingTiles.Add(map[TileToCheck]);
+                else
+                    break;
             TileToCheck.x -= 1;
         }
 
@@ -182,7 +188,10 @@ public class MapManager : MonoBehaviour
         while (map.ContainsKey(TileToCheck))
         {
             if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
-                surroundingTiles.Add(map[TileToCheck]);
+                if (!map[TileToCheck].IsBlocked)
+                    surroundingTiles.Add(map[TileToCheck]);
+                else
+                    break;
             TileToCheck.y += 1;
         }
 
@@ -190,7 +199,10 @@ public class MapManager : MonoBehaviour
         while (map.ContainsKey(TileToCheck))
         {
             if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
-                surroundingTiles.Add(map[TileToCheck]);
+                if (!map[TileToCheck].IsBlocked)
+                    surroundingTiles.Add(map[TileToCheck]);
+                else
+                    break;
             TileToCheck.y -= 1;
         }
 
