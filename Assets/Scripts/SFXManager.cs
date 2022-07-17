@@ -12,6 +12,7 @@ public class SFXManager : MonoBehaviour
     public AudioClip paperWins;
     public AudioClip scissorsWins;
     public AudioClip nuclearWins;
+    public AudioClip kingWins;
     public AudioClip draw;
     public AudioClip move;
 
@@ -35,6 +36,10 @@ public class SFXManager : MonoBehaviour
             EventManager.AddListener("AllyNuclearBeats" + val, _onNuclearWin);
             EventManager.AddListener("Ally" + val + "BeatenByNuclear", _onNuclearWin);
         }
+        foreach (var val in Enum.GetValues(typeof(DiceState))) {
+            EventManager.AddListener("AllyKingBeats" + val, _onKingWin);
+            EventManager.AddListener("Ally" + val + "BeatenByKing", _onKingWin);
+        }
         EventManager.AddListener("Draw", _onDraw);
     }
 
@@ -57,7 +62,15 @@ public class SFXManager : MonoBehaviour
             EventManager.RemoveListener("AllyNuclearBeats" + val, _onNuclearWin);
             EventManager.RemoveListener("Ally" + val + "BeatenByNuclear", _onNuclearWin);
         }
+        foreach (var val in Enum.GetValues(typeof(DiceState))) {
+            EventManager.RemoveListener("AllyKingBeats" + val, _onKingWin);
+            EventManager.RemoveListener("Ally" + val + "BeatenByKing", _onKingWin);
+        }
         EventManager.RemoveListener("Draw", _onDraw);
+    }
+
+    private void _onKingWin() {
+        PlaySound(kingWins);
     }
 
     private void _onNuclearWin() {

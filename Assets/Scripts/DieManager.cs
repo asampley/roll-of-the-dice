@@ -11,6 +11,7 @@ public enum DiceState : uint
     Scissors = 2,
     Nuclear = 3,
     Blank = 4,
+    King = 5,
 }
 
 public class DieManager : MonoBehaviour
@@ -217,12 +218,37 @@ public class DieManager : MonoBehaviour
 
                 switch (state)
                 {
-                    case DiceState.Nuclear:
+                    case DiceState.King:
                         switch (enemyState) {
+                            case DiceState.Blank:
+                                eventName = "Ally" + state + "Beats" + enemyState;
+
+                                toKill.Add(enemyDie);
+                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+                                break;
                             case DiceState.Rock:
                             case DiceState.Scissors:
                             case DiceState.Paper:
+                            case DiceState.Nuclear:
+                                eventName = "Ally" + state + "BeatenBy" + enemyState;
+
+                                toKill.Add(this);
+                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+
+                                break;
+                            case DiceState.King:
+                                eventName = "Draw";
+                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                            }
+                        break;
+                    case DiceState.Nuclear:
+                        switch (enemyState) {
+                            case DiceState.Rock:
+                            case DiceState.Paper:
+                            case DiceState.Scissors:
                             case DiceState.Blank:
+                            case DiceState.King:
                                 eventName = "Ally" + state + "Beats" + enemyState;
 
                                 toKill.Add(enemyDie);
@@ -240,6 +266,7 @@ public class DieManager : MonoBehaviour
                             case DiceState.Scissors:
                             case DiceState.Paper:
                             case DiceState.Nuclear:
+                            case DiceState.King:
                                 eventName = "Ally" + state + "BeatenBy" + enemyState;
 
                                 toKill.Add(this);
@@ -255,6 +282,7 @@ public class DieManager : MonoBehaviour
                         switch (enemyState) {
                             case DiceState.Scissors:
                             case DiceState.Blank:
+                            case DiceState.King:
                                 eventName = "Ally" + state + "Beats" + enemyState;
 
                                 toKill.Add(enemyDie);
@@ -277,6 +305,7 @@ public class DieManager : MonoBehaviour
                         switch (enemyState) {
                             case DiceState.Rock:
                             case DiceState.Blank:
+                            case DiceState.King:
                                 eventName = "Ally" + state + "Beats" + enemyState;
 
                                 toKill.Add(enemyDie);
@@ -300,6 +329,7 @@ public class DieManager : MonoBehaviour
                         switch (enemyState) {
                             case DiceState.Paper:
                             case DiceState.Blank:
+                            case DiceState.King:
                                 eventName = "Ally" + state + "Beats" + enemyState;
 
                                 toKill.Add(enemyDie);
