@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,12 +49,12 @@ public class UIManager : MonoBehaviour
     {
         EventManager.AddListener("SelectUnit", OnSelectUnit);
         EventManager.AddListener("Move", _onMove);
-        EventManager.AddListener("AllyRockBeatsScissors", _onAllyRockBeatsScissors);
-        EventManager.AddListener("AllyRockBeatenByPaper", _onAllyRockBeatenByPaper);
-        EventManager.AddListener("AllyPaperBeatsRock", _onAllyPaperBeatsRock);
-        EventManager.AddListener("AllyPaperBeatenByScissors", _onAllyPaperBeatenByScissors);
-        EventManager.AddListener("AllyScissorsBeatsPaper", _onAllyScissorsBeatsPaper);
-        EventManager.AddListener("AllyScissorsBeatenByRock", _onAllyScissorsBeatenByRock);
+        foreach (DiceState a in Enum.GetValues(typeof(DiceState))) {
+            foreach (DiceState b in Enum.GetValues(typeof(DiceState))) {
+                EventManager.AddListener("Ally" + a + "Beats" + b, () => _onABeatsB(a, b));
+                EventManager.AddListener("Ally" + b + "BeatenBy" + a, () => _onABeatsB(a, b));
+            }
+        }
         EventManager.AddListener("Draw", _onDraw);
     }
 
@@ -61,12 +62,13 @@ public class UIManager : MonoBehaviour
     {
         EventManager.RemoveListener("SelectUnit", OnSelectUnit);
         EventManager.RemoveListener("Move", _onMove);
-        EventManager.RemoveListener("AllyRockBeatsScissors", _onAllyRockBeatsScissors);
-        EventManager.RemoveListener("AllyRockBeatenByPaper", _onAllyRockBeatenByPaper);
-        EventManager.RemoveListener("AllyPaperBeatsRock", _onAllyPaperBeatsRock);
-        EventManager.RemoveListener("AllyPaperBeatenByScissors", _onAllyPaperBeatenByScissors);
-        EventManager.RemoveListener("AllyScissorsBeatsPaper", _onAllyScissorsBeatsPaper);
-        EventManager.RemoveListener("AllyScissorsBeatenByRock", _onAllyScissorsBeatenByRock);
+
+        foreach (DiceState a in Enum.GetValues(typeof(DiceState))) {
+            foreach (DiceState b in Enum.GetValues(typeof(DiceState))) {
+                EventManager.RemoveListener("Ally" + a + "Beats" + b, () => _onABeatsB(a, b));
+                EventManager.RemoveListener("Ally" + b + "BeatenBy" + a, () => _onABeatsB(a, b));
+            }
+        }
         EventManager.RemoveListener("Draw", _onDraw);
     }
 
@@ -136,6 +138,9 @@ public class UIManager : MonoBehaviour
     private void _onMove()
     {
         LogText.text = "";
+    }
+    private void _onABeatsB(DiceState a, DiceState b) {
+        LogText.text = a + " beats " + b + "!";
     }
     private void _onAllyRockBeatsScissors()
     {

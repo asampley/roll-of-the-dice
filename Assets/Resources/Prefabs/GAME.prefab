@@ -194,6 +194,8 @@ MonoBehaviour:
   rockWins: {fileID: 8300000, guid: 6eb8d03b853dd1b4e9b0db4bf392bbba, type: 3}
   paperWins: {fileID: 8300000, guid: b709ed785cfa6ba4096dd23a4a53f5c5, type: 3}
   scissorsWins: {fileID: 8300000, guid: 6921af2697398dc44bff53b83a9799ef, type: 3}
+  nuclearWins: {fileID: 8300000, guid: e8f07a31d2e566f45aacab7871234b77, type: 3}
+  kingWins: {fileID: 8300000, guid: 7a427a44ec85e444c85d1c27601a2f99, type: 3}
   draw: {fileID: 8300000, guid: c188cbd2ada0d99489a341cf260bd815, type: 3}
   move: {fileID: 8300000, guid: 4355ea3aa67ea074caeccaa817c67b48, type: 3}
 --- !u!82 &1941301796209064202

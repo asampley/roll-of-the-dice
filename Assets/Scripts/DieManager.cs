@@ -9,8 +9,9 @@ public enum DiceState : uint
     Rock = 0,
     Paper = 1,
     Scissors = 2,
-    Nuclear = 3,
+    Lich = 3,
     Blank = 4,
+    King = 5,
 }
 
 public class DieManager : MonoBehaviour
@@ -213,66 +214,143 @@ public class DieManager : MonoBehaviour
                 DieManager enemyDie = tile.occupyingDie;
                 DiceState enemyState = enemyDie.state;
 
+                String eventName = null;
+
                 switch (state)
                 {
+                    case DiceState.King:
+                        switch (enemyState) {
+                            case DiceState.Blank:
+                                eventName = "Ally" + state + "Beats" + enemyState;
+
+                                toKill.Add(enemyDie);
+                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                            case DiceState.Rock:
+                            case DiceState.Scissors:
+                            case DiceState.Paper:
+                            case DiceState.Lich:
+                                eventName = "Ally" + state + "BeatenBy" + enemyState;
+
+                                toKill.Add(this);
+                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+
+                                break;
+                            case DiceState.King:
+                                eventName = "Draw";
+                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                            }
+                        break;
+                    case DiceState.Lich:
+                        switch (enemyState) {
+                            case DiceState.Rock:
+                            case DiceState.Paper:
+                            case DiceState.Scissors:
+                            case DiceState.Blank:
+                            case DiceState.King:
+                                eventName = "Ally" + state + "Beats" + enemyState;
+
+                                toKill.Add(enemyDie);
+                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                            case DiceState.Lich:
+                                eventName = "Draw";
+                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                        }
+                        break;
+                    case DiceState.Blank:
+                        switch (enemyState) {
+                            case DiceState.Rock:
+                            case DiceState.Scissors:
+                            case DiceState.Paper:
+                            case DiceState.Lich:
+                            case DiceState.King:
+                                eventName = "Ally" + state + "BeatenBy" + enemyState;
+
+                                toKill.Add(this);
+                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                            case DiceState.Blank:
+                                eventName = "Draw";
+                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                        }
+                        break;
                     case DiceState.Rock:
-                        if (enemyState == DiceState.Scissors)
-                        {
-                            toKill.Add(enemyDie);
-                            EventManager.TriggerEvent("AllyRockBeatsScissors");
-                            Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
-                        }
-                        else if (enemyState == DiceState.Paper)
-                        {
-                            toKill.Add(this);
-                            EventManager.TriggerEvent("AllyRockBeatenByPaper");
-                            Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
-                        }
-                        else if (enemyState == DiceState.Rock)
-                        {
-                            EventManager.TriggerEvent("Draw");
-                            Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                        switch (enemyState) {
+                            case DiceState.Scissors:
+                            case DiceState.Blank:
+                            case DiceState.King:
+                                eventName = "Ally" + state + "Beats" + enemyState;
+
+                                toKill.Add(enemyDie);
+                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                            case DiceState.Paper:
+                            case DiceState.Lich:
+                                eventName = "Ally" + state + "BeatenBy" + enemyState;
+
+                                toKill.Add(this);
+                                Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                            case DiceState.Rock:
+                                eventName = "Draw";
+                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                break;
                         }
                         break;
                     case DiceState.Paper:
-                        if (enemyState == DiceState.Rock)
-                        {
-                            toKill.Add(enemyDie);
-                            EventManager.TriggerEvent("AllyPaperBeatsRock");
-                            Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
-                        }
-                        else if (enemyState == DiceState.Scissors)
-                        {
-                            toKill.Add(this);
-                            EventManager.TriggerEvent("AllyPaperBeatenByScissors");
-                            Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
-                        }
-                        else if (enemyState == DiceState.Paper)
-                        {
-                            EventManager.TriggerEvent("Draw");
-                            Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                        switch (enemyState) {
+                            case DiceState.Rock:
+                            case DiceState.Blank:
+                            case DiceState.King:
+                                eventName = "Ally" + state + "Beats" + enemyState;
+
+                                toKill.Add(enemyDie);
+                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                            case DiceState.Scissors:
+                            case DiceState.Lich:
+                                eventName = "Ally" + state + "BeatenBy" + enemyState;
+
+                                toKill.Add(this);
+                                Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                            case DiceState.Paper:
+                                eventName = "Draw";
+
+                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                break;
                         }
                         break;
                     case DiceState.Scissors:
-                        if (enemyState == DiceState.Paper)
-                        {
-                            toKill.Add(enemyDie);
-                            EventManager.TriggerEvent("AllyScissorsBeatsPaper");
-                            Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
-                        }
-                        else if (enemyState == DiceState.Rock)
-                        {
-                            toKill.Add(this);
-                            EventManager.TriggerEvent("AllyScissorsBeatenByRock");
-                            Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
-                        }
-                        else if (enemyState == DiceState.Scissors)
-                        {
-                            EventManager.TriggerEvent("Draw");
-                            Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                        switch (enemyState) {
+                            case DiceState.Paper:
+                            case DiceState.Blank:
+                            case DiceState.King:
+                                eventName = "Ally" + state + "Beats" + enemyState;
+
+                                toKill.Add(enemyDie);
+                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                            case DiceState.Rock:
+                            case DiceState.Lich:
+                                eventName = "Ally" + state + "BeatenBy" + enemyState;
+
+                                toKill.Add(this);
+                                Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
+                                break;
+                            case DiceState.Scissors:
+                                eventName = "Draw";
+                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                break;
                         }
                         break;
                 }
+
+                EventManager.TriggerEvent(eventName);
             }
         }
 
