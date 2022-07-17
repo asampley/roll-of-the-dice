@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public GameObject trebuchetPrefab;
     public GameObject errantKnightPrefab;
     public GameObject lichPrefab;
+    public GameObject kingPrefab;
 
     private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
@@ -115,6 +116,9 @@ public class GameManager : MonoBehaviour
                 break;
             case DiceClass.Lich:
                 prefab = lichPrefab;
+                break;
+            case DiceClass.King:
+                prefab = kingPrefab;
                 break;
             default:
                 prefab = pawnPrefab;

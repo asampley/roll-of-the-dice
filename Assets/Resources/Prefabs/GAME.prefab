@@ -133,6 +133,7 @@ MonoBehaviour:
   trebuchetPrefab: {fileID: 4210247315298935970, guid: 3171ba44c3fa38c468efb4cee86ecadf, type: 3}
   errantKnightPrefab: {fileID: 4210247315298935970, guid: 6ce44b548060ee343bce3da2eeb69b0d, type: 3}
   lichPrefab: {fileID: 4210247315298935970, guid: 7cc2e3755ebda14438770d34529ddaa6, type: 3}
+  kingPrefab: {fileID: 4210247315298935970, guid: 9277115ac10d4f146a96dc78b34c5d07, type: 3}
 --- !u!114 &7400787855664400776
 MonoBehaviour:
   m_ObjectHideFlags: 0
