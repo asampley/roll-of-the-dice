@@ -691,7 +691,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 0}
-  m_PlaneDistance: 50
+  m_PlaneDistance: 10
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -699,7 +699,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 200
   m_TargetDisplay: 0
 --- !u!114 &3638359080268762163
 MonoBehaviour:
@@ -1921,7 +1921,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5488243452423618151, guid: 8462fb5eb520c5e4abbeb109e55a5ed4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -30.913473
+      value: -30.913475
       objectReference: {fileID: 0}
     - target: {fileID: 5488243452423618151, guid: 8462fb5eb520c5e4abbeb109e55a5ed4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2790,7 +2790,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5488243452423618151, guid: 8462fb5eb520c5e4abbeb109e55a5ed4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -22.057058
+      value: -22.05706
       objectReference: {fileID: 0}
     - target: {fileID: 5488243452423618151, guid: 8462fb5eb520c5e4abbeb109e55a5ed4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
