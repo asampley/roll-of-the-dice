@@ -103,7 +103,7 @@ public class DieManager : MonoBehaviour
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
         if (tiles.Count > 0) {
-            foreach (var tile in tiles) {
+            foreach (var tile in tiles.TakeWhile(t => !t.IsBlocked)) {
                 GetTilesInRange();
                 if (!_tilesInRange.Contains(tile)) {
                     yield break;
