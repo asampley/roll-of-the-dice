@@ -7,7 +7,7 @@ public enum DiceClass
     Pawn,
     Rook,
     Artisan,
-    Rock,
+    Trebuchet,
     ErrantKnight,
     Lich,
 }

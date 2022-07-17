@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     public GameObject pawnPrefab;
     public GameObject rookPrefab;
     public GameObject artisanPrefab;
-    public GameObject rockPrefab;
+    public GameObject trebuchetPrefab;
     public GameObject errantKnightPrefab;
     public GameObject lichPrefab;
 
@@ -98,8 +98,8 @@ public class GameManager : MonoBehaviour
             case DiceClass.Artisan:
                 prefab = artisanPrefab;
                 break;
-            case DiceClass.Rock:
-                prefab = rockPrefab;
+            case DiceClass.Trebuchet:
+                prefab = trebuchetPrefab;
                 break;
             case DiceClass.ErrantKnight:
                 prefab = errantKnightPrefab;
