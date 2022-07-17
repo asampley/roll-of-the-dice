@@ -91,7 +91,7 @@ public class EnemyAI : MonoBehaviour {
     private void TurnChange(Turn turn) {
         if (turn == Turn.Enemy) {
             FollowPath();
-        } else {
+        } else if (turn == Turn.Player) {
             CreatePath();
             GameManager.Instance.EnemiesWaiting.Add(this);
         }

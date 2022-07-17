@@ -7,6 +7,7 @@ using UnityEngine;
 
 public enum Turn
 {
+    Setup,
     Player,
     Enemy,
 }
@@ -70,13 +71,14 @@ public class GameManager : MonoBehaviour
 
         EnemyCountChange += c => Debug.Log(c + " enemies remain");
         PlayerCountChange += c => Debug.Log(c + " players remain");
+        TurnChange += t => Debug.Log("Turn: " + t);
     }
 
     private void Start()
     {
+        CurrentTurn = Turn.Setup;
         RollPositions();
         StartGame();
-        CurrentTurn = Turn.Player;
     }
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
@@ -156,6 +158,8 @@ public class GameManager : MonoBehaviour
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         }
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
+
+        CurrentTurn = Turn.Player;
     }
 
     public void RerollGame()

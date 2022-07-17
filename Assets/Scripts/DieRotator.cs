@@ -61,6 +61,11 @@ public class DieRotator : MonoBehaviour {
         Rotate(rotation, count);
     }
 
+    public void RotateNow() {
+        current = target;
+        this.transform.localRotation = target;
+    }
+
     public void Update() {
         if (Time.fixedTime < startTime + Globals.MOVEMENT_TIME) {
             this.transform.localRotation = Quaternion.Slerp(current, target, (Time.fixedTime - startTime) / Globals.MOVEMENT_TIME);

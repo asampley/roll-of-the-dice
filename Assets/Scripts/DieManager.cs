@@ -94,6 +94,7 @@ public class DieManager : MonoBehaviour
         _dieRotator.RotateX(orientation.xRolls);
         _dieRotator.RotateY(orientation.yRolls);
         _dieRotator.RotateZ(orientation.zRolls);
+        _dieRotator.RotateNow();
         state = _dieRotator.UpFace();
     }
 
