@@ -233,7 +233,7 @@ public class DieManager : MonoBehaviour
                                 eventName = "Ally" + state + "BeatenBy" + enemyState;
 
                                 toKill.Add(this);
-                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+                                Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
 
                                 break;
                             case DiceState.King:
@@ -270,7 +270,7 @@ public class DieManager : MonoBehaviour
                                 eventName = "Ally" + state + "BeatenBy" + enemyState;
 
                                 toKill.Add(this);
-                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+                                Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Blank:
                                 eventName = "Draw";
