@@ -22,9 +22,12 @@ public class GameManager : MonoBehaviour
     public GameObject diceParent;
 
     //Dice Prefabs
-    public GameObject normalPrefab;
+    public GameObject pawnPrefab;
+    public GameObject rookPrefab;
+    public GameObject artisanPrefab;
     public GameObject rockPrefab;
-    public GameObject linePrefab;
+    public GameObject errantKnightPrefab;
+    public GameObject lichPrefab;
 
     private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
@@ -86,17 +89,26 @@ public class GameManager : MonoBehaviour
         GameObject prefab;
         switch (diceClass)
         {
-            case DiceClass.Normal:
-                prefab = normalPrefab;
+            case DiceClass.Pawn:
+                prefab = pawnPrefab;
+                break;
+            case DiceClass.Rook:
+                prefab = rookPrefab;
+                break;
+            case DiceClass.Artisan:
+                prefab = artisanPrefab;
                 break;
             case DiceClass.Rock:
                 prefab = rockPrefab;
                 break;
-            case DiceClass.Line:
-                prefab = linePrefab;
+            case DiceClass.ErrantKnight:
+                prefab = errantKnightPrefab;
+                break;
+            case DiceClass.Lich:
+                prefab = lichPrefab;
                 break;
             default:
-                prefab = normalPrefab;
+                prefab = pawnPrefab;
                 break;
         }
 

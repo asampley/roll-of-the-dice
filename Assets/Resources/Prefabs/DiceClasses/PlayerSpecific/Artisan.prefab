@@ -97,12 +97,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f73d5172d7087c64ab9fcd92a022a39f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frontIndex: 0
-  backIndex: 0
-  leftIndex: 1
+  frontIndex: 2
+  backIndex: 2
+  leftIndex: 2
   rightIndex: 1
-  topIndex: 2
-  bottomIndex: 2
+  topIndex: 1
+  bottomIndex: 1
 --- !u!114 &5074197080693599334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 6716495750821013030}
   - component: {fileID: 255127251107806683}
   m_Layer: 0
-  m_Name: Normal
+  m_Name: Artisan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162,9 +162,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04230cbb42d756645a5ee319901621e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  diceName: Normal
-  _maxRange: 3
+  diceName: Artisan
+  _maxRange: 4
   movesAvailable: 0
+  movesInStraightLine: 0
   isEnemy: 0
   state: 0
   parentTile: {fileID: 0}

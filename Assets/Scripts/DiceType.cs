@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public enum DiceClass
 {
-    Normal,
+    Pawn,
+    Rook,
+    Artisan,
     Rock,
-    Line,
+    ErrantKnight,
+    Lich,
 }
+
 [System.Serializable]
 public class DiceSpawn
 {
