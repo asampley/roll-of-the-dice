@@ -130,6 +130,8 @@ public class UIManager : MonoBehaviour
         pos.z -= 5;
         inspectorObject.transform.position = pos;
         inspectorObject.transform.localScale += new Vector3(65, 65, 65);
+        inspectorObject.GetComponent<DieRotator>().enabled = false;
+        inspectorObject.GetComponent<ObjectRotator>().enabled = true;
     }
 
     public void NextLevel() {
