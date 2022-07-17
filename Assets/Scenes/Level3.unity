@@ -184,7 +184,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b14747696b772ff4c8d48e00b6944519, type: 3}
---- !u!20 &437088557 stripped
+--- !u!20 &44223090 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 326394350890486038, guid: b14747696b772ff4c8d48e00b6944519, type: 3}
   m_PrefabInstance: {fileID: 44223089}
@@ -395,14 +395,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1918526780, guid: cec5975899e82f04190be2a0d97073e5, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -44.468285
-      objectReference: {fileID: 0}
     - target: {fileID: 3638359080268762160, guid: cec5975899e82f04190be2a0d97073e5, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 437088557}
+      objectReference: {fileID: 44223090}
     - target: {fileID: 3638359080268762161, guid: cec5975899e82f04190be2a0d97073e5, type: 3}
       propertyPath: m_Pivot.x
       value: 0
