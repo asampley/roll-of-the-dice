@@ -25,7 +25,7 @@ public class MouseController : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(1))
             {
-                if (!overlayTileManager.isBlocked && Globals.SELECTED_UNIT != null)
+                if (!overlayTileManager.IsBlocked && Globals.SELECTED_UNIT != null)
                 {
                     if (Globals.SELECTED_UNIT.movesInStraightLine)
                     {
@@ -41,5 +41,5 @@ public class MouseController : MonoBehaviour
         }
     }
 
-    
+
 }

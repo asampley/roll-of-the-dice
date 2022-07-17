@@ -116,5 +116,9 @@ public class EnemyAI : MonoBehaviour {
         if (moveFinished != null) {
             dieManager.MoveFinished -= moveFinished;
         }
+
+        foreach (var p in path) {
+            taken.Remove(p);
+        }
     }
 }

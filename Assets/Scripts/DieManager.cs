@@ -289,7 +289,7 @@ public class DieManager : MonoBehaviour
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
         {
-            if (tile.isBlocked) continue;
+            if (tile.IsBlocked) continue;
             tile.ShowTile();
             Vector3Int rot = parentTile.gridLocation - tile.gridLocation;
             GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), rot.x, rot.y);
@@ -389,7 +389,7 @@ public class DieManager : MonoBehaviour
 
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
-        
+
         GetTilesInRange();
         Fight();
     }

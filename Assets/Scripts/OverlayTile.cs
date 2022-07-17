@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class OverlayTile : MonoBehaviour
 {
-    public bool isBlocked;
     public Vector3Int gridLocation;
     public DieManager occupyingDie;
 
+    public TileData data;
+
+    public bool IsBlocked {
+        get { return data.blocking || occupyingDie != null; }
+    }
 
     private void Awake()
     {
@@ -34,12 +38,10 @@ public class OverlayTile : MonoBehaviour
     {
         occupyingDie = die;
         die.parentTile = this;
-        isBlocked = true;
     }
 
     public void RemoveDiceFromTile()
     {
         occupyingDie = null;
-        isBlocked = false;
     }
 }

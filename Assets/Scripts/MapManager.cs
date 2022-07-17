@@ -14,6 +14,10 @@ public class MapManager : MonoBehaviour
 
     public Dictionary<Vector2Int, OverlayTile> map;
 
+    [SerializeField]
+    private List<TileData> tileData;
+    private Dictionary<TileBase, TileData> tileDataDict = new Dictionary<TileBase, TileData>();
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -23,6 +27,12 @@ public class MapManager : MonoBehaviour
         else
         {
             _instance = this;
+        }
+
+        foreach (var data in tileData) {
+            foreach (var tile in data.tiles) {
+                tileDataDict.Add(tile, data);
+            }
         }
     }
 
@@ -54,6 +64,9 @@ public class MapManager : MonoBehaviour
                         overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
                         overlayTile.gridLocation = tileLocation;
                         overlayTile.GetComponent<OverlayTile>().HideTile();
+
+                        overlayTile.data = GetTileData(tileLocation);
+
                         map.Add(tileKey, overlayTile);
                     }
                 }
@@ -81,6 +94,16 @@ public class MapManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    public TileData GetTileData(Vector3Int pos) {
+        TileBase tileBase = tileMap.GetTile(pos);
+
+        if (!tileDataDict.ContainsKey(tileBase)) {
+            return null;
+        } else {
+            return tileDataDict[tileBase];
+        }
     }
 
     public OverlayTile GetTileAtPos(Vector2Int pos)
