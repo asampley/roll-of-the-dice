@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Boulder
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 11400000, guid: 0cb6c7f47c62282428fc11cdb86b418b, type: 2}
+  - {fileID: 11400000, guid: 4c75b075e4419134fb4dced83fdf8818, type: 2}
   blocking: 1
