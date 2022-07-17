@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43c190275e13a074e89528ee6749de0c, type: 3}
   m_Name: Boulder
   m_EditorClassIdentifier: 
-  tiles: []
+  tiles:
+  - {fileID: 11400000, guid: 0cb6c7f47c62282428fc11cdb86b418b, type: 2}
   blocking: 1
