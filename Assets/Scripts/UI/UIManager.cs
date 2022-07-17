@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
 using TMPro;
 
 
@@ -124,6 +125,7 @@ public class UIManager : MonoBehaviour
         inspectorObject.transform.localScale += new Vector3(65, 65, 65);
         inspectorObject.GetComponent<DieRotator>().enabled = false;
         inspectorObject.GetComponent<ObjectRotator>().enabled = true;
+        inspectorObject.GetComponent<SortingGroup>().enabled = true;
     }
 
     public void NextLevel() {
