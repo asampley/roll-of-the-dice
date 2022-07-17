@@ -22,6 +22,11 @@ public class MouseController : MonoBehaviour
                 {
                     overlayTileManager.occupyingDie.Select();
                 }
+                else
+                {
+                    Globals.SELECTED_UNIT?.Deselect();
+                }
+
             }
             if (Input.GetMouseButtonDown(1))
             {

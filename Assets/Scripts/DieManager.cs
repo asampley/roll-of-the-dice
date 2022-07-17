@@ -133,6 +133,10 @@ public class DieManager : MonoBehaviour
         if (Globals.SELECTED_UNIT != null)
             Globals.SELECTED_UNIT.Deselect();
         Globals.SELECTED_UNIT = this;
+
+        GhostManager.Instance.SetEnemyGhostsVisible(Input.GetKey("space"));
+        GhostManager.Instance.SetGhostsVisible(this.gameObject, true);
+
         GetTilesInRange();
         ShowTilesInRange();
         EventManager.TriggerEvent("SelectUnit");
@@ -140,6 +144,10 @@ public class DieManager : MonoBehaviour
 
     public void Deselect()
     {
+        if (!isEnemy) {
+            GhostManager.Instance.SetEnemyGhostsVisible(true);
+        }
+
         HideTilesInRange();
     }
 

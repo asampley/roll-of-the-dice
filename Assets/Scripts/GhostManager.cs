@@ -7,7 +7,6 @@ public class GhostManager : MonoBehaviour {
     private static GhostManager _instance;
     public static GhostManager Instance { get { return _instance; } }
 
-    private Dictionary<Vector2Int, GameObject> ghosts = new Dictionary<Vector2Int, GameObject>();
     private Dictionary<GameObject, List<GameObject>> ghostsByContext = new Dictionary<GameObject, List<GameObject>>();
 
     public GameObject ghostContainer;
@@ -25,8 +24,6 @@ public class GhostManager : MonoBehaviour {
     }
 
     public GameObject CreateGhost(GameObject toGhost, Vector2Int pos, int xRot, int yRot) {
-        if (ghosts.ContainsKey(pos)) return null;
-
         var dieManager = toGhost.GetComponent<DieManager>();
         var ghostComponents = dieManager.ghostComponents;
 
@@ -39,7 +36,6 @@ public class GhostManager : MonoBehaviour {
         rotator.RotateX(xRot);
         rotator.RotateY(yRot);
 
-        ghosts.Add(pos, ghost);
         if (!ghostsByContext.ContainsKey(toGhost)) {
             ghostsByContext.Add(toGhost, new List<GameObject>());
         }
@@ -54,27 +50,39 @@ public class GhostManager : MonoBehaviour {
 
         var ghostsToRemove = ghostsByContext[context];
 
-        foreach (var ghostKeyVal in ghosts.Where(kvp => ghostsToRemove.Contains(kvp.Value)).ToList()) {
-            ghosts.Remove(ghostKeyVal.Key);
-        }
-
         foreach (var ghost in ghostsByContext[context]) {
             Destroy(ghost);
         }
+
+        ghostsByContext.Remove(context);
     }
 
-    public void SetGhostVisible(Vector2Int pos, bool visible) {
-        if (!ghosts.ContainsKey(pos)) return;
+    public void SetEnemyGhostsVisible(bool visible) {
+        ghostsByContext
+            .Where(kv => kv.Key.GetComponent<DieManager>().isEnemy)
+            .ToList()
+            .ForEach(kv => {
+                foreach (var ghost in kv.Value) {
+                    ghost.SetActive(visible);
+                }
+            });
+    }
 
-        ghosts[pos].SetActive(visible);
+    public void SetGhostsVisible(GameObject context, bool visible) {
+        if (!ghostsByContext.ContainsKey(context)) return;
+
+        foreach (var ghosts in ghostsByContext[context]) {
+            ghosts.SetActive(visible);
+        }
     }
 
     public void Clear() {
-        foreach (var ghost in ghosts.Values) {
-            Destroy(ghost);
+        foreach (var ghosts in ghostsByContext) {
+            foreach (var ghost in ghosts.Value) {
+                Destroy(ghost);
+            }
         }
 
-        ghosts.Clear();
         ghostsByContext.Clear();
     }
 }
