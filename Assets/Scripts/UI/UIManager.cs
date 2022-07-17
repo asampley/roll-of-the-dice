@@ -15,10 +15,13 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI menuTitle;
     public Button nextLevelButton;
 
+
     //GameInfo
     public GameObject gameInfo;
     public TextMeshProUGUI diceName;
     public TextMeshProUGUI movesAvailable;
+    public TextMeshProUGUI PiecesRemaining;
+    public TextMeshProUGUI LogText;
 
     public void Start() {
         GameManager.Instance.EnemyCountChange += c => {
@@ -44,11 +47,27 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         EventManager.AddListener("SelectUnit", OnSelectUnit);
+        EventManager.AddListener("Move", _onMove);
+        EventManager.AddListener("AllyRockBeatsScissors", _onAllyRockBeatsScissors);
+        EventManager.AddListener("AllyRockBeatenByPaper", _onAllyRockBeatenByPaper);
+        EventManager.AddListener("AllyPaperBeatsRock", _onAllyPaperBeatsRock);
+        EventManager.AddListener("AllyPaperBeatenByScissors", _onAllyPaperBeatenByScissors);
+        EventManager.AddListener("AllyScissorsBeatsPaper", _onAllyScissorsBeatsPaper);
+        EventManager.AddListener("AllyScissorsBeatenByRock", _onAllyScissorsBeatenByRock);
+        EventManager.AddListener("Draw", _onDraw);
     }
 
     private void OnDisable()
     {
         EventManager.RemoveListener("SelectUnit", OnSelectUnit);
+        EventManager.RemoveListener("Move", _onMove);
+        EventManager.RemoveListener("AllyRockBeatsScissors", _onAllyRockBeatsScissors);
+        EventManager.RemoveListener("AllyRockBeatenByPaper", _onAllyRockBeatenByPaper);
+        EventManager.RemoveListener("AllyPaperBeatsRock", _onAllyPaperBeatsRock);
+        EventManager.RemoveListener("AllyPaperBeatenByScissors", _onAllyPaperBeatenByScissors);
+        EventManager.RemoveListener("AllyScissorsBeatsPaper", _onAllyScissorsBeatsPaper);
+        EventManager.RemoveListener("AllyScissorsBeatenByRock", _onAllyScissorsBeatenByRock);
+        EventManager.RemoveListener("Draw", _onDraw);
     }
 
 
@@ -91,7 +110,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // UNIT SELECTIOn
+    // UNIT SELECTION ------------------------
     private void OnSelectUnit()
     {
         gameInfo.SetActive(true);
@@ -112,5 +131,39 @@ public class UIManager : MonoBehaviour
         nextLevelButton.interactable = victory;
 
         OpenMenu();
+    }
+
+    private void _onMove()
+    {
+        LogText.text = "";
+    }
+    private void _onAllyRockBeatsScissors()
+    {
+        LogText.text = "Rock beats Scissors!";
+    }
+    private void _onAllyRockBeatenByPaper()
+    {
+        LogText.text = "Rock beaten by paper!";
+    }
+    private void _onAllyPaperBeatsRock()
+    {
+        LogText.text = "Paper beats Rock!";
+    }
+    private void _onAllyPaperBeatenByScissors()
+    {
+        LogText.text = "Paper beaten by Scissors!";
+    }
+    private void _onAllyScissorsBeatsPaper()
+    {
+        LogText.text = "Scissors beats Paper!";
+    }
+    private void _onAllyScissorsBeatenByRock()
+    {
+        LogText.text = "Scissors beaten by Rock!";
+    }
+
+    private void _onDraw()
+    {
+        LogText.text = "Draw.";
     }
 }
