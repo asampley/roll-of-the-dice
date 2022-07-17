@@ -114,6 +114,7 @@ public class DieManager : MonoBehaviour
             }
 
             movesAvailable--;
+
             EventManager.TriggerEvent("SelectUnit");
             if (!isEnemy)
             {
@@ -121,6 +122,11 @@ public class DieManager : MonoBehaviour
             }
 
             MoveFinished?.Invoke(tiles[tiles.Count - 1]);
+
+            // hack to fix bug
+            if (movesAvailable == 0) {
+                HideTilesInRange();
+            }
         }
     }
 
