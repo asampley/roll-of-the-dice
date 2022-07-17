@@ -12,6 +12,12 @@ public enum Turn
     Enemy,
 }
 
+public enum Win
+{
+    Player,
+    Enemy,
+}
+
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
@@ -36,22 +42,21 @@ public class GameManager : MonoBehaviour
     private int _enemies;
     public int EnemyCount {
         get { return _enemies; }
-        set { _enemies = value; if (_enemies == 0) EnemyCountChange?.Invoke(value); }
+        set { _enemies = value; CheckWin(); }
     }
 
     private int _players;
     public int PlayerCount {
         get { return _players; }
-        set { _players = value; if (_players == 0) PlayerCountChange?.Invoke(value); }
+        set { _players = value; CheckWin(); }
     }
 
-    public event Action<int> EnemyCountChange;
-    public event Action<int> PlayerCountChange;
+    public event Action<Win> WinEvent;
 
     private int _playerMoveRemaining;
     public int PlayerMoveRemaining {
         get { return _playerMoveRemaining; }
-        set { _playerMoveRemaining = value; if (value == 0) CurrentTurn = Turn.Enemy; }
+        set { _playerMoveRemaining = value; if (value <= 0) CurrentTurn = Turn.Enemy; }
     }
 
     private Turn _turn;
@@ -72,8 +77,6 @@ public class GameManager : MonoBehaviour
             _instance = this;
         }
 
-        EnemyCountChange += c => Debug.Log(c + " enemies remain");
-        PlayerCountChange += c => Debug.Log(c + " players remain");
         TurnChange += t => Debug.Log("Turn: " + t);
     }
 
@@ -193,5 +196,15 @@ public class GameManager : MonoBehaviour
     {
         alliedSpawnPositions.Clear();
         enemySpawnPositions.Clear();
+    }
+
+    public void CheckWin() {
+        if (CurrentTurn == Turn.Setup) return;
+
+        if (PlayerCount == 0) {
+            WinEvent?.Invoke(Win.Enemy);
+        } else if (EnemyCount == 0) {
+            WinEvent?.Invoke(Win.Player);
+        }
     }
 }

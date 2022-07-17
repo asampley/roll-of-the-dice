@@ -27,17 +27,7 @@ public class UIManager : MonoBehaviour
     public GameObject inspectorObject;
 
     public void Start() {
-        GameManager.Instance.EnemyCountChange += c => {
-            if (c == 0) {
-                ShowVictoryScreen(true);
-            }
-        };
-
-        GameManager.Instance.PlayerCountChange += c => {
-            if (c == 0) {
-                ShowVictoryScreen(false);
-            }
-        };
+        GameManager.Instance.WinEvent += w => ShowVictoryScreen(w == Win.Player);
     }
 
     public void OpenMenu()
