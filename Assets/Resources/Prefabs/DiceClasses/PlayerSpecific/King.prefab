@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diceName: King
-  _maxRange: 2
+  _maxRange: 3
   movesAvailable: 0
   movesInStraightLine: 0
   isEnemy: 0
