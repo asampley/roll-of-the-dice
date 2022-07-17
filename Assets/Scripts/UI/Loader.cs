@@ -12,9 +12,6 @@ public static class Loader
         MainMenu = 0,
         Level1 = 1,
         Level2 = 2,
-        Level3 = 3,
-        Level4 = 4,
-        Level5 = 5,
     }
 
     private static Action onLoaderCallback;
@@ -42,9 +39,11 @@ public static class Loader
         if (!Enum.TryParse(SceneManager.GetActiveScene().name, out Scene current)) return;
 
         if ((int)current > 0) {
-            if (!Enum.IsDefined(typeof(Scene), (int)current + 1)) return;
-
-            Load((Scene)Enum.ToObject(typeof(Scene), (int)current + 1));
+            if (!Enum.IsDefined(typeof(Scene), (int)current + 1)) {
+                Load(Scene.MainMenu);
+            } else {
+                Load((Scene)Enum.ToObject(typeof(Scene), (int)current + 1));
+            }
         }
     }
 }
