@@ -125,11 +125,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c2bae854c944fc41b1c52403c51f309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPositions: {fileID: 11400000, guid: d16efe67a79b1aa4a825f7ba70233aec, type: 2}
+  startPositions: {fileID: 11400000, guid: 5add61967d911994cbaad2e8c812522e, type: 2}
   diceParent: {fileID: 584924817115488174}
-  normalPrefab: {fileID: 4210247315298935970, guid: 3344109ed0d897b4184082d9de0ad786, type: 3}
+  pawnPrefab: {fileID: 4210247315298935970, guid: 3344109ed0d897b4184082d9de0ad786, type: 3}
+  rookPrefab: {fileID: 4210247315298935970, guid: 4748fede1ede16f48813ab46610a1a76, type: 3}
+  artisanPrefab: {fileID: 4210247315298935970, guid: 4951a3b6f55317743a049a65bed73661, type: 3}
   rockPrefab: {fileID: 4210247315298935970, guid: 3171ba44c3fa38c468efb4cee86ecadf, type: 3}
-  linePrefab: {fileID: 4210247315298935970, guid: 4748fede1ede16f48813ab46610a1a76, type: 3}
+  errantKnightPrefab: {fileID: 4210247315298935970, guid: 6ce44b548060ee343bce3da2eeb69b0d, type: 3}
+  lichPrefab: {fileID: 4210247315298935970, guid: 7cc2e3755ebda14438770d34529ddaa6, type: 3}
 --- !u!114 &7400787855664400776
 MonoBehaviour:
   m_ObjectHideFlags: 0

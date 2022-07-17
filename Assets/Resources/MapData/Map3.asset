@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Map3
   m_EditorClassIdentifier: Assembly-CSharp::StartPosition
   alliedDice:
-  - diceClass: 2
+  - diceClass: 1
     tilePosition: {x: 11, y: 0}
     isEnemy: 0
-  - diceClass: 2
+  - diceClass: 1
     tilePosition: {x: 0, y: -3}
     isEnemy: 0
-  - diceClass: 0
+  - diceClass: 1
     tilePosition: {x: 3, y: 8}
     isEnemy: 0
   enemyDice:
