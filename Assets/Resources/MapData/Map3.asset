@@ -20,7 +20,7 @@ MonoBehaviour:
     tilePosition: {x: 0, y: -3}
     isEnemy: 0
   - diceClass: 1
-    tilePosition: {x: 3, y: 8}
+    tilePosition: {x: 3, y: 6}
     isEnemy: 0
   enemyDice:
   - diceClass: 0
@@ -42,5 +42,5 @@ MonoBehaviour:
     tilePosition: {x: 10, y: 5}
     isEnemy: 1
   - diceClass: 3
-    tilePosition: {x: 3, y: -6}
+    tilePosition: {x: 3, y: -5}
     isEnemy: 1
