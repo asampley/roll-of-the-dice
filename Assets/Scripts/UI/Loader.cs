@@ -15,6 +15,7 @@ public static class Loader
         Level3 = 3,
         Level4 = 4,
         Level5 = 5,
+        Level6 = 6,
     }
 
     private static Action onLoaderCallback;
