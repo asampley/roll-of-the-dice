@@ -16,7 +16,7 @@ public class DieTranslator : MonoBehaviour {
         set { _collapse = value; if (_collapse) CollapseTargets(); }
     }
 
-    void Awake() {
+    void Start() {
         this.startPos = this.transform.parent.localPosition;
     }
 
