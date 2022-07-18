@@ -31,36 +31,53 @@ public class EnemyAI : MonoBehaviour {
     public void CreatePath() {
         Debug.Log("Create Path: currently taken " + EnemyPathManager.Instance.TakenStr());
 
-        Vector2Int pos = new Vector2Int(dieManager.parentTile.gridLocation.x, dieManager.parentTile.gridLocation.y);
+        OverlayTile startTile = dieManager.parentTile;
+        Vector2Int pos = new Vector2Int(startTile.gridLocation.x, startTile.gridLocation.y);
+
         int currentRange = dieManager.MaxRange();
+
+        List<OverlayTile> tiles = new List<OverlayTile>();
+        tiles.Add(startTile);
 
         List<Vector2Int> rots = new List<Vector2Int>();
 
         while (currentRange > 0) {
             var adjacent = GetTilesBeside(pos)
                 .Where(a => !a.IsBlocked)
-                .Select(a => (Vector2Int)a.gridLocation)
-                .Where(a => !EnemyPathManager.Instance.taken.Contains(a))
+                .Where(a => !EnemyPathManager.Instance.taken.Contains((Vector2Int)a.gridLocation))
                 .ToList();
 
             if (adjacent.Count == 0) break;
 
-            Vector2Int next = adjacent[(int)(UnityEngine.Random.value * adjacent.Count) % adjacent.Count];
+            var next = adjacent[(int)(UnityEngine.Random.value * adjacent.Count) % adjacent.Count];
+            var nextCoord = (Vector2Int)next.gridLocation;
 
-            path.Add(next);
-            EnemyPathManager.Instance.taken.Add(next);
+            tiles.Add(next);
+            path.Add(nextCoord);
+            EnemyPathManager.Instance.taken.Add(nextCoord);
 
-            rots.Add(pos - next);
+            rots.Add(pos - nextCoord);
 
-            var ghost = GhostManager.Instance.CreateGhost(gameObject, next, 0, 0);
+            var ghost = GhostManager.Instance.CreateGhost(gameObject, Vector3.zero, 0, 0);
+
+            var translator = ghost.GetComponentInChildren<DieTranslator>();
+            // required to skip first time step of translation of ghost
+            translator.TranslateNow();
+            for (var i = 1; i < tiles.Count; ++i) {
+                translator.Translate(
+                    MapManager.Instance.GetWorldSpace(tiles[i].transform.position)
+                    - MapManager.Instance.GetWorldSpace(tiles[i - 1].transform.position)
+                );
+            }
+
+            var rotator = ghost.GetComponentInChildren<DieRotator>();
             foreach (var rot in rots) {
-                var rotator = ghost.GetComponentInChildren<DieRotator>();
                 rotator.RotateX(rot.x);
                 rotator.RotateY(rot.y);
             }
 
             currentRange--;
-            pos = next;
+            pos = nextCoord;
         }
 
         Debug.Log("Path: " + PathStr());

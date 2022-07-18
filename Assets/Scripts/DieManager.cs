@@ -55,6 +55,8 @@ public class DieManager : MonoBehaviour
     void Start() {
         turnChange = t => this.TurnChange(t);
         GameManager.Instance.TurnChange += turnChange;
+
+        GetComponentInChildren<DieTranslator>().ReachTarget += () => EventManager.TriggerEvent("Move");
     }
 
     private void Update()
@@ -397,8 +399,12 @@ public class DieManager : MonoBehaviour
             if (tile.IsBlocked) continue;
             tile.ShowTile();
             Vector3Int rot = parentTile.gridLocation - tile.gridLocation;
-            var ghost = GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), rot.x, rot.y);
+            Vector3 translation
+                = MapManager.Instance.GetWorldSpace(tile.transform.position)
+                - MapManager.Instance.GetWorldSpace(parentTile.transform.position);
+            var ghost = GhostManager.Instance.CreateGhost(gameObject, translation, rot.x, rot.y);
             ghost.GetComponentInChildren<DieRotator>().Collapse = true;
+            ghost.GetComponentInChildren<DieTranslator>().Collapse = true;
         }
     }
 
@@ -446,7 +452,7 @@ public class DieManager : MonoBehaviour
 
     public void CalculateDirection(OverlayTile newTile)
     {
-        StartCoroutine(MoveToPos(parentTile.transform.position, newTile.transform.position));
+        MoveToPos(parentTile.transform.position, newTile.transform.position);
         Vector3Int dir = parentTile.gridLocation - newTile.gridLocation;
 
         if (dir == new Vector3Int(1, 0))
@@ -469,19 +475,11 @@ public class DieManager : MonoBehaviour
         Debug.Log(GetComponentInChildren<DieRotator>().UpFace());
     }
 
-    private IEnumerator MoveToPos(Vector2 startPos, Vector2 endPos)
+    private void MoveToPos(Vector2 startPos, Vector2 endPos)
     {
-        float elapsedTime = 0;
-
-        while (elapsedTime < Globals.MOVEMENT_TIME)
-        {
-            Vector3 start = MapManager.Instance.GetWorldSpace(startPos);
-            Vector3 end = MapManager.Instance.GetWorldSpace(endPos);
-            transform.position = Vector3.Lerp(start, end, (elapsedTime / Globals.MOVEMENT_TIME));
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-        EventManager.TriggerEvent("Move");
+        GetComponentInChildren<DieTranslator>().Translate(
+            MapManager.Instance.GetWorldSpace(endPos) - MapManager.Instance.GetWorldSpace(startPos)
+        );
     }
 
     private IEnumerator UpdateTilePos(OverlayTile newTile)

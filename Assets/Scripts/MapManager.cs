@@ -120,7 +120,6 @@ public class MapManager : MonoBehaviour
         return (Vector3)pos + Vector3.forward * pos.y * 2;
     }
 
-
     public List<OverlayTile> GetSurroundingTiles(Vector2Int originTile)
     {
         var surroundingTiles = new List<OverlayTile>();
