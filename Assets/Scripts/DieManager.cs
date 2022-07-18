@@ -397,7 +397,8 @@ public class DieManager : MonoBehaviour
             if (tile.IsBlocked) continue;
             tile.ShowTile();
             Vector3Int rot = parentTile.gridLocation - tile.gridLocation;
-            GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), rot.x, rot.y);
+            var ghost = GhostManager.Instance.CreateGhost(gameObject, new Vector2Int(tile.gridLocation.x, tile.gridLocation.y), rot.x, rot.y);
+            ghost.GetComponentInChildren<DieRotator>().Collapse = true;
         }
     }
 
