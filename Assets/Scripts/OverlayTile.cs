@@ -29,6 +29,12 @@ public class OverlayTile : MonoBehaviour
     {
         occupyingDie = null;
         gridLocationText = GetComponentInChildren<TextMeshProUGUI>();
+        gridLocationText.enabled = false;
+    }
+
+    private void Start()
+    {
+        gridLocationText.text = gridLocation.ToString();
     }
 
     private void Update()
@@ -60,13 +66,6 @@ public class OverlayTile : MonoBehaviour
 
     private void _onDebugMap()
     {
-        if (!Globals.DEBUG_MAP)
-        {
-            gridLocationText.text = gridLocation.ToString();            
-        }
-        else
-        {
-            gridLocationText.text = "";
-        }
+        gridLocationText.enabled = !gridLocationText.enabled;
     }
 }
