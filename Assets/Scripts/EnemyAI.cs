@@ -105,20 +105,12 @@ public class EnemyAI : MonoBehaviour {
             FollowPath();
         } else if (turn == Turn.Player) {
             CreatePath();
-            GameManager.Instance.EnemiesWaiting.Add(this);
+            GameManager.Instance.AddEnemyWaiting(this);
         }
     }
 
     private void MoveFinished(OverlayTile tile) {
-        GameManager.Instance.EnemiesWaiting.Remove(this);
-
-        if (GameManager.Instance.EnemiesWaiting.Count == 0) {
-            GameManager.Instance.CurrentTurn = Turn.Player;
-        } else {
-            string str = "";
-            foreach (var enemy in GameManager.Instance.EnemiesWaiting) str += "(" + enemy + ")";
-            Debug.Log("Still waiting for " + str);
-        }
+        GameManager.Instance.RemoveEnemyWaiting(this);
     }
 
     void ClearPath() {
@@ -134,7 +126,7 @@ public class EnemyAI : MonoBehaviour {
             GameManager.Instance.TurnChange -= turnChange;
         }
 
-        GameManager.Instance.EnemiesWaiting.Remove(this);
+        GameManager.Instance.RemoveEnemyWaiting(this);
 
         if (moveFinished != null) {
             dieManager.MoveFinished -= moveFinished;

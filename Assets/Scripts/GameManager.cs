@@ -39,7 +39,8 @@ public class GameManager : MonoBehaviour
     private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
 
-    public HashSet<EnemyAI> EnemiesWaiting = new HashSet<EnemyAI>();
+    private HashSet<EnemyAI> enemiesWaiting = new HashSet<EnemyAI>();
+
     private int _enemies;
     public int EnemyCount {
         get { return _enemies; }
@@ -234,6 +235,27 @@ public class GameManager : MonoBehaviour
             WinEvent?.Invoke(Win.Enemy);
         } else if (EnemyCount == 0) {
             WinEvent?.Invoke(Win.Player);
+        }
+    }
+
+    public void AddEnemyWaiting(EnemyAI enemy) {
+        enemiesWaiting.Add(enemy);
+
+        string str = "";
+        foreach (var e in enemiesWaiting) str += "(" + e + ")";
+        Debug.Log("Still waiting for " + str);
+    }
+
+    public void RemoveEnemyWaiting(EnemyAI enemy) {
+        Debug.Log("Removing enemy");
+        enemiesWaiting.Remove(enemy);
+
+        string str = "";
+        foreach (var e in enemiesWaiting) str += "(" + e + ")";
+        Debug.Log("Still waiting for " + str);
+
+        if (CurrentTurn == Turn.Enemy && enemiesWaiting.Count == 0) {
+            CurrentTurn = Turn.Player;
         }
     }
 }
