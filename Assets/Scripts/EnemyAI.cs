@@ -74,10 +74,7 @@ public class EnemyAI : MonoBehaviour {
         var tiles = path.Select(x => MapManager.Instance.GetTileAtPos(x)).ToList();
         dieManager.Move(tiles);
 
-        foreach (var p in path) {
-            EnemyPathManager.Instance.taken.Remove(p);
-        }
-        path.Clear();
+        ClearPath();
     }
 
     private string PathStr() {
@@ -107,6 +104,14 @@ public class EnemyAI : MonoBehaviour {
         }
     }
 
+    void ClearPath() {
+        foreach (var p in path) {
+            EnemyPathManager.Instance.taken.Remove(p);
+        }
+
+        path.Clear();
+    }
+
     void OnDestroy() {
         if (turnChange != null) {
             GameManager.Instance.TurnChange -= turnChange;
@@ -118,8 +123,6 @@ public class EnemyAI : MonoBehaviour {
             dieManager.MoveFinished -= moveFinished;
         }
 
-        foreach (var p in path) {
-            EnemyPathManager.Instance.taken.Remove(p);
-        }
+        ClearPath();
     }
 }
