@@ -43,6 +43,7 @@ public class DieRotator : MonoBehaviour {
         for (int i = 0; i < Math.Abs(count); ++i) {
             targets.Add(FinalTarget() * rotation);
         }
+
     }
 
     Quaternion FinalTarget() {
