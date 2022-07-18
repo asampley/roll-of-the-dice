@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class OverlayTile : MonoBehaviour
 {
@@ -8,6 +9,17 @@ public class OverlayTile : MonoBehaviour
     public DieManager occupyingDie;
 
     public TileData data;
+    private TextMeshProUGUI gridLocationText;
+
+    private void OnEnable()
+    {
+        EventManager.AddListener("DebugMap", _onDebugMap);
+    }
+
+    private void OnDisable()
+    {
+        EventManager.RemoveListener("DebugMap", _onDebugMap);
+    }
 
     public bool IsBlocked {
         get { return data.blocking || occupyingDie != null; }
@@ -16,6 +28,7 @@ public class OverlayTile : MonoBehaviour
     private void Awake()
     {
         occupyingDie = null;
+        gridLocationText = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     private void Update()
@@ -43,5 +56,17 @@ public class OverlayTile : MonoBehaviour
     public void RemoveDiceFromTile()
     {
         occupyingDie = null;
+    }
+
+    private void _onDebugMap()
+    {
+        if (!Globals.DEBUG_MAP)
+        {
+            gridLocationText.text = gridLocation.ToString();            
+        }
+        else
+        {
+            gridLocationText.text = "";
+        }
     }
 }

@@ -10,4 +10,6 @@ public static class Globals
     public static float MOVEMENT_TIME = 0.4f;
 
     public static LayerMask OVERLAY_TILE = 1 << 9;
+
+    public static bool DEBUG_MAP = false;
 }
