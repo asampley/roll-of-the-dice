@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
     }
     public event Action<Turn> TurnChange;
 
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
