@@ -41,13 +41,20 @@ public class DieRotator : MonoBehaviour {
         }
 
         for (int i = 0; i < Math.Abs(count); ++i) {
-            targets.Add(FinalTarget() * rotation);
+            AddTarget(FinalTarget() * rotation);
         }
-
     }
 
     Quaternion FinalTarget() {
         return targets.Count > 0 ? targets[targets.Count - 1] : startRot;
+    }
+
+    void AddTarget(Quaternion target) {
+        if (Collapse && targets.Count == 1) {
+            targets[0] = target;
+        } else {
+            targets.Add(target);
+        }
     }
 
     void CollapseTargets() {

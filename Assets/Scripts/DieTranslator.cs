@@ -26,11 +26,19 @@ public class DieTranslator : MonoBehaviour {
             this.startPos = this.transform.parent.localPosition;
         }
 
-        targets.Add(FinalTarget() + translation);
+        AddTarget(FinalTarget() + translation);
     }
 
     Vector3 FinalTarget() {
         return targets.Count > 0 ? targets[targets.Count - 1] : startPos;
+    }
+
+    void AddTarget(Vector3 target) {
+        if (Collapse && targets.Count == 1) {
+            targets[0] = target;
+        } else {
+            targets.Add(target);
+        }
     }
 
     void CollapseTargets() {
