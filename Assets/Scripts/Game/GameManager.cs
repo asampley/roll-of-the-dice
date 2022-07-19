@@ -29,13 +29,14 @@ public class GameManager : MonoBehaviour
     public GameObject diceParent;
 
     //Dice Prefabs
-    public GameObject pawnPrefab;
-    public GameObject rookPrefab;
-    public GameObject artisanPrefab;
-    public GameObject trebuchetPrefab;
-    public GameObject errantKnightPrefab;
-    public GameObject lichPrefab;
-    public GameObject kingPrefab;
+    private string _dicePrefabLocation = "Prefabs/DiceClasses/";
+    private GameObject _pawnPrefab;
+    private GameObject _rookPrefab;
+    private GameObject _artisanPrefab;
+    private GameObject _trebuchetPrefab;
+    private GameObject _errantKnightPrefab;
+    private GameObject _lichPrefab;
+    private GameObject _kingPrefab;
 
     private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
@@ -98,8 +99,20 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         CurrentTurn = Turn.Setup;
+        FindPrefabs();
         RollPositions();
         StartGame();
+    }
+
+    private void FindPrefabs()
+    {
+        _pawnPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "Pawn");
+        _rookPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "Rook");
+        _artisanPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "Artisan");
+        _trebuchetPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "Trebuchet"); ;
+        _errantKnightPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "ErrantKnight"); ;
+        _lichPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "Lich"); ;
+        _kingPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "King"); ;
     }
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
@@ -108,28 +121,28 @@ public class GameManager : MonoBehaviour
         switch (diceClass)
         {
             case DiceClass.Pawn:
-                prefab = pawnPrefab;
+                prefab = _pawnPrefab;
                 break;
             case DiceClass.Rook:
-                prefab = rookPrefab;
+                prefab = _rookPrefab;
                 break;
             case DiceClass.Artisan:
-                prefab = artisanPrefab;
+                prefab = _artisanPrefab;
                 break;
             case DiceClass.Trebuchet:
-                prefab = trebuchetPrefab;
+                prefab = _trebuchetPrefab;
                 break;
             case DiceClass.ErrantKnight:
-                prefab = errantKnightPrefab;
+                prefab = _errantKnightPrefab;
                 break;
             case DiceClass.Lich:
-                prefab = lichPrefab;
+                prefab = _lichPrefab;
                 break;
             case DiceClass.King:
-                prefab = kingPrefab;
+                prefab = _kingPrefab;
                 break;
             default:
-                prefab = pawnPrefab;
+                prefab = _pawnPrefab;
                 break;
         }
 
