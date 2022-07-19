@@ -400,8 +400,8 @@ public class DieManager : MonoBehaviour
             tile.ShowTile();
             Vector3Int rot = parentTile.gridLocation - tile.gridLocation;
             Vector3 translation
-                = MapManager.Instance.GetWorldSpace(tile.transform.position)
-                - MapManager.Instance.GetWorldSpace(parentTile.transform.position);
+                = MapManager.Instance.TileToWorldSpace(tile.gridLocation)
+                - MapManager.Instance.TileToWorldSpace(parentTile.gridLocation);
             var ghost = GhostManager.Instance.CreateGhost(gameObject, translation, rot.x, rot.y);
             ghost.GetComponentInChildren<DieRotator>().Collapse = true;
             ghost.GetComponentInChildren<DieTranslator>().Collapse = true;
@@ -452,7 +452,7 @@ public class DieManager : MonoBehaviour
 
     public void CalculateDirection(OverlayTile newTile)
     {
-        MoveToPos(parentTile.transform.position, newTile.transform.position);
+        MoveToPos((Vector2Int)parentTile.gridLocation, (Vector2Int)newTile.gridLocation);
         Vector3Int dir = parentTile.gridLocation - newTile.gridLocation;
 
         if (dir == new Vector3Int(1, 0))
@@ -475,10 +475,10 @@ public class DieManager : MonoBehaviour
         Debug.Log(GetComponentInChildren<DieRotator>().UpFace());
     }
 
-    private void MoveToPos(Vector2 startPos, Vector2 endPos)
+    private void MoveToPos(Vector2Int startPos, Vector2Int endPos)
     {
         GetComponentInChildren<DieTranslator>().Translate(
-            MapManager.Instance.GetWorldSpace(endPos) - MapManager.Instance.GetWorldSpace(startPos)
+            MapManager.Instance.TileToWorldSpace(endPos) - MapManager.Instance.TileToWorldSpace(startPos)
         );
     }
 

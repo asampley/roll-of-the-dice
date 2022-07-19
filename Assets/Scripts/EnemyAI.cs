@@ -31,43 +31,39 @@ public class EnemyAI : MonoBehaviour {
     public void CreatePath() {
         Debug.Log("Create Path: currently taken " + EnemyPathManager.Instance.TakenStr());
 
-        OverlayTile startTile = dieManager.parentTile;
-        Vector2Int pos = new Vector2Int(startTile.gridLocation.x, startTile.gridLocation.y);
+        Vector2Int start = (Vector2Int)dieManager.parentTile.gridLocation;
+        Vector2Int pos = start;
 
         int currentRange = dieManager.MaxRange();
 
-        List<OverlayTile> tiles = new List<OverlayTile>();
-        tiles.Add(startTile);
-
         List<Vector2Int> rots = new List<Vector2Int>();
+        List<Vector3> trans = new List<Vector3>();
 
         while (currentRange > 0) {
             var adjacent = GetTilesBeside(pos)
                 .Where(a => !a.IsBlocked)
-                .Where(a => !EnemyPathManager.Instance.taken.Contains((Vector2Int)a.gridLocation))
+                .Select(a => (Vector2Int)a.gridLocation)
+                .Where(a => !EnemyPathManager.Instance.taken.Contains(a))
                 .ToList();
 
             if (adjacent.Count == 0) break;
 
             var next = adjacent[(int)(UnityEngine.Random.value * adjacent.Count) % adjacent.Count];
-            var nextCoord = (Vector2Int)next.gridLocation;
 
-            tiles.Add(next);
-            path.Add(nextCoord);
-            EnemyPathManager.Instance.taken.Add(nextCoord);
+            path.Add(next);
+            EnemyPathManager.Instance.taken.Add(next);
 
-            rots.Add(pos - nextCoord);
+            rots.Add(pos - next);
+            trans.Add(
+                MapManager.Instance.TileToWorldSpace(new Vector2Int(0, 0))
+                - MapManager.Instance.TileToWorldSpace(pos - next)
+            );
 
-            var ghost = GhostManager.Instance.CreateGhost(gameObject, Vector3.zero, 0, 0);
+            var ghost = GhostManager.Instance.CreateGhost(gameObject, null, 0, 0);
 
             var translator = ghost.GetComponentInChildren<DieTranslator>();
-            // required to skip first time step of translation of ghost
-            translator.TranslateNow();
-            for (var i = 1; i < tiles.Count; ++i) {
-                translator.Translate(
-                    MapManager.Instance.GetWorldSpace(tiles[i].transform.position)
-                    - MapManager.Instance.GetWorldSpace(tiles[i - 1].transform.position)
-                );
+            foreach (var t in trans) {
+                translator.Translate(t);
             }
 
             var rotator = ghost.GetComponentInChildren<DieRotator>();
@@ -77,7 +73,7 @@ public class EnemyAI : MonoBehaviour {
             }
 
             currentRange--;
-            pos = nextCoord;
+            pos = next;
         }
 
         Debug.Log("Path: " + PathStr());

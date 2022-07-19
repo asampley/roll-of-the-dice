@@ -23,7 +23,7 @@ public class GhostManager : MonoBehaviour {
         }
     }
 
-    public GameObject CreateGhost(GameObject toGhost, Vector3 translation, int xRot, int yRot) {
+    public GameObject CreateGhost(GameObject toGhost, Vector3? translation, int xRot, int yRot) {
         var dieManager = toGhost.GetComponent<DieManager>();
         var ghostComponents = dieManager.ghostComponents;
 
@@ -36,9 +36,11 @@ public class GhostManager : MonoBehaviour {
         rotator.RotateX(xRot);
         rotator.RotateY(yRot);
 
-        var translator = ghost.GetComponentInChildren<DieTranslator>();
+        if (translation != null) {
+            var translator = ghost.GetComponentInChildren<DieTranslator>();
 
-        translator.Translate(translation);
+            translator.Translate(translation.Value);
+        }
 
         if (!ghostsByContext.ContainsKey(toGhost)) {
             ghostsByContext.Add(toGhost, new List<GameObject>());

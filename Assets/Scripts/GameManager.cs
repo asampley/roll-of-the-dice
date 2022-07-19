@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        Vector3 pos = MapManager.Instance.GetTileWorldSpace(startPos);
+        Vector3 pos = MapManager.Instance.TileToWorldSpace(startPos);
         GameObject die = Instantiate(prefab, pos, Quaternion.identity);
         die.transform.SetParent(diceParent.transform);
         die.name = prefab.name + (isEnemy ? " Enemy" : " Player");

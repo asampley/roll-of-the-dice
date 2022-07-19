@@ -111,13 +111,14 @@ public class MapManager : MonoBehaviour
         return map[pos];
     }
 
-    public Vector3 GetTileWorldSpace(Vector2Int pos)
+    public Vector3 TileToWorldSpace(Vector2Int pos)
     {
-        return this.GetWorldSpace(this.tileMap.GetCellCenterWorld((Vector3Int)pos));
+        return TileToWorldSpace((Vector3Int)pos);
     }
 
-    public Vector3 GetWorldSpace(Vector2 pos) {
-        return (Vector3)pos + Vector3.forward * pos.y * 2;
+    public Vector3 TileToWorldSpace(Vector3Int pos)
+    {
+        return this.tileMap.GetCellCenterWorld(pos) + Vector3.forward * pos.y * 2;
     }
 
     public List<OverlayTile> GetSurroundingTiles(Vector2Int originTile)
