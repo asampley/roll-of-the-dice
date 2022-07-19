@@ -41,7 +41,7 @@ public class DieRotator : MonoBehaviour {
         }
 
         for (int i = 0; i < Math.Abs(count); ++i) {
-            AddTarget(FinalTarget() * rotation);
+            AddTarget(rotation * FinalTarget());
         }
     }
 
@@ -64,23 +64,20 @@ public class DieRotator : MonoBehaviour {
     }
 
     public void RotateX(int count) {
-        var targetInverse = Quaternion.Inverse(FinalTarget());
-        var rotation = Quaternion.FromToRotation(targetInverse * localForward, targetInverse * localRight);
+        var rotation = Quaternion.AngleAxis(90, localUp);
 
         Rotate(rotation, count);
     }
 
     public void RotateY(int count) {
-        var targetInverse = Quaternion.Inverse(FinalTarget());
-        var rotation = Quaternion.FromToRotation(targetInverse * localForward, targetInverse * localUp);
+        var rotation = Quaternion.AngleAxis(-90, localRight);
 
         Rotate(rotation, count);
     }
 
     public void RotateZ(int count)
     {
-        var targetInverse = Quaternion.Inverse(FinalTarget());
-        var rotation = Quaternion.FromToRotation(targetInverse * localRight, targetInverse * localUp);
+        var rotation = Quaternion.AngleAxis(-90, localForward);
 
         Rotate(rotation, count);
     }
