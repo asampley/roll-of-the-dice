@@ -24,7 +24,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { return _instance; } }
 
     //Dice
-    public StartPositions startPositions;
+    public StartPositionsData startPositions;
+    public GameRulesData gameRules;
     public GameObject diceParent;
 
     //Dice Prefabs

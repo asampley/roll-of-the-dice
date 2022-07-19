@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "StartPosition", menuName = "Scriptable Objects/StartPosition", order = 1)]
-public class StartPositions : ScriptableObject
+[CreateAssetMenu(fileName = "StartPosition", menuName = "Scriptable Objects/StartPosition", order = 2)]
+public class StartPositionsData : ScriptableObject
 {
     public DiceSpawn[] alliedDice;
 
