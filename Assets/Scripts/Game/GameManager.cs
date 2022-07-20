@@ -24,8 +24,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get { return _instance; } }
 
     //Dice
-    public StartPositionsData startPositions;
-    public GameRulesData gameRules;
+    public MapData mapData;
+    public GameRulesData gameRulesData;
     public GameObject diceParent;
 
     //Dice Prefabs
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
     private int _players;
     public int PlayerCount {
         get { return _players; }
-        set { _players = value; CheckWin(); }
+        set { _players = value; SetMaxMoves(); CheckWin(); }
     }
 
     private bool _playerKingDefeated;
@@ -63,21 +63,32 @@ public class GameManager : MonoBehaviour
 
     public event Action<Win> WinEvent;
 
+    private int _turnsRemaining;
+    public int TurnsRemaining
+    {
+        get { return _turnsRemaining; }
+        set { _turnsRemaining = value; }
+    }
+
+    private int _maxPlayerMoves;
+    public int MaxPlayerMoves
+    {
+        get { return _maxPlayerMoves; }
+        set { _maxPlayerMoves = value; }
+    }
+
     private int _playerMoveRemaining;
     public int PlayerMoveRemaining {
         get { return _playerMoveRemaining; }
         set {
             _playerMoveRemaining = value;
-            if (CurrentTurn == Turn.Player && _playerMoveRemaining <= 0) {
-                CurrentTurn = Turn.Enemy;
-            }
         }
     }
 
     private Turn _turn;
     public Turn CurrentTurn {
         get { return _turn; }
-        set { _turn = value; TurnChange?.Invoke(_turn); }
+        set { _turn = value; if (_turn == Turn.Player) StartPlayerTurn(); TurnChange?.Invoke(_turn); }
     }
     public event Action<Turn> TurnChange;
 
@@ -85,20 +96,18 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         if (_instance != null && _instance != this)
-        {
             Destroy(this.gameObject);
-        }
         else
-        {
             _instance = this;
-        }
 
         TurnChange += t => Debug.Log("Turn: " + t);
     }
 
     private void Start()
     {
+        Debug.Log("Penis: " + CurrentTurn);
         CurrentTurn = Turn.Setup;
+        Debug.Log("Penis: " + CurrentTurn);
         FindPrefabs();
         RollPositions();
         StartGame();
@@ -170,11 +179,11 @@ public class GameManager : MonoBehaviour
     public void RollPositions()
     {
         ClearDictionaries();
-        foreach (DiceSpawn spawn in startPositions.alliedDice)
+        foreach (DiceSpawn spawn in mapData.alliedDice)
         {
             alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
         }
-        foreach (DiceSpawn spawn in startPositions.enemyDice)
+        foreach (DiceSpawn spawn in mapData.enemyDice)
         {
             enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
         }
@@ -208,7 +217,6 @@ public class GameManager : MonoBehaviour
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         }
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
-
 
         StartCoroutine(SleepyStart());
     }
@@ -268,8 +276,30 @@ public class GameManager : MonoBehaviour
         foreach (var e in enemiesWaiting) str += "(" + e + ")";
         Debug.Log("Still waiting for " + str);
 
-        if (CurrentTurn == Turn.Enemy && enemiesWaiting.Count == 0) {
+        if (CurrentTurn == Turn.Enemy && enemiesWaiting.Count == 0)
             CurrentTurn = Turn.Player;
-        }
+    }
+
+    private void StartPlayerTurn()
+    {
+        Debug.Log(_maxPlayerMoves);
+        _playerMoveRemaining = _maxPlayerMoves;
+    }
+
+    public void SetMaxMoves()
+    {
+        if (gameRulesData.canMoveAll)
+            MaxPlayerMoves = PlayerCount;
+        else
+            MaxPlayerMoves = gameRulesData.playerUnitsToMove;
+        Debug.Log("Garfield: " + MaxPlayerMoves);
+    }
+
+    public void PieceOutOfMoves()
+    {
+        _playerMoveRemaining--;
+        if (_playerMoveRemaining <= 0)
+            CurrentTurn = Turn.Enemy;
+        Debug.Log(_playerMoveRemaining);
     }
 }

@@ -331,6 +331,14 @@ PrefabInstance:
       value: GAME
       objectReference: {fileID: 0}
     - target: {fileID: 6007631994916663089, guid: 3c6fbaba7346f494b91afb6ec883c57a, type: 3}
+      propertyPath: mapData
+      value: 
+      objectReference: {fileID: 11400000, guid: 8bc74429df8b0ae418068dd3c1964772, type: 2}
+    - target: {fileID: 6007631994916663089, guid: 3c6fbaba7346f494b91afb6ec883c57a, type: 3}
+      propertyPath: gameRulesData
+      value: 
+      objectReference: {fileID: 11400000, guid: 8fcb3547f400cc14bb10d7414947a2c2, type: 2}
+    - target: {fileID: 6007631994916663089, guid: 3c6fbaba7346f494b91afb6ec883c57a, type: 3}
       propertyPath: startPositions
       value: 
       objectReference: {fileID: 11400000, guid: 8bc74429df8b0ae418068dd3c1964772, type: 2}

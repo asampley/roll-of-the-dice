@@ -2,12 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-[CreateAssetMenu(fileName = "StartPosition", menuName = "Scriptable Objects/StartPosition", order = 2)]
-public class StartPositionsData : ScriptableObject
+public enum GridType
 {
-    public DiceSpawn[] alliedDice;
+    Square,
+    Triangle,
+    Hexagon,
+}
 
+
+[CreateAssetMenu(fileName = "MapData", menuName = "Scriptable Objects/MapData", order = 2)]
+public class MapData : ScriptableObject
+{
+    public GridType gridType;
+
+
+    public DiceSpawn[] alliedDice;
     public DiceSpawn[] enemyDice;
 
     private void OnValidate()

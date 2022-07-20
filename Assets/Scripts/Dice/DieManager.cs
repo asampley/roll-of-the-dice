@@ -53,7 +53,7 @@ public class DieManager : MonoBehaviour
 
 
     void Start() {
-        turnChange = t => this.TurnChange(t);
+        turnChange = t => TurnChange(t);
         GameManager.Instance.TurnChange += turnChange;
 
         GetComponentInChildren<DieTranslator>().ReachTarget += () => EventManager.TriggerEvent("Move");
@@ -63,14 +63,10 @@ public class DieManager : MonoBehaviour
     {
         if (!isEnemy)
         {
-            if (movesAvailable > 0)
-            {
+            if (GameManager.Instance.CurrentTurn == Turn.Player && movesAvailable > 0)
                 _moveIndicator.SetActive(true);
-            }
             else
-            {
                 _moveIndicator.SetActive(false);
-            }
         }
     }
 
@@ -118,9 +114,9 @@ public class DieManager : MonoBehaviour
             movesAvailable--;
 
             EventManager.TriggerEvent("SelectUnit");
-            if (!isEnemy)
+            if (!isEnemy && movesAvailable <= 0)
             {
-                GameManager.Instance.PlayerMoveRemaining--;
+                GameManager.Instance.PieceOutOfMoves();
             }
 
             MoveFinished?.Invoke(tiles[tiles.Count - 1]);
@@ -439,10 +435,6 @@ public class DieManager : MonoBehaviour
 
     public void ResetRange()
     {
-        if (!isEnemy) {
-            GameManager.Instance.PlayerMoveRemaining += _maxRange - movesAvailable;
-        }
-
         movesAvailable = _maxRange;
     }
 
@@ -495,26 +487,24 @@ public class DieManager : MonoBehaviour
     }
 
     void TurnChange(Turn turn) {
-        if (isEnemy && turn == Turn.Enemy) {
+        if (isEnemy && turn == Turn.Enemy)
             ResetRange();
-        } else if (!isEnemy && turn == Turn.Player) {
+        else if (!isEnemy && turn == Turn.Player)
             ResetRange();
-        }
+
         Debug.Log("Turn change " + this + ":"+ movesAvailable + "/" + _maxRange);
     }
 
     void OnDestroy() {
         GhostManager.Instance.RemoveGhosts(gameObject);
 
-        if (turnChange != null) {
+        if (turnChange != null)
             GameManager.Instance.TurnChange -= turnChange;
-        }
 
         if (isEnemy) {
             GameManager.Instance.EnemyCount--;
         } else {
             GameManager.Instance.PlayerCount--;
-            GameManager.Instance.PlayerMoveRemaining -= movesAvailable;
         }
     }
 }
