@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f9f00d45b7c5fa4d900527cca2fd750, type: 3}
   m_Name: Timed
   m_EditorClassIdentifier: 
-  maxTurns: 0
+  maxTurns: 4
   canMoveAll: 0
   playerUnitsToMove: 0
   gameMode: 0

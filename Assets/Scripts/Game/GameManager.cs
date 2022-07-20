@@ -85,10 +85,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private Turn _turn;
-    public Turn CurrentTurn {
-        get { return _turn; }
-        set { _turn = value; if (_turn == Turn.Player) StartPlayerTurn(); TurnChange?.Invoke(_turn); }
+    private int _currentTurnNumber;
+    public int CurrentTurnNumber
+    {
+        get { return _currentTurnNumber; }
+        set { _currentTurnNumber = value; CheckWin(); }
+    }
+
+    private int _maxNumberOfTurns;
+
+    public int MaxNumberOfTurns
+    {
+        get { return _maxNumberOfTurns; }
+        set { _maxNumberOfTurns = value; }
+    }
+
+    private Turn _turnValue;
+    public Turn CurrentTurnValue {
+        get { return _turnValue; }
+        set { _turnValue = value; if (_turnValue == Turn.Player) StartPlayerTurn(); TurnChange?.Invoke(_turnValue); }
     }
     public event Action<Turn> TurnChange;
 
@@ -105,9 +120,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Penis: " + CurrentTurn);
-        CurrentTurn = Turn.Setup;
-        Debug.Log("Penis: " + CurrentTurn);
+        CurrentTurnValue = Turn.Setup;
         FindPrefabs();
         RollPositions();
         StartGame();
@@ -202,7 +215,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        CurrentTurn = Turn.Setup;
+        CurrentTurnValue = Turn.Setup;
         ClearMap();
 
         PlayerKingDefeated = false;
@@ -218,12 +231,15 @@ public class GameManager : MonoBehaviour
         }
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
 
+
+        MaxNumberOfTurns = gameRulesData.maxTurns;
+        CurrentTurnNumber = 1;
         StartCoroutine(SleepyStart());
     }
 
     public IEnumerator SleepyStart() {
         yield return new WaitForFixedUpdate();
-        CurrentTurn = Turn.Player;
+        CurrentTurnValue = Turn.Player;
     }
 
     public void RerollGame()
@@ -251,7 +267,12 @@ public class GameManager : MonoBehaviour
     }
 
     public void CheckWin() {
-        if (CurrentTurn == Turn.Setup) return;
+        if (CurrentTurnValue == Turn.Setup) return;
+
+        if (CurrentTurnNumber >= MaxNumberOfTurns)
+        {
+            WinEvent?.Invoke(Win.Enemy);
+        }
 
         if (PlayerCount == 0 || PlayerKingDefeated) {
             WinEvent?.Invoke(Win.Enemy);
@@ -276,13 +297,13 @@ public class GameManager : MonoBehaviour
         foreach (var e in enemiesWaiting) str += "(" + e + ")";
         Debug.Log("Still waiting for " + str);
 
-        if (CurrentTurn == Turn.Enemy && enemiesWaiting.Count == 0)
-            CurrentTurn = Turn.Player;
+        if (CurrentTurnValue == Turn.Enemy && enemiesWaiting.Count == 0)
+            CurrentTurnValue = Turn.Player;
     }
 
     private void StartPlayerTurn()
     {
-        Debug.Log(_maxPlayerMoves);
+        CurrentTurnNumber++;
         _playerMoveRemaining = _maxPlayerMoves;
     }
 
@@ -292,14 +313,12 @@ public class GameManager : MonoBehaviour
             MaxPlayerMoves = PlayerCount;
         else
             MaxPlayerMoves = gameRulesData.playerUnitsToMove;
-        Debug.Log("Garfield: " + MaxPlayerMoves);
     }
 
     public void PieceOutOfMoves()
     {
         _playerMoveRemaining--;
         if (_playerMoveRemaining <= 0)
-            CurrentTurn = Turn.Enemy;
-        Debug.Log(_playerMoveRemaining);
+            CurrentTurnValue = Turn.Enemy;
     }
 }

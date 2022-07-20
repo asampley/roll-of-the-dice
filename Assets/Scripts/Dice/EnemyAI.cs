@@ -21,7 +21,7 @@ public class EnemyAI : MonoBehaviour {
         moveFinished = t => this.MoveFinished(t);
         dieManager.MoveFinished += moveFinished;
 
-        TurnChange(GameManager.Instance.CurrentTurn);
+        TurnChange(GameManager.Instance.CurrentTurnValue);
     }
 
     private List<OverlayTile> GetTilesBeside(Vector2Int pos) {

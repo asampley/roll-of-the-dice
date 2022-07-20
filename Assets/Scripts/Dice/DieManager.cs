@@ -63,7 +63,7 @@ public class DieManager : MonoBehaviour
     {
         if (!isEnemy)
         {
-            if (GameManager.Instance.CurrentTurn == Turn.Player && movesAvailable > 0)
+            if (GameManager.Instance.CurrentTurnValue == Turn.Player && movesAvailable > 0)
                 _moveIndicator.SetActive(true);
             else
                 _moveIndicator.SetActive(false);
