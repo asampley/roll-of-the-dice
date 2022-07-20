@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f9f00d45b7c5fa4d900527cca2fd750, type: 3}
   m_Name: ToTheDeath
   m_EditorClassIdentifier: 
-  maxTurns: 0
-  canMoveAll: 1
-  playerUnitsToMove: 0
   gameMode: 0
+  turnLimit: 0
+  maxTurns: 1
+  canMoveAll: 1
+  playerUnitsToMove: 1

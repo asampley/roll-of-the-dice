@@ -12,9 +12,21 @@ public enum GameMode
 [CreateAssetMenu(fileName = "GameRules", menuName = "Scriptable Objects/GameRules", order = 1)]
 public class GameRulesData : ScriptableObject
 {
+    public GameMode gameMode;
+
+    [Header("Turns")]
     public bool turnLimit;
     public int maxTurns;
+    [Header("Moves")]
     public bool canMoveAll;
     public int playerUnitsToMove;
-    public GameMode gameMode;
+
+
+    private void OnValidate()
+    {
+        if (playerUnitsToMove < 1)
+            playerUnitsToMove = 1;
+        if (maxTurns < 1)
+            maxTurns = 1;
+    }
 }

@@ -63,13 +63,6 @@ public class GameManager : MonoBehaviour
 
     public event Action<Win> WinEvent;
 
-    private int _turnsRemaining;
-    public int TurnsRemaining
-    {
-        get { return _turnsRemaining; }
-        set { _turnsRemaining = value; }
-    }
-
     private int _maxPlayerMoves;
     public int MaxPlayerMoves
     {
@@ -80,9 +73,27 @@ public class GameManager : MonoBehaviour
     private int _playerMoveRemaining;
     public int PlayerMoveRemaining {
         get { return _playerMoveRemaining; }
-        set {
-            _playerMoveRemaining = value;
-        }
+        set { _playerMoveRemaining = value; }
+    }
+
+    private int _playerpiecesMoved;
+    public int PlayerPiecesMoved
+    {
+        get { return _playerpiecesMoved; }
+        set { _playerpiecesMoved = value; }
+    }
+    private List<DieManager> _movedPieces = new List<DieManager>();
+    public List<DieManager> MovedPieces
+    {
+        get { return _movedPieces; }
+        set { _movedPieces = value; }
+    }
+
+    private int _turnsRemaining;
+    public int TurnsRemaining
+    {
+        get { return _turnsRemaining; }
+        set { _turnsRemaining = value; }
     }
 
     private int _currentTurnNumber;
@@ -270,9 +281,7 @@ public class GameManager : MonoBehaviour
         if (CurrentTurnValue == Turn.Setup) return;
 
         if (CurrentTurnNumber >= MaxNumberOfTurns && gameRulesData.turnLimit)
-        {
             WinEvent?.Invoke(Win.Enemy);
-        }
 
         if (PlayerCount == 0 || PlayerKingDefeated) {
             WinEvent?.Invoke(Win.Enemy);
@@ -304,6 +313,8 @@ public class GameManager : MonoBehaviour
     private void StartPlayerTurn()
     {
         CurrentTurnNumber++;
+        PlayerPiecesMoved = 0;
+        MovedPieces.Clear();
         _playerMoveRemaining = _maxPlayerMoves;
     }
 

@@ -34,15 +34,18 @@ public class MouseController : MonoBehaviour
 
                 if (!overlayTileManager.IsBlocked && Globals.SELECTED_UNIT != null)
                 {
-                    if (Globals.SELECTED_UNIT.movesInStraightLine)
+                    if (GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(Globals.SELECTED_UNIT))
                     {
-                        List<OverlayTile> tiles = Globals.SELECTED_UNIT.GetComponent<DieManager>().FollowPath(overlayTileManager);
-                        Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(tiles);
-                    }
-                    else
-                    {
-                        Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(overlayTileManager);
-                    }
+                        if (Globals.SELECTED_UNIT.movesInStraightLine)
+                        {
+                            List<OverlayTile> tiles = Globals.SELECTED_UNIT.GetComponent<DieManager>().FollowPath(overlayTileManager);
+                            Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(tiles);
+                        }
+                        else
+                        {
+                            Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(overlayTileManager);
+                        }
+                    }                    
                 }
             }
         }

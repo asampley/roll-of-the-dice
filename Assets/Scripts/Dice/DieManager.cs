@@ -63,10 +63,17 @@ public class DieManager : MonoBehaviour
     {
         if (!isEnemy)
         {
-            if (GameManager.Instance.CurrentTurnValue == Turn.Player && movesAvailable > 0)
-                _moveIndicator.SetActive(true);
+            if (GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(this))
+            {
+                if (GameManager.Instance.CurrentTurnValue == Turn.Player && movesAvailable > 0)
+                    _moveIndicator.SetActive(true);
+                else
+                    _moveIndicator.SetActive(false);
+            }
             else
+            {
                 _moveIndicator.SetActive(false);
+            }
         }
     }
 
@@ -114,9 +121,16 @@ public class DieManager : MonoBehaviour
             movesAvailable--;
 
             EventManager.TriggerEvent("SelectUnit");
-            if (!isEnemy && movesAvailable <= 0)
+            if (!isEnemy)
             {
-                GameManager.Instance.PieceOutOfMoves();
+                if (!GameManager.Instance.MovedPieces.Contains(this))
+                {
+                    GameManager.Instance.MovedPieces.Add(this);
+                    GameManager.Instance.PlayerPiecesMoved += 1;
+                }                
+                
+                if (movesAvailable <= 0)
+                    GameManager.Instance.PieceOutOfMoves();
             }
 
             MoveFinished?.Invoke(tiles[tiles.Count - 1]);
@@ -155,9 +169,8 @@ public class DieManager : MonoBehaviour
 
     public void Deselect()
     {
-        if (!isEnemy) {
+        if (!isEnemy)
             GhostManager.Instance.SetEnemyGhostsVisible(true);
-        }
 
         HideTilesInRange();
     }
