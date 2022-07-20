@@ -64,13 +64,13 @@ public class DieRotator : MonoBehaviour {
     }
 
     public void RotateX(int count) {
-        var rotation = Quaternion.AngleAxis(90, localUp);
+        var rotation = Quaternion.AngleAxis(90, localRight);
 
         Rotate(rotation, count);
     }
 
     public void RotateY(int count) {
-        var rotation = Quaternion.AngleAxis(-90, localRight);
+        var rotation = Quaternion.AngleAxis(90, localUp);
 
         Rotate(rotation, count);
     }
