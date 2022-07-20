@@ -115,7 +115,7 @@ public class UIManager : MonoBehaviour
         }
         gameInfo.SetActive(true);
         diceName.text = Globals.SELECTED_UNIT.diceName;
-        movesAvailable.text = "Moves Available: " + Globals.SELECTED_UNIT.movesAvailable.ToString();
+        movesAvailable.text = "Moves Available: " + Globals.SELECTED_UNIT.MovesAvailable.ToString();
         GameObject inspectDie = Globals.SELECTED_UNIT.transform.Find("Mesh").gameObject;
         inspectorObject = Instantiate(inspectDie);
         inspectorObject.transform.parent = inspector;
@@ -126,7 +126,6 @@ public class UIManager : MonoBehaviour
         inspectorObject.GetComponent<DieRotator>().enabled = false;
         inspectorObject.GetComponent<ObjectRotator>().enabled = true;
         inspectorObject.GetComponent<SortingGroup>().enabled = true;
-        Debug.Log(inspectorObject.GetComponent<SortingGroup>().enabled);
     }
 
     public void NextLevel() {

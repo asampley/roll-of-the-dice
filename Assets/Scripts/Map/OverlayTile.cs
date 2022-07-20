@@ -22,7 +22,7 @@ public class OverlayTile : MonoBehaviour
     }
 
     public bool IsBlocked {
-        get { return data.blocking || occupyingDie != null; }
+        get { return data.TileType == TileType.Blocking || occupyingDie != null; }
     }
 
     private void Awake()

@@ -20,7 +20,12 @@ public class DieManager : MonoBehaviour
     public string diceName;
     [SerializeField]
     private int _maxRange;
-    public int movesAvailable;
+    private int _movesAvailable;
+    public int MovesAvailable
+    {
+        get { return _movesAvailable; }
+    }
+
     public bool movesInStraightLine;
     public bool isEnemy;
     public DiceState state;
@@ -65,7 +70,7 @@ public class DieManager : MonoBehaviour
         {
             if (GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(this))
             {
-                if (GameManager.Instance.CurrentTurnValue == Turn.Player && movesAvailable > 0)
+                if (GameManager.Instance.CurrentTurnValue == Turn.Player && _movesAvailable > 0)
                     _moveIndicator.SetActive(true);
                 else
                     _moveIndicator.SetActive(false);
@@ -108,7 +113,7 @@ public class DieManager : MonoBehaviour
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
         if (tiles.Count > 0) {
-            foreach (var tile in tiles.TakeWhile(t => !t.IsBlocked)) {
+            foreach (var tile in tiles.TakeWhile(t => (!t.IsBlocked && _movesAvailable > 0))) {
                 GetTilesInRange();
                 if (!_tilesInRange.Contains(tile)) {
                     yield break;
@@ -117,10 +122,9 @@ public class DieManager : MonoBehaviour
                 state = _dieRotator.UpFace();
                 yield return StartCoroutine(UpdateTilePos(tile));
             }
+            _movesAvailable--;
 
-            movesAvailable--;
-
-            EventManager.TriggerEvent("SelectUnit");
+            EventManager.TriggerEvent("SelectUnit"+diceName);
             if (!isEnemy)
             {
                 if (!GameManager.Instance.MovedPieces.Contains(this))
@@ -129,14 +133,13 @@ public class DieManager : MonoBehaviour
                     GameManager.Instance.PlayerPiecesMoved += 1;
                 }                
                 
-                if (movesAvailable <= 0)
+                if (_movesAvailable <= 0)
                     GameManager.Instance.PieceOutOfMoves();
             }
 
             MoveFinished?.Invoke(tiles[tiles.Count - 1]);
-
             // hack to fix bug
-            if (movesAvailable == 0) {
+            if (_movesAvailable <= 0) {
                 HideTilesInRange();
             }
         } else {
@@ -429,7 +432,7 @@ public class DieManager : MonoBehaviour
     private void GetTilesInRange()
     {
         _tilesInRange.Clear();
-        if (movesAvailable <= 0) return;
+        if (_movesAvailable <= 0) return;
 
         if (movesInStraightLine)
             _tilesInRange = GetTilesStraightLine();
@@ -448,7 +451,7 @@ public class DieManager : MonoBehaviour
 
     public void ResetRange()
     {
-        movesAvailable = _maxRange;
+        _movesAvailable = _maxRange;
     }
 
     public int MaxRange() {
@@ -497,15 +500,33 @@ public class DieManager : MonoBehaviour
 
         GetTilesInRange();
         Fight();
+        GetTileEffects();
     }
 
-    void TurnChange(Turn turn) {
+    private void GetTileEffects()
+    {
+        TileType tileType = parentTile.data.TileType;
+
+        switch (tileType)
+        {
+            case TileType.Normal:
+                break;
+            case TileType.Stopping:
+                _movesAvailable = 0;
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    private void TurnChange(Turn turn) {
         if (isEnemy && turn == Turn.Enemy)
             ResetRange();
         else if (!isEnemy && turn == Turn.Player)
             ResetRange();
 
-        Debug.Log("Turn change " + this + ":"+ movesAvailable + "/" + _maxRange);
+        Debug.Log("Turn change " + this + ":"+ _movesAvailable + "/" + _maxRange);
     }
 
     void OnDestroy() {
@@ -514,10 +535,14 @@ public class DieManager : MonoBehaviour
         if (turnChange != null)
             GameManager.Instance.TurnChange -= turnChange;
 
-        if (isEnemy) {
+        if (isEnemy)
+        {
             GameManager.Instance.EnemyCount--;
-        } else {
+        }            
+        else
+        {
+            GameManager.Instance.PieceOutOfMoves();
             GameManager.Instance.PlayerCount--;
-        }
+        }            
     }
 }
