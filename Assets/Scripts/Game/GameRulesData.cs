@@ -12,6 +12,7 @@ public enum GameMode
 [CreateAssetMenu(fileName = "GameRules", menuName = "Scriptable Objects/GameRules", order = 1)]
 public class GameRulesData : ScriptableObject
 {
+    public bool turnLimit;
     public int maxTurns;
     public bool canMoveAll;
     public int playerUnitsToMove;

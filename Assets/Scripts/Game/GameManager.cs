@@ -269,7 +269,7 @@ public class GameManager : MonoBehaviour
     public void CheckWin() {
         if (CurrentTurnValue == Turn.Setup) return;
 
-        if (CurrentTurnNumber >= MaxNumberOfTurns)
+        if (CurrentTurnNumber >= MaxNumberOfTurns && gameRulesData.turnLimit)
         {
             WinEvent?.Invoke(Win.Enemy);
         }
