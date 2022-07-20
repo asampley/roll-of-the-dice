@@ -21,7 +21,6 @@ public class ObjectRotator : MonoBehaviour
         
         if (_isRotating)
         {
-            Debug.Log("Spam");
             // offset
             _mouseOffset = (Input.mousePosition - _mouseReference);
             // apply rotation

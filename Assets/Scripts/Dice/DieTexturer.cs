@@ -28,7 +28,17 @@ public class DieTexturer : MonoBehaviour {
     public DiceState topIndex;
     public DiceState bottomIndex;
 
-    void Start() {
+    void Start()
+    {
+        UpdateMesh();
+    }
+
+    static TextureCoords GetCoords(DiceState index) {
+        return new TextureCoords((float)index / WIDTH, (float)(index + 1) / WIDTH, 0, 1);
+    }
+
+    public void UpdateMesh()
+    {
         var mesh = this.GetComponent<MeshFilter>().mesh;
 
         var meshUvs = mesh.uv;
@@ -42,42 +52,58 @@ public class DieTexturer : MonoBehaviour {
         var top = GetCoords(topIndex);
         var bottom = GetCoords(bottomIndex);
 
-        for (int triangle = 0; triangle < mesh.triangles.Length / 3; ++triangle) {
+        for (int triangle = 0; triangle < mesh.triangles.Length / 3; ++triangle)
+        {
             var t = new int[] {
                 mesh.triangles[0 + triangle * 3],
                 mesh.triangles[1 + triangle * 3],
                 mesh.triangles[2 + triangle * 3],
             };
 
-            for (int j = 0; j < 3; ++j) {
+            for (int j = 0; j < 3; ++j)
+            {
                 float x, y;
                 {
                     TextureCoords coords;
                     var n = mesh.normals[t[j]];
                     var v = mesh.vertices[t[j]];
 
-                    if (Mathf.Abs(n.x) > 0.5) {
-                        if (v.x > 0) {
+                    if (Mathf.Abs(n.x) > 0.5)
+                    {
+                        if (v.x > 0)
+                        {
                             coords = right;
-                        } else {
+                        }
+                        else
+                        {
                             coords = left;
                         }
 
                         x = v.z > 0 ? coords.xStop : coords.xStart;
                         y = v.y > 0 ? coords.yStop : coords.yStart;
-                    } else if (Mathf.Abs(n.y) > 0.5) {
-                        if (v.y > 0) {
+                    }
+                    else if (Mathf.Abs(n.y) > 0.5)
+                    {
+                        if (v.y > 0)
+                        {
                             coords = top;
-                        } else {
+                        }
+                        else
+                        {
                             coords = bottom;
                         }
 
                         x = v.x > 0 ? coords.xStop : coords.xStart;
                         y = v.z > 0 ? coords.yStop : coords.yStart;
-                    } else {
-                        if (v.z > 0) {
+                    }
+                    else
+                    {
+                        if (v.z > 0)
+                        {
                             coords = front;
-                        } else {
+                        }
+                        else
+                        {
                             coords = back;
                         }
 
@@ -91,9 +117,5 @@ public class DieTexturer : MonoBehaviour {
         }
 
         mesh.SetUVs(0, uvs);
-    }
-
-    static TextureCoords GetCoords(DiceState index) {
-        return new TextureCoords((float)index / WIDTH, (float)(index + 1) / WIDTH, 0, 1);
     }
 }

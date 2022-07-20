@@ -108,7 +108,7 @@ public class DieManager : MonoBehaviour
         _dieRotator.RotateY(orientation.yRolls);
         _dieRotator.RotateZ(orientation.zRolls);
         _dieRotator.RotateNow();
-        state = _dieRotator.UpFace();
+        state = _dieRotator.GetUpFace();
     }
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
@@ -119,12 +119,12 @@ public class DieManager : MonoBehaviour
                     yield break;
                 }
                 CalculateDirection(tile);
-                state = _dieRotator.UpFace();
+                state = _dieRotator.GetUpFace();
                 yield return StartCoroutine(UpdateTilePos(tile));
             }
             _movesAvailable--;
 
-            EventManager.TriggerEvent("SelectUnit"+diceName);
+            EventManager.TriggerEvent("SelectUnit");
             if (!isEnemy)
             {
                 if (!GameManager.Instance.MovedPieces.Contains(this))
@@ -480,7 +480,7 @@ public class DieManager : MonoBehaviour
             GetComponentInChildren<DieRotator>().RotateY(-1);
         }
 
-        Debug.Log(GetComponentInChildren<DieRotator>().UpFace());
+        Debug.Log(GetComponentInChildren<DieRotator>().GetUpFace());
     }
 
     private void MoveToPos(Vector2Int startPos, Vector2Int endPos)
@@ -499,8 +499,8 @@ public class DieManager : MonoBehaviour
         newTile.MoveDiceToTile(this);
 
         GetTilesInRange();
-        Fight();
         GetTileEffects();
+        Fight();
     }
 
     private void GetTileEffects()
@@ -513,6 +513,9 @@ public class DieManager : MonoBehaviour
                 break;
             case TileType.Stopping:
                 _movesAvailable = 0;
+                break;
+            case TileType.RemoveFace:
+                _dieRotator.SetDownFace(DiceState.Blank);
                 break;
             default:
                 break;

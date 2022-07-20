@@ -103,7 +103,7 @@ public class DieRotator : MonoBehaviour {
         }
     }
 
-    public DiceState UpFace() {
+    public DiceState GetUpFace() {
         var topFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(originalOffset * FinalTarget()) * localUp);
 
         var texturer = GetComponent<DieTexturer>();
@@ -120,5 +120,44 @@ public class DieRotator : MonoBehaviour {
         } else {
             return texturer.backIndex;
         }
+    }
+
+    public DiceState GetDownFace()
+    {
+        var bottomFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(originalOffset * FinalTarget()) * -localUp);
+
+        var texturer = GetComponent<DieTexturer>();
+        if (bottomFaceDir.x == 1)
+            return texturer.rightIndex;
+        else if (bottomFaceDir.x == -1)
+            return texturer.leftIndex;
+        else if (bottomFaceDir.y == 1)
+            return texturer.topIndex;
+        else if (bottomFaceDir.y == -1)
+            return texturer.bottomIndex;
+        else if (bottomFaceDir.z == 1)
+            return texturer.frontIndex;
+        else
+            return texturer.backIndex;
+    }
+
+    public void SetDownFace(DiceState newDiceState)
+    {
+        var bottomFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(originalOffset * FinalTarget()) * -localUp);
+
+        var texturer = GetComponent<DieTexturer>();
+        if (bottomFaceDir.x == 1)
+            texturer.rightIndex = newDiceState;
+        else if (bottomFaceDir.x == -1)
+            texturer.leftIndex = newDiceState;
+        else if (bottomFaceDir.y == 1)
+            texturer.topIndex = newDiceState;
+        else if (bottomFaceDir.y == -1)
+            texturer.bottomIndex = newDiceState;
+        else if (bottomFaceDir.z == 1)
+            texturer.frontIndex = newDiceState;
+        else
+            texturer.backIndex = newDiceState;
+        texturer.UpdateMesh();
     }
 }
