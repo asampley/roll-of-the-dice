@@ -102,8 +102,8 @@ public class DieManager : MonoBehaviour
 
         ResetRange();
         _dieRotator = GetComponentInChildren<DieRotator>();
-        _dieRotator.RotateX(orientation.xRolls);
-        _dieRotator.RotateY(orientation.yRolls);
+        _dieRotator.RotateTileDelta(Vector2Int.right, orientation.xRolls);
+        _dieRotator.RotateTileDelta(Vector2Int.up, orientation.yRolls);
         _dieRotator.RotateZ(orientation.zRolls);
         _dieRotator.RotateNow();
         state = _dieRotator.GetUpFace();
@@ -126,7 +126,7 @@ public class DieManager : MonoBehaviour
             if (!isEnemy)
             {
                 if (!GameManager.Instance.MovedPieces.Contains(this))
-                {
+                    {
                     GameManager.Instance.MovedPieces.Add(this);
                     GameManager.Instance.PlayerPiecesMoved += 1;
                 }
@@ -412,7 +412,7 @@ public class DieManager : MonoBehaviour
             Vector3 translation
                 = MapManager.Instance.TileToWorldSpace(tile.gridLocation)
                 - MapManager.Instance.TileToWorldSpace(parentTile.gridLocation);
-            var ghost = GhostManager.Instance.CreateGhost(gameObject, translation, rot.x, rot.y);
+            var ghost = GhostManager.Instance.CreateGhost(gameObject, translation, (Vector2Int)rot);
             ghost.GetComponentInChildren<DieRotator>().Collapse = true;
             ghost.GetComponentInChildren<DieTranslator>().Collapse = true;
         }
@@ -461,22 +461,7 @@ public class DieManager : MonoBehaviour
         MoveToPos((Vector2Int)parentTile.gridLocation, (Vector2Int)newTile.gridLocation);
         Vector3Int dir = parentTile.gridLocation - newTile.gridLocation;
 
-        if (dir == new Vector3Int(1, 0))
-        {
-            GetComponentInChildren<DieRotator>().RotateX(1);
-        }
-        else if (dir == new Vector3Int(-1, 0))
-        {
-            GetComponentInChildren<DieRotator>().RotateX(-1);
-        }
-        else if (dir == new Vector3Int(0, 1))
-        {
-            GetComponentInChildren<DieRotator>().RotateY(1);
-        }
-        else if (dir == new Vector3Int(0, -1))
-        {
-            GetComponentInChildren<DieRotator>().RotateY(-1);
-        }
+        GetComponentInChildren<DieRotator>().RotateTileDelta((Vector2Int)dir);
 
         Debug.Log(GetComponentInChildren<DieRotator>().GetUpFace());
     }

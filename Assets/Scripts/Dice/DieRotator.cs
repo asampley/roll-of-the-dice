@@ -63,12 +63,12 @@ public class DieRotator : MonoBehaviour {
         Rotate(Quaternion.AngleAxis(angle, offsetRotation * axis), count);
     }
 
-    public void RotateX(int count) {
-        RotateAngleAxis(axes.FaceRotationAngle, axes.XAxis, count);
-    }
+    // Computes an axis based on the tile delta.
+    // This should only be called for single space moves.
+    public void RotateTileDelta(Vector2Int delta, int count = 1) {
+        var axis = delta.x * axes.XAxis + delta.y * axes.YAxis;
 
-    public void RotateY(int count) {
-        RotateAngleAxis(axes.FaceRotationAngle, axes.YAxis, count);
+        RotateAngleAxis(axes.FaceRotationAngle, axis, count);
     }
 
     public void RotateZ(int count) {

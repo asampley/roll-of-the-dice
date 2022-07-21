@@ -36,7 +36,7 @@ public class EnemyAI : MonoBehaviour {
 
         int currentRange = dieManager.MaxRange();
 
-        List<Vector2Int> rots = new List<Vector2Int>();
+        List<Vector2Int> deltas = new List<Vector2Int>();
         List<Vector3> trans = new List<Vector3>();
 
         while (currentRange > 0) {
@@ -53,13 +53,13 @@ public class EnemyAI : MonoBehaviour {
             path.Add(next);
             EnemyPathManager.Instance.taken.Add(next);
 
-            rots.Add(pos - next);
+            deltas.Add(pos - next);
             trans.Add(
                 MapManager.Instance.TileToWorldSpace(new Vector2Int(0, 0))
                 - MapManager.Instance.TileToWorldSpace(pos - next)
             );
 
-            var ghost = GhostManager.Instance.CreateGhost(gameObject, null, 0, 0);
+            var ghost = GhostManager.Instance.CreateGhost(gameObject, null, null);
 
             var translator = ghost.GetComponentInChildren<DieTranslator>();
             foreach (var t in trans) {
@@ -67,9 +67,8 @@ public class EnemyAI : MonoBehaviour {
             }
 
             var rotator = ghost.GetComponentInChildren<DieRotator>();
-            foreach (var rot in rots) {
-                rotator.RotateX(rot.x);
-                rotator.RotateY(rot.y);
+            foreach (var delta in deltas) {
+                rotator.RotateTileDelta(delta);
             }
 
             currentRange--;

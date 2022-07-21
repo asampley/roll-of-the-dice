@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 789ae4c9f631634418d9bfc3fdfa40b7, type: 3}
   m_Name: TetraAxes
   m_EditorClassIdentifier: 
-  XAxis: {x: 0.9176629, y: 0, z: 0.3973597}
-  YAxis: {x: -0.5, y: 0, z: 0.8660254}
+  XAxis: {x: 0.5, y: 0, z: 0.8660254}
+  YAxis: {x: 1, y: 0, z: 0}
   ZAxis: {x: 0, y: 1, z: 0}
   FaceRotationAngle: 109.47122
   FaceEdges: 3
