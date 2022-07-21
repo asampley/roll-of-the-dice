@@ -127,6 +127,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4883373c2865b97459d136574d506424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _offsetRotation: {x: 60, y: 0, z: 135}
+  axes: {fileID: 11400000, guid: 6fba02b3d65afaf46b4b0f004dd3b327, type: 2}
 --- !u!114 &4380942884015746227
 MonoBehaviour:
   m_ObjectHideFlags: 0

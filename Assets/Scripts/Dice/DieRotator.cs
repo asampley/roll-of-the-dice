@@ -8,10 +8,11 @@ public class DieRotator : MonoBehaviour {
     private float startTime;
     private List<Quaternion> targets = new List<Quaternion>();
 
-    private static Quaternion originalOffset;
-    private static Vector3 localUp;
-    private static Vector3 localForward;
-    private static Vector3 localRight;
+    [SerializeField]
+    private Vector3 _offsetRotation;
+    private Quaternion offsetRotation;
+
+    public Axes axes;
 
     private bool _collapse;
     public bool Collapse {
@@ -20,29 +21,8 @@ public class DieRotator : MonoBehaviour {
     }
 
     void Awake() {
+        this.offsetRotation = Quaternion.Euler(_offsetRotation);
         this.startRot = this.transform.localRotation;
-
-        if (localUp == Vector3.zero) {
-            originalOffset = this.startRot;
-            localUp = this.startRot * Vector3.up;
-            localForward = this.startRot * Vector3.forward;
-            localRight = this.startRot * Vector3.right;
-        }
-    }
-
-    void Rotate(Quaternion rotation, int count) {
-        if (count < 0) {
-            rotation = Quaternion.Inverse(rotation);
-        }
-
-        if (targets.Count == 0) {
-            this.startTime = Time.fixedTime;
-            this.startRot = this.transform.localRotation;
-        }
-
-        for (int i = 0; i < Math.Abs(count); ++i) {
-            AddTarget(rotation * FinalTarget());
-        }
     }
 
     Quaternion FinalTarget() {
@@ -63,23 +43,36 @@ public class DieRotator : MonoBehaviour {
         }
     }
 
-    public void RotateX(int count) {
-        var rotation = Quaternion.AngleAxis(90, localRight);
+    void Rotate(Quaternion rotation, int count) {
+        if (count < 0) {
+            rotation = Quaternion.Inverse(rotation);
+        }
 
-        Rotate(rotation, count);
+        if (targets.Count == 0) {
+            this.startTime = Time.fixedTime;
+            this.startRot = this.transform.localRotation;
+        }
+
+        for (int i = 0; i < Math.Abs(count); ++i) {
+            AddTarget(rotation * FinalTarget());
+        }
+    }
+
+    // rotate around an axis that is relative to the mesh original orientation
+    void RotateAngleAxis(float angle, Vector3 axis, int count) {
+        Rotate(Quaternion.AngleAxis(angle, offsetRotation * axis), count);
+    }
+
+    public void RotateX(int count) {
+        RotateAngleAxis(axes.FaceRotationAngle, axes.XAxis, count);
     }
 
     public void RotateY(int count) {
-        var rotation = Quaternion.AngleAxis(90, localUp);
-
-        Rotate(rotation, count);
+        RotateAngleAxis(axes.FaceRotationAngle, axes.YAxis, count);
     }
 
-    public void RotateZ(int count)
-    {
-        var rotation = Quaternion.AngleAxis(-90, localForward);
-
-        Rotate(rotation, count);
+    public void RotateZ(int count) {
+        RotateAngleAxis(360f / axes.FaceEdges, axes.ZAxis, count);
     }
 
     public void RotateNow() {
@@ -104,21 +97,21 @@ public class DieRotator : MonoBehaviour {
     }
 
     public DiceState GetUpFace() {
-        var topFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(originalOffset * FinalTarget()) * localUp);
+        var topFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(FinalTarget()) * Vector3.up);
 
         return GetComponent<DieTexturer>().ClosestFace(topFaceDir).state;
     }
 
     public DiceState GetDownFace()
     {
-        var bottomFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(originalOffset * FinalTarget()) * -localUp);
+        var bottomFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(FinalTarget()) * -Vector3.up);
 
         return GetComponent<DieTexturer>().ClosestFace(bottomFaceDir).state;
     }
 
     public void SetDownFace(DiceState newDiceState)
     {
-        var bottomFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(originalOffset * FinalTarget()) * -localUp);
+        var bottomFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(FinalTarget()) * -Vector3.up);
 
         var texturer = GetComponent<DieTexturer>();
         var face = texturer.ClosestFace(bottomFaceDir);

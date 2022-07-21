@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 789ae4c9f631634418d9bfc3fdfa40b7, type: 3}
+  m_Name: TetraAxes
+  m_EditorClassIdentifier: 
+  XAxis: {x: 0.9176629, y: 0, z: 0.3973597}
+  YAxis: {x: -0.5, y: 0, z: 0.8660254}
+  ZAxis: {x: 0, y: 1, z: 0}
+  FaceRotationAngle: 109.47122
+  FaceEdges: 3

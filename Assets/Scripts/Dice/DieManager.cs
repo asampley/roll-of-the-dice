@@ -130,8 +130,8 @@ public class DieManager : MonoBehaviour
                 {
                     GameManager.Instance.MovedPieces.Add(this);
                     GameManager.Instance.PlayerPiecesMoved += 1;
-                }                
-                
+                }
+
                 if (_movesAvailable <= 0)
                     GameManager.Instance.PieceOutOfMoves();
             }
@@ -555,9 +555,9 @@ public class DieManager : MonoBehaviour
                 Fight();
                 break;
             case TileType.Randomize:
-                _dieRotator.RotateX(UnityEngine.Random.Range(0, 4));
-                _dieRotator.RotateY(UnityEngine.Random.Range(0, 4));
-                _dieRotator.RotateZ(UnityEngine.Random.Range(0, 4));
+                _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
+                _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
+                _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
                 GetTilesInRange();
                 Fight();
@@ -594,11 +594,11 @@ public class DieManager : MonoBehaviour
         if (isEnemy)
         {
             GameManager.Instance.EnemyCount--;
-        }            
+        }
         else
         {
             GameManager.Instance.PieceOutOfMoves();
             GameManager.Instance.PlayerCount--;
-        }            
+        }
     }
 }
