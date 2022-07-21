@@ -110,6 +110,7 @@ public class DieManager : MonoBehaviour
     }
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
+        Debug.Log("Garfield");
         if (tiles.Count > 0) {
             foreach (var tile in tiles.TakeWhile(t => (!t.IsBlocked && _movesAvailable > 0))) {
                 GetTilesInRange();
@@ -476,54 +477,79 @@ public class DieManager : MonoBehaviour
     private IEnumerator UpdateTilePos(OverlayTile newTile)
     {
         HideTilesInRange();
-        yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
-
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
 
-        GetTilesInRange();
-        GetTileEffects();
-        Fight();
+        yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
+        StartCoroutine(GetTileEffects());
     }
 
-    private void GetTileEffects()
+    private IEnumerator GetTileEffects()
     {
         TileType tileType = parentTile.data.TileType;
-
+        HideTilesInRange();
         switch (tileType)
         {
             case TileType.Normal:
+                GetTilesInRange();
+                Fight();
                 break;
             case TileType.Stopping:
                 _movesAvailable = 0;
+                GetTilesInRange();
+                Fight();
                 break;
             case TileType.RotateClockwise:
                 _dieRotator.RotateZ(1);
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
+                GetTilesInRange();
+                Fight();
                 break;
             case TileType.RotateCounterClockwise:
                 _dieRotator.RotateZ(-1);
+                GetTilesInRange();
+                Fight();
                 break;
             case TileType.ShovePosX:
                 Shove(new Vector2Int(1, 0));
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
+                GetTilesInRange();
+                Fight();
                 break;
             case TileType.ShovePosY:
                 Shove(new Vector2Int(0, 1));
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
+                GetTilesInRange();
+                Fight();
                 break;
             case TileType.ShoveNegX:
                 Shove(new Vector2Int(-1, 0));
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
+                GetTilesInRange();
+                Fight();
                 break;
             case TileType.ShoveNegY:
                 Shove(new Vector2Int(0, -1));
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
+                GetTilesInRange();
+                Fight();
                 break;
             case TileType.RemoveFace:
                 _dieRotator.SetDownFace(DiceState.Blank);
+                GetTilesInRange();
+                Fight();
                 break;
             case TileType.Randomize:
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
+                GetTilesInRange();
+                Fight();
                 break;
             default:
+                GetTilesInRange();
+                Fight();
                 break;
         }
     }

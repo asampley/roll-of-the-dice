@@ -15,7 +15,7 @@ MonoBehaviour:
   gridType: 0
   alliedDice:
   - diceClass: 0
-    tilePosition: {x: 0, y: -2}
+    tilePosition: {x: 0, y: 0}
     isEnemy: 0
   - diceClass: 0
     tilePosition: {x: 3, y: 2}
@@ -28,5 +28,5 @@ MonoBehaviour:
     tilePosition: {x: 4, y: 0}
     isEnemy: 1
   - diceClass: 5
-    tilePosition: {x: 2, y: -1}
+    tilePosition: {x: 0, y: -2}
     isEnemy: 1

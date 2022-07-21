@@ -18,7 +18,7 @@ public class EnemyAI : MonoBehaviour {
 
         turnChange = t => this.TurnChange(t);
         GameManager.Instance.TurnChange += turnChange;
-        moveFinished = t => this.MoveFinished(t);
+        moveFinished = t => this.MoveFinished();
         dieManager.MoveFinished += moveFinished;
 
         TurnChange(GameManager.Instance.CurrentTurnValue);
@@ -104,7 +104,7 @@ public class EnemyAI : MonoBehaviour {
         }
     }
 
-    private void MoveFinished(OverlayTile tile) {
+    private void MoveFinished() {
         GameManager.Instance.RemoveEnemyWaiting(this);
     }
 

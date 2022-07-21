@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
-public struct Face {
+public class Face {
     public DiceState state;
     public Vector3 position;
 }
@@ -75,7 +75,7 @@ public class DieTexturer : MonoBehaviour {
     }
 
     public Face ClosestFace(Vector3 position) {
-        Face? face = null;
+        Face face = null;
         float dist = float.PositiveInfinity;
 
         foreach (var f in this.faces) {
@@ -91,7 +91,7 @@ public class DieTexturer : MonoBehaviour {
             Debug.LogError("No face found for texturing, make sure faces is not empty");
             throw new System.IndexOutOfRangeException();
         } else {
-            return face.Value;
+            return face;
         }
     }
 
