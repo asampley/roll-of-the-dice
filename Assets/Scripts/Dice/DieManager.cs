@@ -479,7 +479,9 @@ public class DieManager : MonoBehaviour
         HideTilesInRange();
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
+
         yield return StartCoroutine(GetTileEffects());        
+
     }
 
     private IEnumerator GetTileEffects()

@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
 
+    private static uint DieSpawnID = 0;
+
     //Dice
     public MapData mapData;
     public GameRulesData gameRulesData;
@@ -145,7 +147,7 @@ public class GameManager : MonoBehaviour
         Vector3 pos = MapManager.Instance.TileToWorldSpace(startPos);
         GameObject die = Instantiate(prefab, pos, Quaternion.identity);
         die.transform.SetParent(diceParent.transform);
-        die.name = prefab.name + (isEnemy ? " Enemy" : " Player");
+        die.name = prefab.name + (isEnemy ? " Enemy " : " Player ") + (DieSpawnID++);
         DieManager dieManager = die.GetComponent<DieManager>();
         var placedOnTile = MapManager.Instance.GetTileAtPos(startPos);
 
@@ -255,8 +257,7 @@ public class GameManager : MonoBehaviour
     public void AddEnemyWaiting(EnemyAI enemy) {
         enemiesWaiting.Add(enemy);
 
-        string str = "";
-        foreach (var e in enemiesWaiting) str += "(" + e + ")";
+        string str = Utilities.EnumerableString(enemiesWaiting.Select(e => e.name));
         Debug.Log("Still waiting for " + str);
     }
 
@@ -264,8 +265,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Removing enemy");
         enemiesWaiting.Remove(enemy);
 
-        string str = "";
-        foreach (var e in enemiesWaiting) str += "(" + e + ")";
+        string str = Utilities.EnumerableString(enemiesWaiting.Select(e => e.name));
         Debug.Log("Still waiting for " + str);
 
         if (CurrentTurnValue == Turn.Enemy && enemiesWaiting.Count == 0)
