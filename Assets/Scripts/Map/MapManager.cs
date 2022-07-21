@@ -13,9 +13,6 @@ public class MapManager : MonoBehaviour
     public Tilemap tileMap;
 
     public Dictionary<Vector2Int, OverlayTile> map;
-
-    [SerializeField]
-    private List<TileData> tileData;
     private Dictionary<TileBase, TileData> tileDataDict = new Dictionary<TileBase, TileData>();
 
     private void Awake()
@@ -29,11 +26,9 @@ public class MapManager : MonoBehaviour
             _instance = this;
         }
 
-        foreach (var data in tileData) {
-            foreach (var tile in data.tiles) {
+        foreach (var data in Resources.LoadAll<TileData>("ScriptableObjects/TileData/"))
+            foreach (var tile in data.tiles)
                 tileDataDict.Add(tile, data);
-            }
-        }
     }
 
     private void Start()

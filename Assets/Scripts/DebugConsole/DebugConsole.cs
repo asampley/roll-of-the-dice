@@ -35,7 +35,11 @@ public class DebugConsole : MonoBehaviour
         new DebugCommand("debug_map", "Toggles grid location text on/off.", "debug_map", () =>
         {
             EventManager.TriggerEvent("DebugMap");
-        });        
+        });
+        new DebugCommand("kill", "Kills the selected unit.", "kill", () =>
+        {
+            Globals.SELECTED_UNIT.Kill();
+        });
     }
 
     private void Update()

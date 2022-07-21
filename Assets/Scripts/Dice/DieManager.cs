@@ -517,6 +517,11 @@ public class DieManager : MonoBehaviour
             case TileType.RemoveFace:
                 _dieRotator.SetDownFace(DiceState.Blank);
                 break;
+            case TileType.Randomize:
+                _dieRotator.RotateX(UnityEngine.Random.Range(0, 4));
+                _dieRotator.RotateY(UnityEngine.Random.Range(0, 4));
+                _dieRotator.RotateZ(UnityEngine.Random.Range(0, 4));
+                break;
             default:
                 break;
 
