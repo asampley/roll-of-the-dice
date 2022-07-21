@@ -573,6 +573,10 @@ public class DieManager : MonoBehaviour
     void OnDestroy() {
         GhostManager.Instance.RemoveGhosts(gameObject);
 
+        if (Globals.SELECTED_UNIT == this) {
+            Globals.SELECTED_UNIT = null;
+        }
+
         if (turnChange != null)
             GameManager.Instance.TurnChange -= turnChange;
 
