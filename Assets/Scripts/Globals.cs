@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class Globals
@@ -10,4 +12,6 @@ public static class Globals
     public static float MOVEMENT_TIME = 0.4f;
 
     public static LayerMask OVERLAY_TILE = 1 << 9;
+
+    public static readonly uint DICE_STATES = Enum.GetValues(typeof(DiceState)).Cast<uint>().Max() + 1;
 }

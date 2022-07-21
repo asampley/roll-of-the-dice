@@ -8,4 +8,14 @@ public static class Utilities
     {
         return input[0].ToString().ToUpper() + input.Substring(1);
     }
+
+    public static string EnumerableString(IEnumerable enumerable) {
+        string str = "[";
+        foreach (var a in enumerable) {
+            str += a + ",";
+        }
+        str += "]";
+
+        return str;
+    }
 }

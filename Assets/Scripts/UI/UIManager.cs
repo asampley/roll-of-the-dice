@@ -116,7 +116,7 @@ public class UIManager : MonoBehaviour
         gameInfo.SetActive(true);
         diceName.text = Globals.SELECTED_UNIT.diceName;
         movesAvailable.text = "Moves Available: " + Globals.SELECTED_UNIT.MovesAvailable.ToString();
-        GameObject inspectDie = Globals.SELECTED_UNIT.transform.Find("Mesh").gameObject;
+        GameObject inspectDie = Globals.SELECTED_UNIT.GetComponent<DieManager>().ghostComponents.gameObject;
         inspectorObject = Instantiate(inspectDie);
         inspectorObject.transform.parent = inspector;
         Vector3 pos = inspector.transform.position;

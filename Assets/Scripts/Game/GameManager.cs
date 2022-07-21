@@ -30,13 +30,7 @@ public class GameManager : MonoBehaviour
 
     //Dice Prefabs
     private string _dicePrefabLocation = "Prefabs/DiceClasses/";
-    private GameObject _pawnPrefab;
-    private GameObject _rookPrefab;
-    private GameObject _artisanPrefab;
-    private GameObject _trebuchetPrefab;
-    private GameObject _errantKnightPrefab;
-    private GameObject _lichPrefab;
-    private GameObject _kingPrefab;
+    private Dictionary<DiceClass, GameObject> _dicePrefabs = new Dictionary<DiceClass, GameObject>();
 
     private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
@@ -139,45 +133,14 @@ public class GameManager : MonoBehaviour
 
     private void FindPrefabs()
     {
-        _pawnPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "Pawn");
-        _rookPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "Rook");
-        _artisanPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "Artisan");
-        _trebuchetPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "Trebuchet"); ;
-        _errantKnightPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "ErrantKnight"); ;
-        _lichPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "Lich"); ;
-        _kingPrefab = Resources.Load<GameObject>(_dicePrefabLocation + "King"); ;
+        foreach (DiceClass diceClass in Enum.GetValues(typeof(DiceClass))) {
+            _dicePrefabs.Add(diceClass, Resources.Load<GameObject>(_dicePrefabLocation + diceClass));
+        }
     }
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
     {
-        GameObject prefab;
-        switch (diceClass)
-        {
-            case DiceClass.Pawn:
-                prefab = _pawnPrefab;
-                break;
-            case DiceClass.Rook:
-                prefab = _rookPrefab;
-                break;
-            case DiceClass.Artisan:
-                prefab = _artisanPrefab;
-                break;
-            case DiceClass.Trebuchet:
-                prefab = _trebuchetPrefab;
-                break;
-            case DiceClass.ErrantKnight:
-                prefab = _errantKnightPrefab;
-                break;
-            case DiceClass.Lich:
-                prefab = _lichPrefab;
-                break;
-            case DiceClass.King:
-                prefab = _kingPrefab;
-                break;
-            default:
-                prefab = _pawnPrefab;
-                break;
-        }
+        GameObject prefab = _dicePrefabs[diceClass];
 
         Vector3 pos = MapManager.Instance.TileToWorldSpace(startPos);
         GameObject die = Instantiate(prefab, pos, Quaternion.identity);

@@ -16,9 +16,9 @@ GameObject:
   - component: {fileID: 4380942884015746227}
   - component: {fileID: 5209130856033525126}
   - component: {fileID: 4559362308804007215}
-  - component: {fileID: 7169106772478044607}
+  - component: {fileID: 5884028651448309479}
   m_Layer: 0
-  m_Name: Mesh
+  m_Name: MeshCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -101,12 +101,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f73d5172d7087c64ab9fcd92a022a39f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frontIndex: 4
-  backIndex: 4
-  leftIndex: 4
-  rightIndex: 4
-  topIndex: 4
-  bottomIndex: 4
+  originalMesh: {fileID: 0}
+  faces:
+  - state: 4
+    position: {x: 0.5, y: 0, z: 0}
+  - state: 4
+    position: {x: -0.5, y: 0, z: 0}
+  - state: 4
+    position: {x: 0, y: 0.5, z: 0}
+  - state: 4
+    position: {x: 0, y: -0.5, z: 0}
+  - state: 4
+    position: {x: 0, y: 0, z: 0.5}
+  - state: 4
+    position: {x: 0, y: 0, z: -0.5}
 --- !u!114 &1635569790649016206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,7 +162,7 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 400
---- !u!65 &7169106772478044607
+--- !u!65 &5884028651448309479
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -165,5 +173,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.0000002, y: 1.0000001, z: 1.0000001}
+  m_Size: {x: 1.0000002, y: 1.0000004, z: 1.0000002}
   m_Center: {x: 0, y: 0, z: 0}

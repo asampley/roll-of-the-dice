@@ -39,8 +39,6 @@ public class DieManager : MonoBehaviour
     [SerializeField]
     private EnemyAI enemyAI;
 
-
-
     //Materials
     [HideInInspector]
     public Material ghostMaterial;

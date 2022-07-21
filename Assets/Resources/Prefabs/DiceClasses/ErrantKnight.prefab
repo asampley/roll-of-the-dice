@@ -117,48 +117,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 7103340230149900096}
     m_Modifications:
     - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: topIndex
+      propertyPath: faces.Array.data[0].state
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: backIndex
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: leftIndex
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: frontIndex
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: rightIndex
+      propertyPath: faces.Array.data[1].state
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: bottomIndex
+      propertyPath: faces.Array.data[2].state
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: faces.Array.data[3].state
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 7008636932835894278, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: m_RootOrder
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: faces.Array.data[4].state
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7008636932835894278, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 7008636932835894278, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7008636932835894278, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 8304734700538434376, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: m_Name
-      value: Mesh
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: faces.Array.data[5].state
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be536d2d1149c534cb9da362ca62618a, type: 3}

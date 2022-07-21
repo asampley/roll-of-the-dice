@@ -83,27 +83,27 @@ PrefabInstance:
     m_TransformParent: {fileID: 7103340230149900096}
     m_Modifications:
     - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: topIndex
+      propertyPath: faces.Array.data[0].state
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: backIndex
+      propertyPath: faces.Array.data[1].state
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: leftIndex
+      propertyPath: faces.Array.data[2].state
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: frontIndex
+      propertyPath: faces.Array.data[3].state
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: rightIndex
+      propertyPath: faces.Array.data[4].state
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
-      propertyPath: bottomIndex
+      propertyPath: faces.Array.data[5].state
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7008636932835894278, guid: be536d2d1149c534cb9da362ca62618a, type: 3}

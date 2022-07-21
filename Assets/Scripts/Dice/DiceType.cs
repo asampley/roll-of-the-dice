@@ -11,6 +11,7 @@ public enum DiceClass
     ErrantKnight,
     Lich,
     King,
+    TetraPawn,
 }
 
 [System.Serializable]

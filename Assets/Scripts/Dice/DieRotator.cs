@@ -106,39 +106,14 @@ public class DieRotator : MonoBehaviour {
     public DiceState GetUpFace() {
         var topFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(originalOffset * FinalTarget()) * localUp);
 
-        var texturer = GetComponent<DieTexturer>();
-        if (topFaceDir.x == 1) {
-            return texturer.rightIndex;
-        } else if (topFaceDir.x == -1) {
-            return texturer.leftIndex;
-        } else if (topFaceDir.y == 1) {
-            return texturer.topIndex;
-        } else if (topFaceDir.y == -1) {
-            return texturer.bottomIndex;
-        } else if (topFaceDir.z == 1) {
-            return texturer.frontIndex;
-        } else {
-            return texturer.backIndex;
-        }
+        return GetComponent<DieTexturer>().ClosestFace(topFaceDir).state;
     }
 
     public DiceState GetDownFace()
     {
         var bottomFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(originalOffset * FinalTarget()) * -localUp);
 
-        var texturer = GetComponent<DieTexturer>();
-        if (bottomFaceDir.x == 1)
-            return texturer.rightIndex;
-        else if (bottomFaceDir.x == -1)
-            return texturer.leftIndex;
-        else if (bottomFaceDir.y == 1)
-            return texturer.topIndex;
-        else if (bottomFaceDir.y == -1)
-            return texturer.bottomIndex;
-        else if (bottomFaceDir.z == 1)
-            return texturer.frontIndex;
-        else
-            return texturer.backIndex;
+        return GetComponent<DieTexturer>().ClosestFace(bottomFaceDir).state;
     }
 
     public void SetDownFace(DiceState newDiceState)
@@ -146,18 +121,8 @@ public class DieRotator : MonoBehaviour {
         var bottomFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(originalOffset * FinalTarget()) * -localUp);
 
         var texturer = GetComponent<DieTexturer>();
-        if (bottomFaceDir.x == 1)
-            texturer.rightIndex = newDiceState;
-        else if (bottomFaceDir.x == -1)
-            texturer.leftIndex = newDiceState;
-        else if (bottomFaceDir.y == 1)
-            texturer.topIndex = newDiceState;
-        else if (bottomFaceDir.y == -1)
-            texturer.bottomIndex = newDiceState;
-        else if (bottomFaceDir.z == 1)
-            texturer.frontIndex = newDiceState;
-        else
-            texturer.backIndex = newDiceState;
+        var face = texturer.ClosestFace(bottomFaceDir);
+        face.state = newDiceState;
         texturer.UpdateMesh();
     }
 }
