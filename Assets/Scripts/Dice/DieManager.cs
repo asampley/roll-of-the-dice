@@ -480,8 +480,8 @@ public class DieManager : MonoBehaviour
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
 
-        yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
-        yield return StartCoroutine(GetTileEffects());
+        yield return StartCoroutine(GetTileEffects());        
+
     }
 
     private IEnumerator GetTileEffects()
@@ -491,55 +491,65 @@ public class DieManager : MonoBehaviour
         switch (tileType)
         {
             case TileType.Normal:
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.Stopping:
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 _movesAvailable = 0;
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.RotateClockwise:
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 _dieRotator.RotateZ(1);
                 yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.RotateCounterClockwise:
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 _dieRotator.RotateZ(-1);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.ShovePosX:
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 Shove(new Vector2Int(1, 0));
                 yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.ShovePosY:
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 Shove(new Vector2Int(0, 1));
                 yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.ShoveNegX:
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 Shove(new Vector2Int(-1, 0));
                 yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.ShoveNegY:
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 Shove(new Vector2Int(0, -1));
                 yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.RemoveFace:
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 _dieRotator.SetDownFace(DiceState.Blank);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.Randomize:
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
@@ -548,6 +558,7 @@ public class DieManager : MonoBehaviour
                 Fight();
                 break;
             default:
+                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 GetTilesInRange();
                 Fight();
                 break;
