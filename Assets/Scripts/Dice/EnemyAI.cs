@@ -75,7 +75,7 @@ public class EnemyAI : MonoBehaviour {
             pos = next;
         }
 
-        Debug.Log("Path: " + PathStr());
+        Debug.Log("Created Path: " + PathStr());
     }
 
     public void FollowPath() {
@@ -90,9 +90,7 @@ public class EnemyAI : MonoBehaviour {
     }
 
     private string PathStr() {
-        string pathstr = "" + new Vector2Int(dieManager.parentTile.gridLocation.x, dieManager.parentTile.gridLocation.y) + " -> ";
-        foreach (var p in path) pathstr += p;
-        return pathstr;
+        return (Vector2Int)dieManager.parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
     }
 
     private void TurnChange(Turn turn) {
