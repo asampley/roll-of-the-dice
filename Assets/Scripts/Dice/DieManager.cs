@@ -514,6 +514,24 @@ public class DieManager : MonoBehaviour
             case TileType.Stopping:
                 _movesAvailable = 0;
                 break;
+            case TileType.RotateClockwise:
+                _dieRotator.RotateZ(1);
+                break;
+            case TileType.RotateCounterClockwise:
+                _dieRotator.RotateZ(-1);
+                break;
+            case TileType.ShovePosX:
+                Shove(new Vector2Int(1, 0));
+                break;
+            case TileType.ShovePosY:
+                Shove(new Vector2Int(0, 1));
+                break;
+            case TileType.ShoveNegX:
+                Shove(new Vector2Int(-1, 0));
+                break;
+            case TileType.ShoveNegY:
+                Shove(new Vector2Int(0, -1));
+                break;
             case TileType.RemoveFace:
                 _dieRotator.SetDownFace(DiceState.Blank);
                 break;
@@ -524,8 +542,14 @@ public class DieManager : MonoBehaviour
                 break;
             default:
                 break;
-
         }
+    }
+
+    public void Shove(Vector2Int dir)
+    {
+        Vector2Int newPos = (Vector2Int)parentTile.gridLocation + dir;
+        MoveToPos((Vector2Int)parentTile.gridLocation, newPos);
+        StartCoroutine(UpdateTilePos(MapManager.Instance.GetTileAtPos(newPos)));
     }
 
     private void TurnChange(Turn turn) {
