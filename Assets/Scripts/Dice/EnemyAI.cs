@@ -9,17 +9,12 @@ public class EnemyAI : MonoBehaviour {
 
     private DieManager dieManager;
 
-    private Action<Turn> turnChange;
-    private Action<OverlayTile> moveFinished;
-
     // Start is called before the first frame update
     void Start() {
         dieManager = GetComponent<DieManager>();
 
-        turnChange = t => this.TurnChange(t);
-        GameManager.Instance.TurnChange += turnChange;
-        moveFinished = t => this.MoveFinished();
-        dieManager.MoveFinished += moveFinished;
+        GameManager.Instance.TurnChange += TurnChange;
+        dieManager.MoveFinished += MoveFinished;
 
         TurnChange(GameManager.Instance.CurrentTurnValue);
     }
@@ -105,7 +100,7 @@ public class EnemyAI : MonoBehaviour {
         }
     }
 
-    private void MoveFinished() {
+    private void MoveFinished(OverlayTile tile) {
         GameManager.Instance.RemoveEnemyWaiting(this);
     }
 
@@ -118,15 +113,10 @@ public class EnemyAI : MonoBehaviour {
     }
 
     void OnDestroy() {
-        if (turnChange != null) {
-            GameManager.Instance.TurnChange -= turnChange;
-        }
-
         GameManager.Instance.RemoveEnemyWaiting(this);
 
-        if (moveFinished != null) {
-            dieManager.MoveFinished -= moveFinished;
-        }
+        GameManager.Instance.TurnChange -= TurnChange;
+        dieManager.MoveFinished -= MoveFinished;
 
         ClearPath();
     }
