@@ -481,7 +481,7 @@ public class DieManager : MonoBehaviour
         newTile.MoveDiceToTile(this);
 
         yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
-        StartCoroutine(GetTileEffects());
+        yield return StartCoroutine(GetTileEffects());
     }
 
     private IEnumerator GetTileEffects()
