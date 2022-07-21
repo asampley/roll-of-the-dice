@@ -110,6 +110,7 @@ public class DieManager : MonoBehaviour
     }
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
+        Debug.Log("Garfield");
         if (tiles.Count > 0) {
             foreach (var tile in tiles.TakeWhile(t => (!t.IsBlocked && _movesAvailable > 0))) {
                 GetTilesInRange();
@@ -550,7 +551,6 @@ public class DieManager : MonoBehaviour
                 break;
             case TileType.RemoveFace:
                 _dieRotator.SetDownFace(DiceState.Blank);
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
                 GetTilesInRange();
                 Fight();
                 break;

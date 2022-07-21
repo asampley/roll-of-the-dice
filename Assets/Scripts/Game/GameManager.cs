@@ -190,9 +190,8 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         CurrentTurnValue = Turn.Setup;
-        ClearMap();
-
         PlayerKingDefeated = false;
+        ClearMap();
 
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
         foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in alliedSpawnPositions)
@@ -292,7 +291,7 @@ public class GameManager : MonoBehaviour
     public void PieceOutOfMoves()
     {
         _playerMoveRemaining--;
-        if (_playerMoveRemaining <= 0)
+        if (_playerMoveRemaining <= 0 && CurrentTurnValue != Turn.Setup)
             CurrentTurnValue = Turn.Enemy;
     }
 }

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43c190275e13a074e89528ee6749de0c, type: 3}
-  m_Name: Spikes
+  m_Name: RemoveFace
   m_EditorClassIdentifier: 
   tiles:
   - {fileID: 11400000, guid: 01cce9a49cd3db648abc240c51b8e129, type: 2}
