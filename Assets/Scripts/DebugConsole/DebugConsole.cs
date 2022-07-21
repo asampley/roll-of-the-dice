@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,8 @@ public class DebugConsole : MonoBehaviour
     private DisplayType _displayType = DisplayType.None;
     private static GUIStyle _logStyle;
 
+    public static event Action DebugMap;
+    public static event Action DebugNames;
 
     private void Awake()
     {
@@ -34,7 +37,11 @@ public class DebugConsole : MonoBehaviour
 
         new DebugCommand("debug_map", "Toggles grid location text on/off.", "debug_map", () =>
         {
-            EventManager.TriggerEvent("DebugMap");
+            DebugMap?.Invoke();
+        });
+        new DebugCommand("debug_names", "Toggles unit names on/off.", "debug_names", () =>
+        {
+            DebugNames?.Invoke();
         });
         new DebugCommand("kill", "Kills the selected unit.", "kill", () =>
         {
@@ -88,18 +95,18 @@ public class DebugConsole : MonoBehaviour
                 if (e.keyCode == KeyCode.Return)
                 {
                     _OnReturn();
-                }                    
+                }
                 else if (e.keyCode == KeyCode.Escape | (e.keyCode == KeyCode.BackQuote && _time > _exitTime))
                 {
                     _showConsole = false;
 #if UNITY_EDITOR
                     StartCoroutine("ConsoleDelay");
 #endif
-                }                    
+                }
                 else if (e.keyCode == KeyCode.Tab)
                 {
                     _displayType = DisplayType.Autocomplete;
-                }                    
+                }
             }
 
             if (te != null)

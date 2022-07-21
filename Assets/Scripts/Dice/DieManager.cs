@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using TMPro;
 
 public enum DiceState : uint
 {
@@ -50,16 +51,26 @@ public class DieManager : MonoBehaviour
     public GameObject ghostComponents;
     private DieRotator _dieRotator;
 
-    private Action<Turn> turnChange;
+    private TextMeshProUGUI nameText;
 
     public event Action<OverlayTile> MoveFinished;
 
-
     void Start() {
-        turnChange = t => TurnChange(t);
-        GameManager.Instance.TurnChange += turnChange;
+        nameText = GetComponentInChildren<TextMeshProUGUI>();
+        nameText.enabled = false;
+        nameText.text = this.name;
 
         GetComponentInChildren<DieTranslator>().ReachTarget += () => EventManager.TriggerEvent("Move");
+    }
+
+    void OnEnable() {
+        GameManager.Instance.TurnChange += TurnChange;
+        DebugConsole.DebugNames += OnDebugNames;
+    }
+
+    void OnDisable() {
+        GameManager.Instance.TurnChange += TurnChange;
+        DebugConsole.DebugNames += OnDebugNames;
     }
 
     private void Update()
@@ -480,7 +491,7 @@ public class DieManager : MonoBehaviour
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
 
-        yield return StartCoroutine(GetTileEffects());        
+        yield return StartCoroutine(GetTileEffects());
 
     }
 
@@ -581,6 +592,10 @@ public class DieManager : MonoBehaviour
         Debug.Log("Turn change " + this + ":"+ _movesAvailable + "/" + _maxRange);
     }
 
+    private void OnDebugNames() {
+        nameText.enabled = !nameText.enabled;
+    }
+
     void OnDestroy() {
         GhostManager.Instance.RemoveGhosts(gameObject);
 
@@ -588,8 +603,7 @@ public class DieManager : MonoBehaviour
             Globals.SELECTED_UNIT = null;
         }
 
-        if (turnChange != null)
-            GameManager.Instance.TurnChange -= turnChange;
+        GameManager.Instance.TurnChange -= TurnChange;
 
         if (isEnemy)
         {
