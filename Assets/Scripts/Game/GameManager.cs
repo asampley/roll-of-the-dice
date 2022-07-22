@@ -110,7 +110,13 @@ public class GameManager : MonoBehaviour
     private Turn _turnValue;
     public Turn CurrentTurnValue {
         get { return _turnValue; }
-        set { _turnValue = value; if (_turnValue == Turn.Player) StartPlayerTurn(); TurnChange?.Invoke(_turnValue); }
+        private set {
+            if (_turnValue != value) {
+                _turnValue = value;
+                PostTurnChange();
+                TurnChange?.Invoke(_turnValue);
+            }
+        }
     }
     public event Action<Turn> TurnChange;
 
@@ -202,13 +208,13 @@ public class GameManager : MonoBehaviour
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         }
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
-        
-        StartCoroutine(SleepyStart());
+
+        StartCoroutine(SleepyTurnSwitch(Turn.Player));
     }
 
-    public IEnumerator SleepyStart() {
+    public IEnumerator SleepyTurnSwitch(Turn turn) {
         yield return new WaitForFixedUpdate();
-        CurrentTurnValue = Turn.Player;
+        CurrentTurnValue = turn;
     }
 
     public void RerollGame()
@@ -219,9 +225,6 @@ public class GameManager : MonoBehaviour
 
     public void ClearMap()
     {
-        // seems necessary to fix a bug with persistent state
-        EnemyPathManager.Instance.ResetReserved();
-
         foreach(Transform child in diceParent.transform)
             GameObject.Destroy(child.gameObject);
         MapManager.Instance.ClearMap();
@@ -238,8 +241,7 @@ public class GameManager : MonoBehaviour
 
         if (CurrentTurnNumber >= MaxNumberOfTurns && gameRulesData.turnLimit)
             WinEvent?.Invoke(Win.Enemy);
-
-        if (PlayerCount == 0 || PlayerKingDefeated)
+        else if (PlayerCount == 0 || PlayerKingDefeated)
             WinEvent?.Invoke(Win.Enemy);
         else if (EnemyCount == 0)
             WinEvent?.Invoke(Win.Player);
@@ -263,12 +265,13 @@ public class GameManager : MonoBehaviour
             CurrentTurnValue = Turn.Player;
     }
 
-    private void StartPlayerTurn()
-    {
-        CurrentTurnNumber++;
-        PlayerPiecesMoved = 0;
-        MovedPieces.Clear();
-        _playerMoveRemaining = _maxPlayerMoves;
+    private void PostTurnChange() {
+        if (CurrentTurnValue == Turn.Player) {
+            CurrentTurnNumber++;
+            PlayerPiecesMoved = 0;
+            MovedPieces.Clear();
+            _playerMoveRemaining = _maxPlayerMoves;
+        }
     }
 
     public void SetMaxMoves()
