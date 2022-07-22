@@ -34,7 +34,7 @@ public class MouseController : MonoBehaviour
 
                 if (!overlayTileManager.IsBlocked && Globals.SELECTED_UNIT != null)
                 {
-                    if (GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(Globals.SELECTED_UNIT))
+                    if (GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(Globals.SELECTED_UNIT) && !Globals.SELECTED_UNIT.IsMoving)
                     {
                         if (Globals.SELECTED_UNIT.movesInStraightLine)
                         {

@@ -24,7 +24,7 @@ public class EnemyAI : MonoBehaviour {
     }
 
     public void CreatePath() {
-        Debug.Log("Garfield Starting CreatePath: " + dieManager.diceName);
+        Debug.Log("Garfield Starting CreatePath: " + transform.name);
         Debug.Log("Create Path: currently taken " + EnemyPathManager.Instance.TakenStr());
 
         Vector2Int start = (Vector2Int)dieManager.parentTile.gridLocation;
@@ -70,19 +70,19 @@ public class EnemyAI : MonoBehaviour {
             currentRange--;
             pos = next;
         }
-        Debug.Log("Garfield Ending CreatePath: " + dieManager.diceName);
+        Debug.Log("Garfield Ending CreatePath: " + transform.name);
         Debug.Log("Created Path: " + PathStr());
     }
 
     public void FollowPath() {
-        Debug.Log("Garfield Starting FollowPath: " + dieManager.diceName);
+        Debug.Log("Garfield Starting FollowPath: " + transform.name);
         Debug.Log("Following Path: " + PathStr());
 
         GhostManager.Instance.RemoveGhosts(gameObject);
 
         dieManager.Move(PathToTilesOnTheFly());
 
-        Debug.Log("Garfield Ending FollowPath: " + dieManager.diceName);
+        Debug.Log("Garfield Ending FollowPath: " + transform.name);
     }
 
     private string PathStr() {
