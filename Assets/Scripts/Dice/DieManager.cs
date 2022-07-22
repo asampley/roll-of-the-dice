@@ -203,52 +203,32 @@ public class DieManager : MonoBehaviour
         HideTilesInRange();
     }
 
-    public List<OverlayTile> FollowPath(OverlayTile tile)
+    public IEnumerator<OverlayTile> PathGenerator(OverlayTile tile)
     {
-        List<OverlayTile> list = new List<OverlayTile>();
-
         if (parentTile.gridLocation.x < tile.gridLocation.x)
         {
-            int x = parentTile.gridLocation.x + 1;
-            while (x <= tile.gridLocation.x)
-            {
-                OverlayTile tileToAdd = MapManager.Instance.GetTileAtPos(new Vector2Int(x, parentTile.gridLocation.y));
-                list.Add(tileToAdd);
-                x++;
+            for (int x = parentTile.gridLocation.x + 1; x <= tile.gridLocation.x; ++x) {
+                yield return MapManager.Instance.GetTileAtPos(new Vector2Int(x, parentTile.gridLocation.y));
             }
         }
         else if (parentTile.gridLocation.x > tile.gridLocation.x)
         {
-            int x = parentTile.gridLocation.x - 1;
-            while (x >= tile.gridLocation.x)
-            {
-                OverlayTile tileToAdd = MapManager.Instance.GetTileAtPos(new Vector2Int(x, parentTile.gridLocation.y));
-                list.Add(tileToAdd);
-                x--;
+            for (int x = parentTile.gridLocation.x - 1; x <= tile.gridLocation.x; --x) {
+                yield return MapManager.Instance.GetTileAtPos(new Vector2Int(x, parentTile.gridLocation.y));
             }
         }
         else if (parentTile.gridLocation.y < tile.gridLocation.y)
         {
-            int y = parentTile.gridLocation.y + 1;
-            while (y <= tile.gridLocation.y)
-            {
-                OverlayTile tileToAdd = MapManager.Instance.GetTileAtPos(new Vector2Int(parentTile.gridLocation.x, y));
-                list.Add(tileToAdd);
-                y++;
+            for (int y = parentTile.gridLocation.y + 1; y <= tile.gridLocation.y; ++y) {
+                yield return MapManager.Instance.GetTileAtPos(new Vector2Int(parentTile.gridLocation.x, y));
             }
         }
         else if (parentTile.gridLocation.y > tile.gridLocation.y)
         {
-            int y = parentTile.gridLocation.y - 1;
-            while (y >= tile.gridLocation.y)
-            {
-                OverlayTile tileToAdd = MapManager.Instance.GetTileAtPos(new Vector2Int(parentTile.gridLocation.x, y));
-                list.Add(tileToAdd);
-                y--;
+            for (int y = parentTile.gridLocation.y - 1; y >= tile.gridLocation.y; --y) {
+                yield return MapManager.Instance.GetTileAtPos(new Vector2Int(parentTile.gridLocation.x, y));
             }
         }
-
-        return list;
     }
 
     public void Fight()
@@ -439,7 +419,7 @@ public class DieManager : MonoBehaviour
             Vector3 translation
                 = MapManager.Instance.TileToWorldSpace(tile.gridLocation)
                 - MapManager.Instance.TileToWorldSpace(parentTile.gridLocation);
-            var ghost = GhostManager.Instance.CreateGhost(gameObject, translation, (Vector2Int)rot);
+            var ghost = GhostManager.Instance.CreateGhost(gameObject, translation, (Vector2Int)rot, rot.x + rot.y);
             ghost.GetComponentInChildren<DieRotator>().Collapse = true;
             ghost.GetComponentInChildren<DieTranslator>().Collapse = true;
         }

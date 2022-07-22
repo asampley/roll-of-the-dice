@@ -23,7 +23,7 @@ public class GhostManager : MonoBehaviour {
         }
     }
 
-    public GameObject CreateGhost(GameObject toGhost, Vector3? translation, Vector2Int? tileDelta) {
+    public GameObject CreateGhost(GameObject toGhost, Vector3? translation, Vector2Int? tileDelta, int rotationCount = 1) {
         var dieManager = toGhost.GetComponent<DieManager>();
         var ghostComponents = dieManager.ghostComponents;
 
@@ -35,7 +35,7 @@ public class GhostManager : MonoBehaviour {
         if (tileDelta != null) {
             var rotator = ghost.GetComponentInChildren<DieRotator>();
 
-            rotator.RotateTileDelta(tileDelta.Value);
+            rotator.RotateTileDelta(tileDelta.Value, rotationCount);
         }
 
         if (translation != null) {

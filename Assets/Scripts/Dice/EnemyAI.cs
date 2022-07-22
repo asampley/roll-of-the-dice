@@ -39,7 +39,7 @@ public class EnemyAI : MonoBehaviour {
             var adjacent = GetTilesBeside(pos)
                 .Where(a => !a.IsBlocked)
                 .Select(a => (Vector2Int)a.gridLocation)
-                .Where(a => !EnemyPathManager.Instance.taken.Contains(a))
+                .Where(a => !EnemyPathManager.Instance.IsReserved(a))
                 .ToList();
 
             if (adjacent.Count == 0) break;
@@ -47,7 +47,7 @@ public class EnemyAI : MonoBehaviour {
             var next = adjacent[(int)(UnityEngine.Random.value * adjacent.Count) % adjacent.Count];
 
             path.Add(next - pos);
-            EnemyPathManager.Instance.taken.Add(next);
+            EnemyPathManager.Instance.Reserve(this, next);
 
             deltas.Add(next - pos);
             trans.Add(
@@ -80,7 +80,7 @@ public class EnemyAI : MonoBehaviour {
 
         GhostManager.Instance.RemoveGhosts(gameObject);
 
-        dieManager.Move(PathToTilesOnTheFly());
+        dieManager.Move(PathGenerator());
 
         Debug.Log("Garfield Ending FollowPath: " + transform.name);
     }
@@ -89,11 +89,19 @@ public class EnemyAI : MonoBehaviour {
         return (Vector2Int)dieManager.parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
     }
 
-    private IEnumerator<OverlayTile> PathToTilesOnTheFly() {
+    private IEnumerator<OverlayTile> PathGenerator() {
         foreach (var p in path) {
-            yield return MapManager.Instance.GetTileAtPos(
-                (Vector2Int)dieManager.parentTile.gridLocation + p
-            );
+            OverlayTile tile;
+            try {
+                tile = MapManager.Instance.GetTileAtPos(
+                    (Vector2Int)dieManager.parentTile.gridLocation + p
+                );
+            } catch (KeyNotFoundException) {
+                Debug.Log("Tile does not exist, stopping path");
+                break;
+            }
+
+            yield return tile;
         }
     }
 
@@ -111,10 +119,12 @@ public class EnemyAI : MonoBehaviour {
         GameManager.Instance.RemoveEnemyWaiting(this);
     }
 
+    void UnreservePath() {
+        EnemyPathManager.Instance.ClearReserved(this);
+    }
+
     void ClearPath() {
-        foreach (var p in path) {
-            EnemyPathManager.Instance.taken.Remove(p);
-        }
+        UnreservePath();
 
         path.Clear();
     }
@@ -128,6 +138,6 @@ public class EnemyAI : MonoBehaviour {
             dieManager.MoveFinished -= MoveFinished;
         }
 
-        ClearPath();
+        UnreservePath();
     }
 }

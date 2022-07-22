@@ -38,9 +38,8 @@ public class MouseController : MonoBehaviour
                     {
                         if (Globals.SELECTED_UNIT.movesInStraightLine)
                         {
-                            List<OverlayTile> tiles = Globals.SELECTED_UNIT.GetComponent<DieManager>().FollowPath(overlayTileManager);
-                            Debug.Log(Utilities.EnumerableString(tiles));
-                            Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(tiles.GetEnumerator());
+                            var path = Globals.SELECTED_UNIT.GetComponent<DieManager>().PathGenerator(overlayTileManager);
+                            Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(path);
                         }
                         else
                         {
