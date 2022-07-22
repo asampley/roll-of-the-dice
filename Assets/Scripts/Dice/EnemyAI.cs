@@ -13,10 +13,10 @@ public class EnemyAI : MonoBehaviour {
     void Start() {
         dieManager = GetComponent<DieManager>();
 
-        GameManager.Instance.TurnChange += TurnChange;
-        dieManager.MoveFinished += MoveFinished;
+        GameManager.Instance.TurnChange += OnTurnChange;
+        dieManager.MoveFinished += OnMoveFinished;
 
-        TurnChange(GameManager.Instance.CurrentTurnValue);
+        OnTurnChange(GameManager.Instance.CurrentTurnValue);
     }
 
     private List<OverlayTile> GetTilesBeside(Vector2Int pos) {
@@ -105,7 +105,7 @@ public class EnemyAI : MonoBehaviour {
         }
     }
 
-    private void TurnChange(Turn turn) {
+    private void OnTurnChange(Turn turn) {
         if (turn == Turn.Enemy) {
             FollowPath();
         } else if (turn == Turn.Player) {
@@ -114,7 +114,7 @@ public class EnemyAI : MonoBehaviour {
         }
     }
 
-    private void MoveFinished(OverlayTile tile) {
+    private void OnMoveFinished(OverlayTile tile) {
         ClearPath();
         GameManager.Instance.RemoveEnemyWaiting(this);
     }
@@ -132,10 +132,10 @@ public class EnemyAI : MonoBehaviour {
     void OnDestroy() {
         GameManager.Instance.RemoveEnemyWaiting(this);
 
-        GameManager.Instance.TurnChange -= TurnChange;
+        GameManager.Instance.TurnChange -= OnTurnChange;
 
         if (dieManager != null) {
-            dieManager.MoveFinished -= MoveFinished;
+            dieManager.MoveFinished -= OnMoveFinished;
         }
 
         UnreservePath();

@@ -72,14 +72,14 @@ public class DieManager : MonoBehaviour
     }
 
     void OnEnable() {
-        GameManager.Instance.TurnChange += TurnChange;
+        GameManager.Instance.TurnChange += OnTurnChange;
         DebugConsole.DebugNames += OnDebugNames;
         ABeatsB += OnABeatsB;
         Draw += OnDraw;
     }
 
     void OnDisable() {
-        GameManager.Instance.TurnChange += TurnChange;
+        GameManager.Instance.TurnChange += OnTurnChange;
         DebugConsole.DebugNames += OnDebugNames;
         ABeatsB -= OnABeatsB;
         Draw -= OnDraw;
@@ -548,7 +548,7 @@ public class DieManager : MonoBehaviour
         yield return StartCoroutine(UpdateTilePos(MapManager.Instance.GetTileAtPos(newPos)));
     }
 
-    void TurnChange(Turn turn) {
+    void OnTurnChange(Turn turn) {
         if (isEnemy && turn == Turn.Enemy)
             ResetRange();
         else if (!isEnemy && turn == Turn.Player)
@@ -576,7 +576,7 @@ public class DieManager : MonoBehaviour
             Globals.SELECTED_UNIT = null;
         }
 
-        GameManager.Instance.TurnChange -= TurnChange;
+        GameManager.Instance.TurnChange -= OnTurnChange;
 
         if (isEnemy)
         {
