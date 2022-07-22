@@ -16,81 +16,31 @@ public class SFXManager : MonoBehaviour
     public AudioClip draw;
     public AudioClip move;
 
-
     private void OnEnable()
     {
         EventManager.AddListener("Move", _onMove);
-        foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.AddListener("AllyRockBeats" + val, _onRockWin);
-            EventManager.AddListener("Ally" + val + "BeatenByRock", _onRockWin);
-        }
-        foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.AddListener("AllyPaperBeats" + val, _onPaperWin);
-            EventManager.AddListener("Ally" + val + "BeatenByPaper", _onPaperWin);
-        }
-        foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.AddListener("AllyScissorsBeats" + val, _onScissorsWin);
-            EventManager.AddListener("Ally" + val + "BeatenByScissors", _onScissorsWin);
-        }
-        foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.AddListener("AllyLichBeats" + val, _onLichWin);
-            EventManager.AddListener("Ally" + val + "BeatenByLich", _onLichWin);
-        }
-        foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.AddListener("AllyKingBeats" + val, _onKingWin);
-            EventManager.AddListener("Ally" + val + "BeatenByKing", _onKingWin);
-        }
-        EventManager.AddListener("Draw", _onDraw);
+        DieManager.ABeatsB += OnABeatsB;
+        DieManager.Draw += OnDraw;
     }
 
     private void OnDisable()
     {
         EventManager.RemoveListener("Move", _onMove);
-        foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.RemoveListener("AllyRockBeats" + val, _onRockWin);
-            EventManager.RemoveListener("Ally" + val + "BeatenByRock", _onRockWin);
+        DieManager.ABeatsB -= OnABeatsB;
+        DieManager.Draw -= OnDraw;
+    }
+
+    private void OnABeatsB(DieManager a, DieManager b) {
+        switch (a.state) {
+            case DiceState.King: PlaySound(kingWins); break;
+            case DiceState.Lich: PlaySound(lichWins); break;
+            case DiceState.Rock: PlaySound(rockWins); break;
+            case DiceState.Paper: PlaySound(paperWins); break;
+            case DiceState.Scissors: PlaySound(scissorsWins); break;
         }
-        foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.RemoveListener("AllyPaperBeats" + val, _onPaperWin);
-            EventManager.RemoveListener("Ally" + val + "BeatenByPaper", _onPaperWin);
-        }
-        foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.RemoveListener("AllyScissorsBeats" + val, _onScissorsWin);
-            EventManager.RemoveListener("Ally" + val + "BeatenByScissors", _onScissorsWin);
-        }
-        foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.RemoveListener("AllyLichBeats" + val, _onLichWin);
-            EventManager.RemoveListener("Ally" + val + "BeatenByLich", _onLichWin);
-        }
-        foreach (var val in Enum.GetValues(typeof(DiceState))) {
-            EventManager.RemoveListener("AllyKingBeats" + val, _onKingWin);
-            EventManager.RemoveListener("Ally" + val + "BeatenByKing", _onKingWin);
-        }
-        EventManager.RemoveListener("Draw", _onDraw);
     }
 
-    private void _onKingWin() {
-        PlaySound(kingWins);
-    }
-
-    private void _onLichWin() {
-        PlaySound(lichWins);
-    }
-
-    private void _onRockWin() {
-        PlaySound(rockWins);
-    }
-
-    private void _onPaperWin() {
-        PlaySound(paperWins);
-    }
-
-    private void _onScissorsWin() {
-        PlaySound(scissorsWins);
-    }
-
-    private void _onDraw()
-    {
+    private void OnDraw(DieManager a, DieManager b) {
         PlaySound(draw);
     }
 

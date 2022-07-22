@@ -60,6 +60,8 @@ public class DieManager : MonoBehaviour
     private TextMeshProUGUI nameText;
 
     public event Action<OverlayTile> MoveFinished;
+    public static event Action<DieManager, DieManager> ABeatsB;
+    public static event Action<DieManager, DieManager> Draw;
 
     void Start() {
         nameText = GetComponentInChildren<TextMeshProUGUI>();
@@ -72,11 +74,15 @@ public class DieManager : MonoBehaviour
     void OnEnable() {
         GameManager.Instance.TurnChange += TurnChange;
         DebugConsole.DebugNames += OnDebugNames;
+        ABeatsB += OnABeatsB;
+        Draw += OnDraw;
     }
 
     void OnDisable() {
         GameManager.Instance.TurnChange += TurnChange;
         DebugConsole.DebugNames += OnDebugNames;
+        ABeatsB -= OnABeatsB;
+        Draw -= OnDraw;
     }
 
     private void Update()
@@ -242,35 +248,29 @@ public class DieManager : MonoBehaviour
                 DieManager enemyDie = tile.occupyingDie;
                 DiceState enemyState = enemyDie.state;
 
-                String eventName = null;
-
-                switch (state)
-                {
+                switch (state) {
                     case DiceState.King:
                         switch (enemyState) {
                             case DiceState.Blank:
-                                eventName = "Ally" + state + "Beats" + enemyState;
+                                ABeatsB?.Invoke(this, enemyDie);
 
                                 toKill.Add(enemyDie);
-                                Debug.Log(state + "(" + name + ") beats " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Rock:
                             case DiceState.Scissors:
                             case DiceState.Paper:
                             case DiceState.Lich:
-                                eventName = "Ally" + state + "BeatenBy" + enemyState;
+                                ABeatsB?.Invoke(enemyDie, this);
 
                                 if (!this.isEnemy) {
                                     GameManager.Instance.PlayerKingDefeated = true;
                                 }
 
                                 toKill.Add(this);
-                                Debug.Log(state + "(" + name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
 
                                 break;
                             case DiceState.King:
-                                eventName = "Draw";
-                                Debug.Log(state + "(" + name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                Draw?.Invoke(this, enemyDie);
                                 break;
                             }
                         break;
@@ -281,14 +281,12 @@ public class DieManager : MonoBehaviour
                             case DiceState.Paper:
                             case DiceState.Scissors:
                             case DiceState.Blank:
-                                eventName = "Ally" + state + "Beats" + enemyState;
+                                ABeatsB?.Invoke(this, enemyDie);
 
                                 toKill.Add(enemyDie);
-                                Debug.Log(state + "(" + name + ") beats " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Lich:
-                                eventName = "Draw";
-                                Debug.Log(state + "(" + name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                Draw?.Invoke(this, enemyDie);
                                 break;
                         }
                         break;
@@ -299,14 +297,12 @@ public class DieManager : MonoBehaviour
                             case DiceState.Scissors:
                             case DiceState.Paper:
                             case DiceState.Lich:
-                                eventName = "Ally" + state + "BeatenBy" + enemyState;
+                                ABeatsB?.Invoke(enemyDie, this);
 
                                 toKill.Add(this);
-                                Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Blank:
-                                eventName = "Draw";
-                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                Draw?.Invoke(this, enemyDie);
                                 break;
                         }
                         break;
@@ -315,21 +311,18 @@ public class DieManager : MonoBehaviour
                             case DiceState.King:
                             case DiceState.Scissors:
                             case DiceState.Blank:
-                                eventName = "Ally" + state + "Beats" + enemyState;
+                                ABeatsB?.Invoke(this, enemyDie);
 
                                 toKill.Add(enemyDie);
-                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Paper:
                             case DiceState.Lich:
-                                eventName = "Ally" + state + "BeatenBy" + enemyState;
+                                ABeatsB?.Invoke(enemyDie, this);
 
                                 toKill.Add(this);
-                                Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Rock:
-                                eventName = "Draw";
-                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                Draw?.Invoke(this, enemyDie);
                                 break;
                         }
                         break;
@@ -338,22 +331,18 @@ public class DieManager : MonoBehaviour
                             case DiceState.King:
                             case DiceState.Rock:
                             case DiceState.Blank:
-                                eventName = "Ally" + state + "Beats" + enemyState;
+                                ABeatsB?.Invoke(this, enemyDie);
 
                                 toKill.Add(enemyDie);
-                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Scissors:
                             case DiceState.Lich:
-                                eventName = "Ally" + state + "BeatenBy" + enemyState;
+                                ABeatsB?.Invoke(enemyDie, this);
 
                                 toKill.Add(this);
-                                Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Paper:
-                                eventName = "Draw";
-
-                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                Draw?.Invoke(this, enemyDie);
                                 break;
                         }
                         break;
@@ -362,27 +351,22 @@ public class DieManager : MonoBehaviour
                             case DiceState.King:
                             case DiceState.Paper:
                             case DiceState.Blank:
-                                eventName = "Ally" + state + "Beats" + enemyState;
+                                ABeatsB?.Invoke(this, enemyDie);
 
                                 toKill.Add(enemyDie);
-                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Rock:
                             case DiceState.Lich:
-                                eventName = "Ally" + state + "BeatenBy" + enemyState;
+                                ABeatsB?.Invoke(enemyDie, this);
 
                                 toKill.Add(this);
-                                Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Scissors:
-                                eventName = "Draw";
-                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                Draw?.Invoke(this, enemyDie);
                                 break;
                         }
                         break;
                 }
-
-                EventManager.TriggerEvent(eventName);
             }
         }
 
@@ -564,7 +548,7 @@ public class DieManager : MonoBehaviour
         yield return StartCoroutine(UpdateTilePos(MapManager.Instance.GetTileAtPos(newPos)));
     }
 
-    private void TurnChange(Turn turn) {
+    void TurnChange(Turn turn) {
         if (isEnemy && turn == Turn.Enemy)
             ResetRange();
         else if (!isEnemy && turn == Turn.Player)
@@ -573,8 +557,16 @@ public class DieManager : MonoBehaviour
         Debug.Log("Turn change " + this + ":"+ _movesAvailable + "/" + _maxRange);
     }
 
-    private void OnDebugNames() {
+    void OnDebugNames() {
         nameText.enabled = !nameText.enabled;
+    }
+
+    void OnABeatsB(DieManager a, DieManager b) {
+        Debug.Log(a.state + "(" + a.name + ") beats " + b.state + "(" + b.name + ")");
+    }
+
+    void OnDraw(DieManager a, DieManager b) {
+        Debug.Log(a.state + "(" + a.name + ") draws with " + b.state + "(" + b.name + ")");
     }
 
     void OnDestroy() {

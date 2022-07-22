@@ -42,28 +42,18 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        foreach (DiceState a in Enum.GetValues(typeof(DiceState))) {
-            foreach (DiceState b in Enum.GetValues(typeof(DiceState))) {
-                EventManager.AddListener("Ally" + a + "Beats" + b, () => _onABeatsB(a, b));
-                EventManager.AddListener("Ally" + b + "BeatenBy" + a, () => _onABeatsB(a, b));
-            }
-        }
+        DieManager.ABeatsB += OnABeatsB;
+        DieManager.Draw += OnDraw;
 
         EventManager.AddListener("SelectUnit", OnSelectUnit);
-        EventManager.AddListener("Draw", _onDraw);
     }
 
     private void OnDisable()
     {
-        foreach (DiceState a in Enum.GetValues(typeof(DiceState))) {
-            foreach (DiceState b in Enum.GetValues(typeof(DiceState))) {
-                EventManager.RemoveListener("Ally" + a + "Beats" + b, () => _onABeatsB(a, b));
-                EventManager.RemoveListener("Ally" + b + "BeatenBy" + a, () => _onABeatsB(a, b));
-            }
-        }
+        DieManager.ABeatsB -= OnABeatsB;
+        DieManager.Draw -= OnDraw;
 
         EventManager.RemoveListener("SelectUnit", OnSelectUnit);
-        EventManager.RemoveListener("Draw", _onDraw);
     }
 
 
@@ -144,39 +134,22 @@ public class UIManager : MonoBehaviour
     }
 
 
-    private void _onABeatsB(DiceState a, DiceState b) {
+    private void OnABeatsB(DieManager a, DieManager b) {
+        var spriteA = Resources.Load<Sprite>("Sprites/" + a.state);
+        var spriteB = Resources.Load<Sprite>("Sprites/" + b.state);
 
-        img1.sprite = Resources.Load<Sprite>("Sprites/" + a);
-        Debug.Log("Sprites/" + a);
-        logText.text = a + " beats " + b + "!";
-        img2.sprite = Resources.Load<Sprite>("Sprites/" + b);
-    }
-    private void _onAllyRockBeatsScissors()
-    {
-        logText.text = "Rock beats Scissors!";
-    }
-    private void _onAllyRockBeatenByPaper()
-    {
-        logText.text = "Rock beaten by paper!";
-    }
-    private void _onAllyPaperBeatsRock()
-    {
-        logText.text = "Paper beats Rock!";
-    }
-    private void _onAllyPaperBeatenByScissors()
-    {
-        logText.text = "Paper beaten by Scissors!";
-    }
-    private void _onAllyScissorsBeatsPaper()
-    {
-        logText.text = "Scissors beats Paper!";
-    }
-    private void _onAllyScissorsBeatenByRock()
-    {
-        logText.text = "Scissors beaten by Rock!";
+        if (!a.isEnemy) {
+            img1.sprite = spriteA;
+            logText.text = a.state + " beats " + b.state + "!";
+            img2.sprite = spriteB;
+        } else {
+            img1.sprite = spriteB;
+            logText.text = a.state + " beaten by " + b.state + "!";
+            img2.sprite = spriteA;
+        }
     }
 
-    private void _onDraw()
+    private void OnDraw(DieManager a, DieManager b)
     {
         logText.text = "Draw.";
     }
