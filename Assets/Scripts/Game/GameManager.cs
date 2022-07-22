@@ -282,7 +282,7 @@ public class GameManager : MonoBehaviour
     public void PieceOutOfMoves()
     {
         _playerMoveRemaining--;
-        if (_playerMoveRemaining <= 0 && CurrentTurnValue != Turn.Setup)
+        if (_playerMoveRemaining <= 0 && CurrentTurnValue == Turn.Player)
             CurrentTurnValue = Turn.Enemy;
     }
 }

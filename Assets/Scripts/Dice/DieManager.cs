@@ -147,8 +147,6 @@ public class DieManager : MonoBehaviour
                 if (!_tilesInRange.Contains(tile)) {
                     yield break;
                 }
-                CalculateDirection(tile);
-                state = _dieRotator.GetUpFace();
                 yield return StartCoroutine(UpdateTilePos(tile));
             } while (tiles.MoveNext());
 
@@ -466,6 +464,8 @@ public class DieManager : MonoBehaviour
 
     private IEnumerator UpdateTilePos(OverlayTile newTile)
     {
+        CalculateDirection(newTile);
+        state = _dieRotator.GetUpFace();
         HideTilesInRange();
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
