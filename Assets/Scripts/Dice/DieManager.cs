@@ -213,7 +213,7 @@ public class DieManager : MonoBehaviour
         }
         else if (parentTile.gridLocation.x > tile.gridLocation.x)
         {
-            for (int x = parentTile.gridLocation.x - 1; x <= tile.gridLocation.x; --x) {
+            for (int x = parentTile.gridLocation.x - 1; x >= tile.gridLocation.x; --x) {
                 yield return MapManager.Instance.GetTileAtPos(new Vector2Int(x, parentTile.gridLocation.y));
             }
         }
