@@ -46,10 +46,10 @@ public class EnemyAI : MonoBehaviour {
 
             var next = adjacent[(int)(UnityEngine.Random.value * adjacent.Count) % adjacent.Count];
 
-            path.Add(next);
+            path.Add(next - pos);
             EnemyPathManager.Instance.taken.Add(next);
 
-            deltas.Add(pos - next);
+            deltas.Add(next - pos);
             trans.Add(
                 MapManager.Instance.TileToWorldSpace(new Vector2Int(0, 0))
                 - MapManager.Instance.TileToWorldSpace(pos - next)
@@ -80,15 +80,21 @@ public class EnemyAI : MonoBehaviour {
 
         GhostManager.Instance.RemoveGhosts(gameObject);
 
-        var tiles = path.Select(x => MapManager.Instance.GetTileAtPos(x)).ToList();
-        dieManager.Move(tiles);
+        dieManager.Move(PathToTilesOnTheFly());
 
-        ClearPath();
         Debug.Log("Garfield Ending FollowPath: " + dieManager.diceName);
     }
 
     private string PathStr() {
         return (Vector2Int)dieManager.parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
+    }
+
+    private IEnumerator<OverlayTile> PathToTilesOnTheFly() {
+        foreach (var p in path) {
+            yield return MapManager.Instance.GetTileAtPos(
+                (Vector2Int)dieManager.parentTile.gridLocation + p
+            );
+        }
     }
 
     private void TurnChange(Turn turn) {
@@ -101,6 +107,7 @@ public class EnemyAI : MonoBehaviour {
     }
 
     private void MoveFinished(OverlayTile tile) {
+        ClearPath();
         GameManager.Instance.RemoveEnemyWaiting(this);
     }
 
@@ -116,7 +123,10 @@ public class EnemyAI : MonoBehaviour {
         GameManager.Instance.RemoveEnemyWaiting(this);
 
         GameManager.Instance.TurnChange -= TurnChange;
-        dieManager.MoveFinished -= MoveFinished;
+
+        if (dieManager != null) {
+            dieManager.MoveFinished -= MoveFinished;
+        }
 
         ClearPath();
     }

@@ -120,10 +120,15 @@ public class DieManager : MonoBehaviour
         state = _dieRotator.GetUpFace();
     }
 
-    private IEnumerator MoveMany(List<OverlayTile> tiles) {
-        Debug.Log("Garfield");
-        if (tiles.Count > 0) {
-            foreach (var tile in tiles.TakeWhile(t => (!t.IsBlocked && _movesAvailable > 0))) {
+    // consumes each step of the enumerator only after the last move has completed
+    private IEnumerator MoveMany(IEnumerator<OverlayTile> tiles) {
+        if (tiles.MoveNext()) {
+            OverlayTile tile;
+            do {
+                tile = tiles.Current;
+
+                if (tile.IsBlocked || _movesAvailable <= 0) break;
+
                 GetTilesInRange();
                 if (!_tilesInRange.Contains(tile)) {
                     yield break;
@@ -131,7 +136,8 @@ public class DieManager : MonoBehaviour
                 CalculateDirection(tile);
                 state = _dieRotator.GetUpFace();
                 yield return StartCoroutine(UpdateTilePos(tile));
-            }
+            } while (tiles.MoveNext());
+
             _movesAvailable--;
 
             EventManager.TriggerEvent("SelectUnit");
@@ -147,7 +153,7 @@ public class DieManager : MonoBehaviour
                     GameManager.Instance.PieceOutOfMoves();
             }
 
-            MoveFinished?.Invoke(tiles[tiles.Count - 1]);
+            MoveFinished?.Invoke(tile);
             // hack to fix bug
             if (_movesAvailable <= 0) {
                 HideTilesInRange();
@@ -159,10 +165,10 @@ public class DieManager : MonoBehaviour
     }
 
     public void Move(OverlayTile newTile) {
-        StartCoroutine(MoveMany(new List<OverlayTile> { newTile }));
+        StartCoroutine(MoveMany(new List<OverlayTile> { newTile }.GetEnumerator()));
     }
 
-    public void Move(List<OverlayTile> tiles) {
+    public void Move(IEnumerator<OverlayTile> tiles) {
         StartCoroutine(MoveMany(tiles));
     }
 
@@ -420,7 +426,7 @@ public class DieManager : MonoBehaviour
         {
             if (tile.IsBlocked) continue;
             tile.ShowTile();
-            Vector3Int rot = parentTile.gridLocation - tile.gridLocation;
+            Vector3Int rot = tile.gridLocation - parentTile.gridLocation;
             Vector3 translation
                 = MapManager.Instance.TileToWorldSpace(tile.gridLocation)
                 - MapManager.Instance.TileToWorldSpace(parentTile.gridLocation);
@@ -471,7 +477,7 @@ public class DieManager : MonoBehaviour
     public void CalculateDirection(OverlayTile newTile)
     {
         MoveToPos((Vector2Int)parentTile.gridLocation, (Vector2Int)newTile.gridLocation);
-        Vector3Int dir = parentTile.gridLocation - newTile.gridLocation;
+        Vector3Int dir = newTile.gridLocation - parentTile.gridLocation;
 
         GetComponentInChildren<DieRotator>().RotateTileDelta((Vector2Int)dir);
 
