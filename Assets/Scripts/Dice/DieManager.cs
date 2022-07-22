@@ -445,26 +445,21 @@ public class DieManager : MonoBehaviour
         return _maxRange;
     }
 
-    public void CalculateDirection(OverlayTile newTile)
+    private void MoveToPos(Vector2Int delta, bool rotate = true)
     {
-        MoveToPos((Vector2Int)parentTile.gridLocation, (Vector2Int)newTile.gridLocation);
-        Vector3Int dir = newTile.gridLocation - parentTile.gridLocation;
+        if (rotate) {
+            GetComponentInChildren<DieRotator>().RotateTileDelta(delta);
+        }
 
-        GetComponentInChildren<DieRotator>().RotateTileDelta((Vector2Int)dir);
-
-        Debug.Log(GetComponentInChildren<DieRotator>().GetUpFace());
-    }
-
-    private void MoveToPos(Vector2Int startPos, Vector2Int endPos)
-    {
         GetComponentInChildren<DieTranslator>().Translate(
-            MapManager.Instance.TileToWorldSpace(endPos) - MapManager.Instance.TileToWorldSpace(startPos)
+            MapManager.Instance.TileToWorldSpace(delta)
+            - MapManager.Instance.TileToWorldSpace(Vector2Int.zero)
         );
     }
 
-    private IEnumerator UpdateTilePos(OverlayTile newTile)
+    private IEnumerator UpdateTilePos(OverlayTile newTile, bool rotate = true)
     {
-        CalculateDirection(newTile);
+        MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
         state = _dieRotator.GetUpFace();
         HideTilesInRange();
         parentTile.RemoveDiceFromTile();
@@ -543,9 +538,7 @@ public class DieManager : MonoBehaviour
     public IEnumerator Shove(Vector2Int dir)
     {
         Vector2Int newPos = (Vector2Int)parentTile.gridLocation + dir;
-        MoveToPos((Vector2Int)parentTile.gridLocation, newPos);
-        yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
-        yield return StartCoroutine(UpdateTilePos(MapManager.Instance.GetTileAtPos(newPos)));
+        yield return StartCoroutine(UpdateTilePos(MapManager.Instance.GetTileAtPos(newPos), false));
     }
 
     void OnTurnChange(Turn turn) {
