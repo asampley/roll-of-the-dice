@@ -13,12 +13,12 @@ public class OverlayTile : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.AddListener("DebugMap", _onDebugMap);
+        DebugConsole.DebugMap += _onDebugMap;
     }
 
     private void OnDisable()
     {
-        EventManager.RemoveListener("DebugMap", _onDebugMap);
+        DebugConsole.DebugMap -= _onDebugMap;
     }
 
     public bool IsBlocked {
