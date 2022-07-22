@@ -127,7 +127,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        CurrentTurnValue = Turn.Setup;
         FindPrefabs();
         RollPositions();
         StartGame();
@@ -135,9 +134,8 @@ public class GameManager : MonoBehaviour
 
     private void FindPrefabs()
     {
-        foreach (DiceClass diceClass in Enum.GetValues(typeof(DiceClass))) {
+        foreach (DiceClass diceClass in Enum.GetValues(typeof(DiceClass)))
             _dicePrefabs.Add(diceClass, Resources.Load<GameObject>(_dicePrefabLocation + diceClass));
-        }
     }
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
@@ -169,13 +167,9 @@ public class GameManager : MonoBehaviour
     {
         ClearDictionaries();
         foreach (DiceSpawn spawn in mapData.alliedDice)
-        {
             alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
-        }
         foreach (DiceSpawn spawn in mapData.enemyDice)
-        {
             enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
-        }
     }
 
     public DiceOrientation GenerateDiceOrientation()
@@ -193,6 +187,9 @@ public class GameManager : MonoBehaviour
     {
         CurrentTurnValue = Turn.Setup;
         PlayerKingDefeated = false;
+        MaxNumberOfTurns = gameRulesData.maxTurns;
+        CurrentTurnNumber = 1;
+
         ClearMap();
 
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
@@ -205,10 +202,7 @@ public class GameManager : MonoBehaviour
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         }
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
-
-
-        MaxNumberOfTurns = gameRulesData.maxTurns;
-        CurrentTurnNumber = 1;
+        
         StartCoroutine(SleepyStart());
     }
 
@@ -229,9 +223,7 @@ public class GameManager : MonoBehaviour
         EnemyPathManager.Instance.ResetReserved();
 
         foreach(Transform child in diceParent.transform)
-        {
             GameObject.Destroy(child.gameObject);
-        }
         MapManager.Instance.ClearMap();
         MapManager.Instance.GenerateMap();
     }
@@ -247,11 +239,10 @@ public class GameManager : MonoBehaviour
         if (CurrentTurnNumber >= MaxNumberOfTurns && gameRulesData.turnLimit)
             WinEvent?.Invoke(Win.Enemy);
 
-        if (PlayerCount == 0 || PlayerKingDefeated) {
+        if (PlayerCount == 0 || PlayerKingDefeated)
             WinEvent?.Invoke(Win.Enemy);
-        } else if (EnemyCount == 0) {
+        else if (EnemyCount == 0)
             WinEvent?.Invoke(Win.Player);
-        }
     }
 
     public void AddEnemyWaiting(EnemyAI enemy) {

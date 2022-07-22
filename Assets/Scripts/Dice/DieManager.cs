@@ -29,6 +29,12 @@ public class DieManager : MonoBehaviour
     public bool movesInStraightLine;
     public bool isEnemy;
     public DiceState state;
+    private bool _isMoving;
+    public bool IsMoving
+    {
+        get { return _isMoving; }
+        set { _isMoving = value; }
+    }
 
     private List<OverlayTile> _tilesInRange = new List<OverlayTile>();
     public OverlayTile parentTile;
@@ -107,10 +113,11 @@ public class DieManager : MonoBehaviour
         _dieRotator.RotateZ(orientation.zRolls);
         _dieRotator.RotateNow();
         state = _dieRotator.GetUpFace();
+        IsMoving = false;
     }
 
     private IEnumerator MoveMany(List<OverlayTile> tiles) {
-        Debug.Log("Garfield");
+        IsMoving = true;
         if (tiles.Count > 0) {
             foreach (var tile in tiles.TakeWhile(t => (!t.IsBlocked && _movesAvailable > 0))) {
                 GetTilesInRange();
@@ -145,6 +152,7 @@ public class DieManager : MonoBehaviour
             // important if no path exists to still pass event
             MoveFinished?.Invoke(null);
         }
+        IsMoving = false;
     }
 
     public void Move(OverlayTile newTile) {
@@ -162,7 +170,7 @@ public class DieManager : MonoBehaviour
         Globals.SELECTED_UNIT = this;
 
         GhostManager.Instance.SetEnemyGhostsVisible(Input.GetKey("space"));
-        GhostManager.Instance.SetGhostsVisible(this.gameObject, true);
+        GhostManager.Instance.SetGhostsVisible(gameObject, true);
 
         GetTilesInRange();
         ShowTilesInRange();
@@ -246,7 +254,7 @@ public class DieManager : MonoBehaviour
                                 eventName = "Ally" + state + "Beats" + enemyState;
 
                                 toKill.Add(enemyDie);
-                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+                                Debug.Log(state + "(" + name + ") beats " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Rock:
                             case DiceState.Scissors:
@@ -259,12 +267,12 @@ public class DieManager : MonoBehaviour
                                 }
 
                                 toKill.Add(this);
-                                Debug.Log(state + "(" + this.name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
+                                Debug.Log(state + "(" + name + ") beaten by " + enemyState + "(" + enemyDie.name + ")");
 
                                 break;
                             case DiceState.King:
                                 eventName = "Draw";
-                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                Debug.Log(state + "(" + name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             }
                         break;
@@ -278,11 +286,11 @@ public class DieManager : MonoBehaviour
                                 eventName = "Ally" + state + "Beats" + enemyState;
 
                                 toKill.Add(enemyDie);
-                                Debug.Log(state + "(" + this.name + ") beats " + enemyState + "(" + enemyDie.name + ")");
+                                Debug.Log(state + "(" + name + ") beats " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                             case DiceState.Lich:
                                 eventName = "Draw";
-                                Debug.Log(state + "(" + this.name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
+                                Debug.Log(state + "(" + name + ") draws with " + enemyState + "(" + enemyDie.name + ")");
                                 break;
                         }
                         break;
@@ -490,61 +498,51 @@ public class DieManager : MonoBehaviour
         switch (tileType)
         {
             case TileType.Normal:
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.Stopping:
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 _movesAvailable = 0;
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.RotateClockwise:
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 _dieRotator.RotateZ(1);
                 yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.RotateCounterClockwise:
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 _dieRotator.RotateZ(-1);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.ShovePosX:
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 yield return StartCoroutine(Shove(new Vector2Int(1, 0)));
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.ShovePosY:
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 yield return StartCoroutine(Shove(new Vector2Int(0, 1)));
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.ShoveNegX:
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 yield return StartCoroutine(Shove(new Vector2Int(-1, 0)));
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.ShoveNegY:
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 yield return StartCoroutine(Shove(new Vector2Int(0, -1)));
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.RemoveFace:
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 _dieRotator.SetDownFace(DiceState.Blank);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.Randomize:
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
@@ -553,7 +551,6 @@ public class DieManager : MonoBehaviour
                 Fight();
                 break;
             default:
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
                 GetTilesInRange();
                 Fight();
                 break;
