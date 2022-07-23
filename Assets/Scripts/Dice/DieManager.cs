@@ -15,7 +15,7 @@ public enum DiceState : uint
     King = 5,
 }
 
-public class DieManager : MonoBehaviour
+public class DieManager : MonoBehaviour, PhaseListener
 {
     //Properties
     public string diceName;
@@ -72,14 +72,14 @@ public class DieManager : MonoBehaviour
     }
 
     void OnEnable() {
-        GameManager.Instance.TurnChange += OnTurnChange;
+        GameManager.Instance.PhaseChange += OnPhaseChange;
         DebugConsole.DebugNames += OnDebugNames;
         ABeatsB += OnABeatsB;
         Draw += OnDraw;
     }
 
     void OnDisable() {
-        GameManager.Instance.TurnChange += OnTurnChange;
+        GameManager.Instance.PhaseChange += OnPhaseChange;
         DebugConsole.DebugNames += OnDebugNames;
         ABeatsB -= OnABeatsB;
         Draw -= OnDraw;
@@ -91,7 +91,7 @@ public class DieManager : MonoBehaviour
         {
             if (GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(this))
             {
-                if (GameManager.Instance.CurrentTurnValue == Turn.Player && _movesAvailable > 0)
+                if (GameManager.Instance.CurrentPhase == Phase.Player && _movesAvailable > 0)
                     _moveIndicator.SetActive(true);
                 else
                     _moveIndicator.SetActive(false);
@@ -162,7 +162,7 @@ public class DieManager : MonoBehaviour
                 }
 
                 if (_movesAvailable <= 0)
-                    GameManager.Instance.PieceOutOfMoves();
+                    GameManager.Instance.PlayerMoveRemaining--;
             }
 
             MoveFinished?.Invoke(tile);
@@ -545,13 +545,20 @@ public class DieManager : MonoBehaviour
         yield return StartCoroutine(UpdateTilePos(tile, false));
     }
 
-    void OnTurnChange(Turn turn) {
-        if (isEnemy && turn == Turn.Enemy)
-            ResetRange();
-        else if (!isEnemy && turn == Turn.Player)
-            ResetRange();
-
-        Debug.Log("Turn change " + this + ":"+ _movesAvailable + "/" + _maxRange);
+    public void OnPhaseChange(Phase phase) {
+        switch (phase) {
+            case Phase.Enemy:
+                if (isEnemy) {
+                    ResetRange();
+                }
+                break;
+            case Phase.Player:
+                if (!isEnemy) {
+                    ResetRange();
+                }
+                break;
+        }
+        Debug.Log("Phase change " + this + ":"+ _movesAvailable + "/" + _maxRange);
     }
 
     void OnDebugNames() {
@@ -573,7 +580,7 @@ public class DieManager : MonoBehaviour
             Globals.SELECTED_UNIT = null;
         }
 
-        GameManager.Instance.TurnChange -= OnTurnChange;
+        GameManager.Instance.PhaseChange -= OnPhaseChange;
 
         if (isEnemy)
         {
@@ -581,7 +588,7 @@ public class DieManager : MonoBehaviour
         }
         else
         {
-            GameManager.Instance.PieceOutOfMoves();
+            GameManager.Instance.PlayerMoveRemaining--;
             GameManager.Instance.PlayerCount--;
         }
     }

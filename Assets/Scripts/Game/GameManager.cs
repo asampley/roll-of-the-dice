@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 
-public enum Turn
+public enum Phase
 {
     Setup,
     Player,
@@ -16,6 +16,12 @@ public enum Win
 {
     Player,
     Enemy,
+}
+
+public interface PhaseListener {
+    string name { get; }
+
+    void OnPhaseChange(Phase phase);
 }
 
 public class GameManager : MonoBehaviour
@@ -37,7 +43,7 @@ public class GameManager : MonoBehaviour
     private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
 
-    private HashSet<EnemyAI> enemiesWaiting = new HashSet<EnemyAI>();
+    private HashSet<PhaseListener> phaseProcessing = new HashSet<PhaseListener>();
 
     private int _enemies;
     public int EnemyCount {
@@ -69,7 +75,7 @@ public class GameManager : MonoBehaviour
     private int _playerMoveRemaining;
     public int PlayerMoveRemaining {
         get { return _playerMoveRemaining; }
-        set { _playerMoveRemaining = value; }
+        set { _playerMoveRemaining = value; TryAdvancePhase(); }
     }
 
     private int _playerpiecesMoved;
@@ -107,18 +113,18 @@ public class GameManager : MonoBehaviour
         set { _maxNumberOfTurns = value; }
     }
 
-    private Turn _turnValue;
-    public Turn CurrentTurnValue {
-        get { return _turnValue; }
+    private Phase _phase;
+    public Phase CurrentPhase {
+        get { return _phase; }
         private set {
-            if (_turnValue != value) {
-                _turnValue = value;
-                PostTurnChange();
-                TurnChange?.Invoke(_turnValue);
+            if (_phase != value) {
+                _phase = value;
+                PostPhaseChange();
+                PhaseChange?.Invoke(_phase);
             }
         }
     }
-    public event Action<Turn> TurnChange;
+    public event Action<Phase> PhaseChange;
 
 
     private void Awake()
@@ -128,7 +134,7 @@ public class GameManager : MonoBehaviour
         else
             _instance = this;
 
-        TurnChange += t => Debug.Log("Turn: " + t);
+        PhaseChange += p => Debug.Log("Phase: " + p);
     }
 
     private void Start()
@@ -191,7 +197,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        CurrentTurnValue = Turn.Setup;
+        CurrentPhase = Phase.Setup;
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
         CurrentRound = 1;
@@ -209,12 +215,12 @@ public class GameManager : MonoBehaviour
         }
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
 
-        StartCoroutine(SleepyTurnSwitch(Turn.Player));
+        StartCoroutine(SleepyPhaseSwitch(Phase.Player));
     }
 
-    public IEnumerator SleepyTurnSwitch(Turn turn) {
+    public IEnumerator SleepyPhaseSwitch(Phase phase) {
         yield return new WaitForFixedUpdate();
-        CurrentTurnValue = turn;
+        CurrentPhase = phase;
     }
 
     public void RerollGame()
@@ -237,7 +243,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void CheckWin() {
-        if (CurrentTurnValue == Turn.Setup) return;
+        if (CurrentPhase == Phase.Setup) return;
 
         if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
             WinEvent?.Invoke(Win.Enemy);
@@ -247,26 +253,45 @@ public class GameManager : MonoBehaviour
             WinEvent?.Invoke(Win.Player);
     }
 
-    public void AddEnemyWaiting(EnemyAI enemy) {
-        enemiesWaiting.Add(enemy);
+    public void AddPhaseProcessing(PhaseListener listener) {
+        phaseProcessing.Add(listener);
 
-        string str = Utilities.EnumerableString(enemiesWaiting.Select(e => e.name));
+        string str = Utilities.EnumerableString(phaseProcessing.Select(e => e.name));
         Debug.Log("Still waiting for " + str);
     }
 
-    public void RemoveEnemyWaiting(EnemyAI enemy) {
-        Debug.Log("Removing enemy");
-        enemiesWaiting.Remove(enemy);
+    public void RemovePhaseProcessing(PhaseListener listener) {
+        phaseProcessing.Remove(listener);
 
-        string str = Utilities.EnumerableString(enemiesWaiting.Select(e => e.name));
+        string str = Utilities.EnumerableString(phaseProcessing.Select(e => e.name));
         Debug.Log("Still waiting for " + str);
 
-        if (CurrentTurnValue == Turn.Enemy && enemiesWaiting.Count == 0)
-            CurrentTurnValue = Turn.Player;
+        TryAdvancePhase();
     }
 
-    private void PostTurnChange() {
-        if (CurrentTurnValue == Turn.Player) {
+    private void TryAdvancePhase() {
+        if (phaseProcessing.Count != 0) return;
+
+        switch (CurrentPhase) {
+            case Phase.Setup:
+                CurrentPhase = Phase.Player;
+                break;
+            case Phase.Enemy:
+                CurrentPhase = Phase.Player;
+                break;
+            case Phase.Player:
+                if (_playerMoveRemaining <= 0) {
+                    CurrentPhase = Phase.Enemy;
+                }
+                break;
+            default:
+                Debug.LogError("Unreconized phase. Cannot advance");
+                break;
+        }
+    }
+
+    private void PostPhaseChange() {
+        if (CurrentPhase == Phase.Player) {
             CurrentRound++;
             PlayerPiecesMoved = 0;
             MovedPieces.Clear();
@@ -280,12 +305,5 @@ public class GameManager : MonoBehaviour
             MaxPlayerMoves = PlayerCount;
         else
             MaxPlayerMoves = gameRulesData.playerUnitsToMove;
-    }
-
-    public void PieceOutOfMoves()
-    {
-        _playerMoveRemaining--;
-        if (_playerMoveRemaining <= 0 && CurrentTurnValue == Turn.Player)
-            CurrentTurnValue = Turn.Enemy;
     }
 }

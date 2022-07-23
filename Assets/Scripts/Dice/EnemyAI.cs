@@ -4,19 +4,26 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EnemyAI : MonoBehaviour {
+public class EnemyAI : MonoBehaviour, PhaseListener {
     private List<Vector2Int> path = new List<Vector2Int>();
 
     private DieManager dieManager;
 
     // Start is called before the first frame update
     void Start() {
+        OnPhaseChange(GameManager.Instance.CurrentPhase);
+    }
+
+    void OnEnable() {
         dieManager = GetComponent<DieManager>();
 
-        GameManager.Instance.TurnChange += OnTurnChange;
+        GameManager.Instance.PhaseChange += OnPhaseChange;
         dieManager.MoveFinished += OnMoveFinished;
+    }
 
-        OnTurnChange(GameManager.Instance.CurrentTurnValue);
+    void OnDisable() {
+        GameManager.Instance.PhaseChange -= OnPhaseChange;
+        dieManager.MoveFinished -= OnMoveFinished;
     }
 
     private List<OverlayTile> GetTilesBeside(Vector2Int pos) {
@@ -105,18 +112,22 @@ public class EnemyAI : MonoBehaviour {
         }
     }
 
-    private void OnTurnChange(Turn turn) {
-        if (turn == Turn.Enemy) {
-            FollowPath();
-        } else if (turn == Turn.Player) {
-            CreatePath();
-            GameManager.Instance.AddEnemyWaiting(this);
+    public void OnPhaseChange(Phase phase) {
+        switch(phase) {
+            case Phase.Enemy:
+                GameManager.Instance.AddPhaseProcessing(this);
+                FollowPath();
+                break;
+            case Phase.Player:
+                CreatePath();
+                break;
         }
     }
 
     private void OnMoveFinished(OverlayTile tile) {
+        Debug.Log("Move finished");
         ClearPath();
-        GameManager.Instance.RemoveEnemyWaiting(this);
+        GameManager.Instance.RemovePhaseProcessing(this);
     }
 
     void UnreservePath() {
@@ -130,13 +141,7 @@ public class EnemyAI : MonoBehaviour {
     }
 
     void OnDestroy() {
-        GameManager.Instance.RemoveEnemyWaiting(this);
-
-        GameManager.Instance.TurnChange -= OnTurnChange;
-
-        if (dieManager != null) {
-            dieManager.MoveFinished -= OnMoveFinished;
-        }
+        GameManager.Instance.RemovePhaseProcessing(this);
 
         UnreservePath();
     }
