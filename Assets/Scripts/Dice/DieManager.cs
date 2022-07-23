@@ -400,7 +400,6 @@ public class DieManager : MonoBehaviour
             if (tile.IsBlocked) continue;
             tile.ShowTile();
             Vector2Int delta = (Vector2Int)(tile.gridLocation - parentTile.gridLocation);
-            Debug.Log(delta);
             Vector3 translation = MapManager.Instance.TileDeltaToWorldDelta(delta);
             var ghost = GhostManager.Instance.CreateGhost(gameObject, translation, delta, Math.Abs(delta.x) + Math.Abs(delta.y));
             ghost.GetComponentInChildren<DieRotator>().Collapse = true;

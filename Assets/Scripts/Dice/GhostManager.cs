@@ -35,7 +35,6 @@ public class GhostManager : MonoBehaviour {
         if (tileDelta != null) {
             var rotator = ghost.GetComponentInChildren<DieRotator>();
 
-            Debug.Log(rotationCount);
             rotator.RotateTileDelta(tileDelta.Value, rotationCount);
         }
 
