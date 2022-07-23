@@ -92,11 +92,11 @@ public class GameManager : MonoBehaviour
         set { _turnsRemaining = value; }
     }
 
-    private int _currentTurnNumber;
-    public int CurrentTurnNumber
+    private int _currentRound;
+    public int CurrentRound
     {
-        get { return _currentTurnNumber; }
-        set { _currentTurnNumber = value; CheckWin(); }
+        get { return _currentRound; }
+        set { _currentRound = value; CheckWin(); }
     }
 
     private int _maxNumberOfTurns;
@@ -194,7 +194,7 @@ public class GameManager : MonoBehaviour
         CurrentTurnValue = Turn.Setup;
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
-        CurrentTurnNumber = 1;
+        CurrentRound = 1;
 
         ClearMap();
 
@@ -239,7 +239,7 @@ public class GameManager : MonoBehaviour
     public void CheckWin() {
         if (CurrentTurnValue == Turn.Setup) return;
 
-        if (CurrentTurnNumber >= MaxNumberOfTurns && gameRulesData.turnLimit)
+        if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
             WinEvent?.Invoke(Win.Enemy);
         else if (PlayerCount == 0 || PlayerKingDefeated)
             WinEvent?.Invoke(Win.Enemy);
@@ -267,7 +267,7 @@ public class GameManager : MonoBehaviour
 
     private void PostTurnChange() {
         if (CurrentTurnValue == Turn.Player) {
-            CurrentTurnNumber++;
+            CurrentRound++;
             PlayerPiecesMoved = 0;
             MovedPieces.Clear();
             _playerMoveRemaining = _maxPlayerMoves;
