@@ -187,6 +187,8 @@ public class DieManager : MonoBehaviour
 
     public void Select()
     {
+        if (Globals.SELECTED_UNIT == this) return;
+
         if (Globals.SELECTED_UNIT != null)
             Globals.SELECTED_UNIT.Deselect();
         Globals.SELECTED_UNIT = this;
@@ -397,11 +399,10 @@ public class DieManager : MonoBehaviour
         {
             if (tile.IsBlocked) continue;
             tile.ShowTile();
-            Vector3Int rot = tile.gridLocation - parentTile.gridLocation;
-            Vector3 translation
-                = MapManager.Instance.TileToWorldSpace(tile.gridLocation)
-                - MapManager.Instance.TileToWorldSpace(parentTile.gridLocation);
-            var ghost = GhostManager.Instance.CreateGhost(gameObject, translation, (Vector2Int)rot, rot.x + rot.y);
+            Vector2Int delta = (Vector2Int)(tile.gridLocation - parentTile.gridLocation);
+            Debug.Log(delta);
+            Vector3 translation = MapManager.Instance.TileDeltaToWorldDelta(delta);
+            var ghost = GhostManager.Instance.CreateGhost(gameObject, translation, delta, Math.Abs(delta.x) + Math.Abs(delta.y));
             ghost.GetComponentInChildren<DieRotator>().Collapse = true;
             ghost.GetComponentInChildren<DieTranslator>().Collapse = true;
         }
@@ -452,8 +453,7 @@ public class DieManager : MonoBehaviour
         }
 
         GetComponentInChildren<DieTranslator>().Translate(
-            MapManager.Instance.TileToWorldSpace(delta)
-            - MapManager.Instance.TileToWorldSpace(Vector2Int.zero)
+            MapManager.Instance.TileDeltaToWorldDelta(delta)
         );
     }
 

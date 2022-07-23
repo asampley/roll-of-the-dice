@@ -116,6 +116,10 @@ public class MapManager : MonoBehaviour
         return this.tileMap.GetCellCenterWorld(pos) + Vector3.forward * 0.5f * (pos.y + pos.x);
     }
 
+    public Vector3 TileDeltaToWorldDelta(Vector2Int delta) {
+        return TileToWorldSpace(delta) - TileToWorldSpace(Vector2Int.zero);
+    }
+
     public List<OverlayTile> GetSurroundingTiles(Vector2Int originTile)
     {
         var surroundingTiles = new List<OverlayTile>();
