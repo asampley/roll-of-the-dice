@@ -538,7 +538,12 @@ public class DieManager : MonoBehaviour
     public IEnumerator Shove(Vector2Int dir)
     {
         Vector2Int newPos = (Vector2Int)parentTile.gridLocation + dir;
-        yield return StartCoroutine(UpdateTilePos(MapManager.Instance.GetTileAtPos(newPos), false));
+
+        var tile = MapManager.Instance.GetTileAtPos(newPos);
+
+        if (tile.IsBlocked) yield break;
+
+        yield return StartCoroutine(UpdateTilePos(tile, false));
     }
 
     void OnTurnChange(Turn turn) {
