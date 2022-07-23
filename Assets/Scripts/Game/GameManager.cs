@@ -278,13 +278,12 @@ public class GameManager : MonoBehaviour
     }
 
     private IEnumerator RunPhaseUpdate() {
-        List<Coroutine> coroutines = new List<Coroutine>();
-
         do {
             // copy list to protect from manipulation in the middle of processing
             List<PhaseListener> toUpdate = new List<PhaseListener>(phaseProcessing);
 
-            coroutines = toUpdate.Select(l => StartCoroutine(l.OnPhaseUpdate(CurrentPhase))).ToList();
+            List<Coroutine> coroutines =
+                toUpdate.Select(l => StartCoroutine(l.OnPhaseUpdate(CurrentPhase))).ToList();
 
             foreach (var coroutine in coroutines) {
                 yield return coroutine;
