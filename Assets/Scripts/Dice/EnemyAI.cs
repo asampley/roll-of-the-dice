@@ -125,7 +125,6 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
     }
 
     private void OnMoveFinished(OverlayTile tile) {
-        Debug.Log("Move finished");
         ClearPath();
         GameManager.Instance.RemovePhaseProcessing(this);
     }

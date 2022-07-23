@@ -187,8 +187,6 @@ public class DieManager : MonoBehaviour, PhaseListener
 
     public void Select()
     {
-        if (Globals.SELECTED_UNIT == this) return;
-
         if (Globals.SELECTED_UNIT != null)
             Globals.SELECTED_UNIT.Deselect();
         Globals.SELECTED_UNIT = this;
