@@ -5,8 +5,25 @@ using UnityEngine;
 
 public class MouseController : MonoBehaviour
 {
+    private Vector3 mouseStart;
+
     private void LateUpdate()
     {
+        var mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition + Vector3.forward * transform.position.z);
+
+        if (Input.GetMouseButtonDown(0)) {
+            mouseStart = mousePoint;
+        } else if (Input.GetMouseButton(0)) {
+            Camera.main.transform.position += mouseStart - mousePoint;
+        }
+
+        Camera.main.orthographicSize =
+            Mathf.Clamp(
+                Camera.main.orthographicSize - Input.mouseScrollDelta.y,
+                Globals.MIN_CAMERA_SIZE,
+                Globals.MAX_CAMERA_SIZE
+            );
+
         var focusedTileHit = MapManager.Instance.GetFocusedTile();
 
         if (focusedTileHit.HasValue)
@@ -16,7 +33,7 @@ public class MouseController : MonoBehaviour
             transform.position = overlayTile.transform.position;
             gameObject.GetComponent<SpriteRenderer>().sortingOrder = overlayTile.GetComponent<SpriteRenderer>().sortingOrder + 2;
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 if (overlayTileManager.occupyingDie != null)
                 {

@@ -13,5 +13,8 @@ public static class Globals
 
     public static LayerMask OVERLAY_TILE = 1 << 9;
 
+    public static float MIN_CAMERA_SIZE = 1;
+    public static float MAX_CAMERA_SIZE = 10;
+
     public static readonly uint DICE_STATES = Enum.GetValues(typeof(DiceState)).Cast<uint>().Max() + 1;
 }
