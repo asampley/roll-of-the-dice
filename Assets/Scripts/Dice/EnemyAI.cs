@@ -126,7 +126,8 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
             case Phase.Enemy:
                 if (path.Count == 0) {
                     ClearPath();
-                    yield return GameManager.Instance.RemovePhaseProcessing(this);
+
+                    GameManager.Instance.RemovePhaseProcessing(this);
                 } else {
                     yield return StepPath();
                 }

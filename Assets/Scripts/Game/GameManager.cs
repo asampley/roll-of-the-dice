@@ -23,6 +23,7 @@ public interface PhaseListener {
 
     // called once when the phase changes
     void OnPhaseChange(Phase phase);
+
     // async function that is called again once all listeners have completed a step in the phase
     // only called if the item has been added to phase processing
     IEnumerator OnPhaseUpdate(Phase phase);
@@ -267,9 +268,7 @@ public class GameManager : MonoBehaviour
     }
 
     // must be a coroutine to remove only after a frame has passed
-    public IEnumerator RemovePhaseProcessing(PhaseListener listener) {
-        yield return new WaitForEndOfFrame();
-
+    public void RemovePhaseProcessing(PhaseListener listener) {
         phaseProcessing.Remove(listener);
 
         string str = Utilities.EnumerableString(phaseProcessing.Select(e => e.name));
@@ -282,9 +281,10 @@ public class GameManager : MonoBehaviour
         List<Coroutine> coroutines = new List<Coroutine>();
 
         do {
-            foreach (PhaseListener listener in phaseProcessing) {
-                coroutines.Add(StartCoroutine(listener.OnPhaseUpdate(CurrentPhase)));
-            }
+            // copy list to protect from manipulation in the middle of processing
+            List<PhaseListener> toUpdate = new List<PhaseListener>(phaseProcessing);
+
+            coroutines = toUpdate.Select(l => StartCoroutine(l.OnPhaseUpdate(CurrentPhase))).ToList();
 
             foreach (var coroutine in coroutines) {
                 yield return coroutine;
