@@ -21,7 +21,11 @@ public enum Win
 public interface PhaseListener {
     string name { get; }
 
+    // called once when the phase changes
     void OnPhaseChange(Phase phase);
+    // async function that is called again once all listeners have completed a step in the phase
+    // only called if the item has been added to phase processing
+    IEnumerator OnPhaseUpdate(Phase phase);
 }
 
 public class GameManager : MonoBehaviour
@@ -121,6 +125,7 @@ public class GameManager : MonoBehaviour
                 _phase = value;
                 PostPhaseChange();
                 PhaseChange?.Invoke(_phase);
+                StartCoroutine(RunPhaseUpdate());
             }
         }
     }
@@ -253,6 +258,7 @@ public class GameManager : MonoBehaviour
             WinEvent?.Invoke(Win.Player);
     }
 
+    // should only be called in OnPhaseChange
     public void AddPhaseProcessing(PhaseListener listener) {
         phaseProcessing.Add(listener);
 
@@ -260,7 +266,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("Still waiting for " + str);
     }
 
-    public void RemovePhaseProcessing(PhaseListener listener) {
+    // must be a coroutine to remove only after a frame has passed
+    public IEnumerator RemovePhaseProcessing(PhaseListener listener) {
+        yield return new WaitForEndOfFrame();
+
         phaseProcessing.Remove(listener);
 
         string str = Utilities.EnumerableString(phaseProcessing.Select(e => e.name));
@@ -269,24 +278,38 @@ public class GameManager : MonoBehaviour
         TryAdvancePhase();
     }
 
-    private void TryAdvancePhase() {
-        if (phaseProcessing.Count != 0) return;
+    private IEnumerator RunPhaseUpdate() {
+        List<Coroutine> coroutines = new List<Coroutine>();
+
+        do {
+            foreach (PhaseListener listener in phaseProcessing) {
+                coroutines.Add(StartCoroutine(listener.OnPhaseUpdate(CurrentPhase)));
+            }
+
+            foreach (var coroutine in coroutines) {
+                yield return coroutine;
+            }
+        } while (!TryAdvancePhase());
+    }
+
+    private bool TryAdvancePhase() {
+        if (phaseProcessing.Count != 0) return false;
 
         switch (CurrentPhase) {
             case Phase.Setup:
                 CurrentPhase = Phase.Player;
-                break;
+                return true;
             case Phase.Enemy:
                 CurrentPhase = Phase.Player;
-                break;
+                return true;
             case Phase.Player:
                 if (_playerMoveRemaining <= 0) {
                     CurrentPhase = Phase.Enemy;
                 }
-                break;
+                return true;
             default:
                 Debug.LogError("Unreconized phase. Cannot advance");
-                break;
+                return false;
         }
     }
 

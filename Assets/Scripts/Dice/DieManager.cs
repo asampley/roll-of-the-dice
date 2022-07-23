@@ -177,6 +177,10 @@ public class DieManager : MonoBehaviour, PhaseListener
         IsMoving = false;
     }
 
+    public IEnumerator MoveAsync(OverlayTile newTile) {
+        yield return MoveMany(new List<OverlayTile> { newTile }.GetEnumerator());
+    }
+
     public void Move(OverlayTile newTile) {
         StartCoroutine(MoveMany(new List<OverlayTile> { newTile }.GetEnumerator()));
     }
@@ -557,6 +561,10 @@ public class DieManager : MonoBehaviour, PhaseListener
                 break;
         }
         Debug.Log("Phase change " + this + ":"+ _movesAvailable + "/" + _maxRange);
+    }
+
+    public IEnumerator OnPhaseUpdate(Phase phase) {
+        yield break;
     }
 
     void OnDebugNames() {
