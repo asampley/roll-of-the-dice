@@ -11,17 +11,19 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
 
     // Start is called before the first frame update
     void Start() {
-        dieManager = GetComponent<DieManager>();
-
         OnPhaseChange(GameManager.Instance.CurrentPhase);
     }
 
     void OnEnable() {
+        dieManager = GetComponent<DieManager>();
+
         GameManager.Instance.PhaseChange += OnPhaseChange;
+        dieManager.MoveFinished += OnMoveFinished;
     }
 
     void OnDisable() {
         GameManager.Instance.PhaseChange -= OnPhaseChange;
+        dieManager.MoveFinished -= OnMoveFinished;
     }
 
     private List<OverlayTile> GetTilesBeside(Vector2Int pos) {
@@ -79,41 +81,42 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         Debug.Log("Created Path: " + PathStr());
     }
 
-    public IEnumerator StepPath() {
-        Debug.Log("Garfield Starting StepPath: " + transform.name);
+    public void FollowPath() {
+        Debug.Log("Garfield Starting FollowPath: " + transform.name);
         Debug.Log("Following Path: " + PathStr());
 
         GhostManager.Instance.RemoveGhosts(gameObject);
 
-        if (path.Count > 0) {
-            OverlayTile tile;
-            try {
-                tile = MapManager.Instance.GetTileAtPos(
-                    (Vector2Int)dieManager.parentTile.gridLocation + path[0]
-                );
+        dieManager.Move(PathGenerator());
 
-                path.RemoveAt(0);
-            } catch (KeyNotFoundException) {
-                Debug.Log("Tile does not exist, stopping path");
-                ClearPath();
-
-                yield break;
-            }
-
-            yield return dieManager.MoveAsync(tile);
-        }
-
-        Debug.Log("Garfield Ending StepPath: " + transform.name);
+        Debug.Log("Garfield Ending FollowPath: " + transform.name);
     }
 
     private string PathStr() {
         return (Vector2Int)dieManager.parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
     }
 
+    private IEnumerator<OverlayTile> PathGenerator() {
+        foreach (var p in path) {
+            OverlayTile tile;
+            try {
+                tile = MapManager.Instance.GetTileAtPos(
+                    (Vector2Int)dieManager.parentTile.gridLocation + p
+                );
+            } catch (KeyNotFoundException) {
+                Debug.Log("Tile does not exist, stopping path");
+                break;
+            }
+
+            yield return tile;
+        }
+    }
+
     public void OnPhaseChange(Phase phase) {
         switch(phase) {
             case Phase.Enemy:
                 GameManager.Instance.AddPhaseProcessing(this);
+                FollowPath();
                 break;
             case Phase.Player:
                 CreatePath();
@@ -121,18 +124,9 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         }
     }
 
-    public IEnumerator OnPhaseUpdate(Phase phase) {
-        switch(phase) {
-            case Phase.Enemy:
-                if (path.Count == 0) {
-                    ClearPath();
-
-                    GameManager.Instance.RemovePhaseProcessing(this);
-                } else {
-                    yield return StepPath();
-                }
-                break;
-        }
+    private void OnMoveFinished(OverlayTile tile) {
+        ClearPath();
+        GameManager.Instance.RemovePhaseProcessing(this);
     }
 
     void UnreservePath() {
