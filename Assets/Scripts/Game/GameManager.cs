@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
-
+using Cysharp.Threading.Tasks;
 
 public enum Phase
 {
@@ -20,13 +21,14 @@ public enum Win
 
 public interface PhaseListener {
     string name { get; }
+    MonoBehaviour Self { get; }
 
     // called once when the phase changes
     void OnPhaseChange(Phase phase);
 
     // async function that is called again once all listeners have completed a step in the phase
     // only called if the item has been added to phase processing
-    IEnumerator OnPhaseUpdate(Phase phase);
+    UniTask OnPhaseUpdate(Phase phase, CancellationToken token);
 }
 
 public class GameManager : MonoBehaviour
@@ -80,7 +82,7 @@ public class GameManager : MonoBehaviour
     private int _playerMoveRemaining;
     public int PlayerMoveRemaining {
         get { return _playerMoveRemaining; }
-        set { _playerMoveRemaining = value; TryAdvancePhase(); }
+        set { _playerMoveRemaining = value; }
     }
 
     private int _playerpiecesMoved;
@@ -122,12 +124,8 @@ public class GameManager : MonoBehaviour
     public Phase CurrentPhase {
         get { return _phase; }
         private set {
-            if (_phase != value) {
-                _phase = value;
-                PostPhaseChange();
-                PhaseChange?.Invoke(_phase);
-                StartCoroutine(RunPhaseUpdate());
-            }
+            _phase = value;
+            PhaseChange?.Invoke(_phase);
         }
     }
     public event Action<Phase> PhaseChange;
@@ -140,7 +138,7 @@ public class GameManager : MonoBehaviour
         else
             _instance = this;
 
-        PhaseChange += p => Debug.Log("Phase: " + p);
+        PhaseChange += OnPhaseChange;
     }
 
     private void Start()
@@ -148,6 +146,7 @@ public class GameManager : MonoBehaviour
         FindPrefabs();
         RollPositions();
         StartGame();
+        RunPhaseUpdate().Forget();
     }
 
     private void FindPrefabs()
@@ -221,11 +220,11 @@ public class GameManager : MonoBehaviour
         }
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
 
-        StartCoroutine(SleepyPhaseSwitch(Phase.Player));
+        UniTask.Create(async () => await SleepyPhaseSwitch(Phase.Player));
     }
 
-    public IEnumerator SleepyPhaseSwitch(Phase phase) {
-        yield return new WaitForFixedUpdate();
+    public async UniTask SleepyPhaseSwitch(Phase phase) {
+        await UniTask.DelayFrame(1);
         CurrentPhase = phase;
     }
 
@@ -273,22 +272,42 @@ public class GameManager : MonoBehaviour
 
         string str = Utilities.EnumerableString(phaseProcessing.Select(e => e.name));
         Debug.Log("Still waiting for " + str);
-
-        TryAdvancePhase();
     }
 
-    private IEnumerator RunPhaseUpdate() {
-        do {
+    private async UniTask RunPhaseUpdate() {
+        Debug.Log("Start Run Phase Update: " + CurrentPhase);
+
+        while (true) {
             // copy list to protect from manipulation in the middle of processing
             List<PhaseListener> toUpdate = new List<PhaseListener>(phaseProcessing);
+            List<UniTask> tasks = new List<UniTask>();
 
-            List<Coroutine> coroutines =
-                toUpdate.Select(l => StartCoroutine(l.OnPhaseUpdate(CurrentPhase))).ToList();
-
-            foreach (var coroutine in coroutines) {
-                yield return coroutine;
+            foreach (var l in toUpdate) {
+                tasks.Add(TryPhaseUpdate(l, l.Self.GetCancellationTokenOnDestroy()));
             }
-        } while (!TryAdvancePhase());
+
+            if (tasks.Count > 0) {
+                await UniTask.WhenAll(tasks);
+            } else {
+                await UniTask.WaitForFixedUpdate();
+            }
+
+            TryAdvancePhase();
+        }
+    }
+
+    private async UniTask TryPhaseUpdate(PhaseListener listener, CancellationToken token) {
+        try {
+            await listener.OnPhaseUpdate(CurrentPhase, token);
+        } catch (MissingReferenceException) {
+            return;
+        } catch (OperationCanceledException e) {
+            Debug.Log(e);
+            return;
+        } catch (Exception e) {
+            Debug.LogError(e);
+            return;
+        }
     }
 
     private bool TryAdvancePhase() {
@@ -296,24 +315,27 @@ public class GameManager : MonoBehaviour
 
         switch (CurrentPhase) {
             case Phase.Setup:
-                CurrentPhase = Phase.Player;
-                return true;
+                //CurrentPhase = Phase.Player;
+                //return true;
+                return false;
             case Phase.Enemy:
                 CurrentPhase = Phase.Player;
                 return true;
             case Phase.Player:
                 if (_playerMoveRemaining <= 0) {
                     CurrentPhase = Phase.Enemy;
+                    return true;
+                } else {
+                    return false;
                 }
-                return true;
             default:
                 Debug.LogError("Unreconized phase. Cannot advance");
                 return false;
         }
     }
 
-    private void PostPhaseChange() {
-        if (CurrentPhase == Phase.Player) {
+    private void OnPhaseChange(Phase phase) {
+        if (phase == Phase.Player) {
             CurrentRound++;
             PlayerPiecesMoved = 0;
             MovedPieces.Clear();

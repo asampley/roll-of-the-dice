@@ -2,9 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class EnemyAI : MonoBehaviour, PhaseListener {
+    public MonoBehaviour Self { get { return this; } }
+
     private List<Vector2Int> path = new List<Vector2Int>();
 
     private DieManager dieManager;
@@ -79,7 +83,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         Debug.Log("Created Path: " + PathStr());
     }
 
-    public IEnumerator StepPath() {
+    public async UniTask StepPath(CancellationToken token) {
         Debug.Log("Garfield Starting StepPath: " + transform.name);
         Debug.Log("Following Path: " + PathStr());
 
@@ -97,10 +101,10 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                 Debug.Log("Tile does not exist, stopping path");
                 ClearPath();
 
-                yield break;
+                return;
             }
 
-            yield return dieManager.MoveAsync(tile);
+            await dieManager.MoveAsync(tile, token);
         }
 
         Debug.Log("Garfield Ending StepPath: " + transform.name);
@@ -121,7 +125,8 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         }
     }
 
-    public IEnumerator OnPhaseUpdate(Phase phase) {
+    public async UniTask OnPhaseUpdate(Phase phase, CancellationToken token) {
+        Debug.Log("Phase update: " + name);
         switch(phase) {
             case Phase.Enemy:
                 if (path.Count == 0) {
@@ -129,7 +134,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
 
                     GameManager.Instance.RemovePhaseProcessing(this);
                 } else {
-                    yield return StepPath();
+                    await StepPath(token);
                 }
                 break;
         }

@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using TMPro;
+using Cysharp.Threading.Tasks;
 
 public enum DiceState : uint
 {
@@ -17,6 +19,8 @@ public enum DiceState : uint
 
 public class DieManager : MonoBehaviour, PhaseListener
 {
+    public MonoBehaviour Self { get { return this; } }
+
     //Properties
     public string diceName;
     [SerializeField]
@@ -63,6 +67,11 @@ public class DieManager : MonoBehaviour, PhaseListener
     public static event Action<DieManager, DieManager> ABeatsB;
     public static event Action<DieManager, DieManager> Draw;
 
+    static DieManager() {
+        ABeatsB += (a,b) => Debug.Log(a.state + "(" + a.name + ") beats " + b.state + "(" + b.name + ")");
+        Draw += (a,b) => Debug.Log(a.state + "(" + a.name + ") draws with " + b.state + "(" + b.name + ")");
+    }
+
     void Start() {
         nameText = GetComponentInChildren<TextMeshProUGUI>();
         nameText.enabled = false;
@@ -74,15 +83,11 @@ public class DieManager : MonoBehaviour, PhaseListener
     void OnEnable() {
         GameManager.Instance.PhaseChange += OnPhaseChange;
         DebugConsole.DebugNames += OnDebugNames;
-        ABeatsB += OnABeatsB;
-        Draw += OnDraw;
     }
 
     void OnDisable() {
         GameManager.Instance.PhaseChange += OnPhaseChange;
         DebugConsole.DebugNames += OnDebugNames;
-        ABeatsB -= OnABeatsB;
-        Draw -= OnDraw;
     }
 
     private void Update()
@@ -134,7 +139,7 @@ public class DieManager : MonoBehaviour, PhaseListener
     }
 
     // consumes each step of the enumerator only after the last move has completed
-    private IEnumerator MoveMany(IEnumerator<OverlayTile> tiles) {
+    private async UniTask MoveMany(IEnumerator<OverlayTile> tiles, CancellationToken token) {
         IsMoving = true;
         if (tiles.MoveNext()) {
             OverlayTile tile;
@@ -145,9 +150,9 @@ public class DieManager : MonoBehaviour, PhaseListener
 
                 GetTilesInRange();
                 if (!_tilesInRange.Contains(tile)) {
-                    yield break;
+                    return;
                 }
-                yield return StartCoroutine(UpdateTilePos(tile));
+                await UpdateTilePos(tile, token);
             } while (tiles.MoveNext());
 
             _movesAvailable--;
@@ -177,16 +182,16 @@ public class DieManager : MonoBehaviour, PhaseListener
         IsMoving = false;
     }
 
-    public IEnumerator MoveAsync(OverlayTile newTile) {
-        yield return MoveMany(new List<OverlayTile> { newTile }.GetEnumerator());
+    public async UniTask MoveAsync(OverlayTile newTile, CancellationToken token) {
+        await MoveMany(new List<OverlayTile> { newTile }.GetEnumerator(), token);
     }
 
     public void Move(OverlayTile newTile) {
-        StartCoroutine(MoveMany(new List<OverlayTile> { newTile }.GetEnumerator()));
+        MoveMany(new List<OverlayTile> { newTile }.GetEnumerator(), this.GetCancellationTokenOnDestroy()).Forget();
     }
 
     public void Move(IEnumerator<OverlayTile> tiles) {
-        StartCoroutine(MoveMany(tiles));
+        MoveMany(tiles, this.GetCancellationTokenOnDestroy()).Forget();
     }
 
     public void Select()
@@ -458,7 +463,7 @@ public class DieManager : MonoBehaviour, PhaseListener
         );
     }
 
-    private IEnumerator UpdateTilePos(OverlayTile newTile, bool rotate = true)
+    private async UniTask UpdateTilePos(OverlayTile newTile, CancellationToken token, bool rotate = true)
     {
         MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
         state = _dieRotator.GetUpFace();
@@ -466,11 +471,11 @@ public class DieManager : MonoBehaviour, PhaseListener
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
 
-        yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
-        yield return StartCoroutine(GetTileEffects());
+        await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME + 0.1f), cancellationToken: token);
+        await GetTileEffects(token);
     }
 
-    private IEnumerator GetTileEffects()
+    private async UniTask GetTileEffects(CancellationToken token)
     {
         TileType tileType = parentTile.data.TileType;
         HideTilesInRange();
@@ -487,7 +492,7 @@ public class DieManager : MonoBehaviour, PhaseListener
                 break;
             case TileType.RotateClockwise:
                 _dieRotator.RotateZ(1);
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
+                await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 Fight();
                 break;
@@ -497,22 +502,22 @@ public class DieManager : MonoBehaviour, PhaseListener
                 Fight();
                 break;
             case TileType.ShovePosX:
-                yield return StartCoroutine(Shove(new Vector2Int(1, 0)));
+                await Shove(new Vector2Int(1, 0), token);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.ShovePosY:
-                yield return StartCoroutine(Shove(new Vector2Int(0, 1)));
+                await Shove(new Vector2Int(0, 1), token);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.ShoveNegX:
-                yield return StartCoroutine(Shove(new Vector2Int(-1, 0)));
+                await Shove(new Vector2Int(-1, 0), token);
                 GetTilesInRange();
                 Fight();
                 break;
             case TileType.ShoveNegY:
-                yield return StartCoroutine(Shove(new Vector2Int(0, -1)));
+                await Shove(new Vector2Int(0, -1), token);
                 GetTilesInRange();
                 Fight();
                 break;
@@ -525,7 +530,7 @@ public class DieManager : MonoBehaviour, PhaseListener
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
+                await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 Fight();
                 break;
@@ -536,15 +541,15 @@ public class DieManager : MonoBehaviour, PhaseListener
         }
     }
 
-    public IEnumerator Shove(Vector2Int dir)
+    public async UniTask Shove(Vector2Int dir, CancellationToken token)
     {
         Vector2Int newPos = (Vector2Int)parentTile.gridLocation + dir;
 
         var tile = MapManager.Instance.GetTileAtPos(newPos);
 
-        if (tile.IsBlocked) yield break;
+        if (tile.IsBlocked) return;
 
-        yield return StartCoroutine(UpdateTilePos(tile, false));
+        await UpdateTilePos(tile, token, false);
     }
 
     public void OnPhaseChange(Phase phase) {
@@ -560,23 +565,14 @@ public class DieManager : MonoBehaviour, PhaseListener
                 }
                 break;
         }
-        Debug.Log("Phase change " + this + ":"+ _movesAvailable + "/" + _maxRange);
     }
 
-    public IEnumerator OnPhaseUpdate(Phase phase) {
-        yield break;
+    public async UniTask OnPhaseUpdate(Phase phase, CancellationToken token) {
+        return;
     }
 
     void OnDebugNames() {
         nameText.enabled = !nameText.enabled;
-    }
-
-    void OnABeatsB(DieManager a, DieManager b) {
-        Debug.Log(a.state + "(" + a.name + ") beats " + b.state + "(" + b.name + ")");
-    }
-
-    void OnDraw(DieManager a, DieManager b) {
-        Debug.Log(a.state + "(" + a.name + ") draws with " + b.state + "(" + b.name + ")");
     }
 
     void OnDestroy() {
