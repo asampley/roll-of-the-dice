@@ -17,15 +17,17 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
     void Start() {
         dieManager = GetComponent<DieManager>();
 
-        OnPhaseChange(GameManager.Instance.CurrentPhase);
+        if (GameManager.Instance.phaseManager.CurrentPhase != null) {
+            OnPhaseChange(GameManager.Instance.phaseManager.CurrentPhase.Value);
+        }
     }
 
     void OnEnable() {
-        GameManager.Instance.PhaseChange += OnPhaseChange;
+        GameManager.Instance.phaseManager.AllPhaseListeners.Add(this);
     }
 
     void OnDisable() {
-        GameManager.Instance.PhaseChange -= OnPhaseChange;
+        GameManager.Instance.phaseManager.AllPhaseListeners.Remove(this);
     }
 
     private List<OverlayTile> GetTilesBeside(Vector2Int pos) {
@@ -114,14 +116,15 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         return (Vector2Int)dieManager.parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
     }
 
-    public void OnPhaseChange(Phase phase) {
+    public bool OnPhaseChange(Phase phase) {
         switch(phase) {
             case Phase.Enemy:
-                GameManager.Instance.AddPhaseProcessing(this);
-                break;
+                return true;
             case Phase.Player:
                 CreatePath();
-                break;
+                return false;
+            default:
+                return false;
         }
     }
 
@@ -132,7 +135,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                 if (path.Count == 0) {
                     ClearPath();
 
-                    GameManager.Instance.RemovePhaseProcessing(this);
+                    GameManager.Instance.phaseManager.RemovePhaseProcessing(this);
                 } else {
                     await StepPath(token);
                 }
@@ -151,7 +154,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
     }
 
     void OnDestroy() {
-        GameManager.Instance.RemovePhaseProcessing(this);
+        GameManager.Instance.phaseManager.RemovePhaseProcessing(this);
 
         UnreservePath();
     }

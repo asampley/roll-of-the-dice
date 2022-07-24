@@ -6,35 +6,18 @@ using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-public enum Phase
-{
-    Setup,
-    Player,
-    Enemy,
-}
-
 public enum Win
 {
     Player,
     Enemy,
 }
 
-public interface PhaseListener {
-    string name { get; }
-    MonoBehaviour Self { get; }
-
-    // called once when the phase changes
-    void OnPhaseChange(Phase phase);
-
-    // async function that is called again once all listeners have completed a step in the phase
-    // only called if the item has been added to phase processing
-    UniTask OnPhaseUpdate(Phase phase, CancellationToken token);
-}
-
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, PhaseListener
 {
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
+
+    public MonoBehaviour Self { get { return this; } }
 
     private static uint DieSpawnID = 0;
 
@@ -50,7 +33,7 @@ public class GameManager : MonoBehaviour
     private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
 
-    private HashSet<PhaseListener> phaseProcessing = new HashSet<PhaseListener>();
+    public PhaseManager phaseManager = new PhaseManager();
 
     private int _enemies;
     public int EnemyCount {
@@ -120,17 +103,6 @@ public class GameManager : MonoBehaviour
         set { _maxNumberOfTurns = value; }
     }
 
-    private Phase _phase;
-    public Phase CurrentPhase {
-        get { return _phase; }
-        private set {
-            _phase = value;
-            PhaseChange?.Invoke(_phase);
-        }
-    }
-    public event Action<Phase> PhaseChange;
-
-
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -138,7 +110,7 @@ public class GameManager : MonoBehaviour
         else
             _instance = this;
 
-        PhaseChange += OnPhaseChange;
+        phaseManager.AllPhaseListeners.Add(this);
     }
 
     private void Start()
@@ -202,7 +174,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        CurrentPhase = Phase.Setup;
+        phaseManager.Push(Phase.Setup);
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
         CurrentRound = 1;
@@ -225,7 +197,7 @@ public class GameManager : MonoBehaviour
 
     public async UniTask SleepyPhaseSwitch(Phase phase) {
         await UniTask.DelayFrame(1);
-        CurrentPhase = phase;
+        phaseManager.Transition(phase);
     }
 
     public void RerollGame()
@@ -248,7 +220,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void CheckWin() {
-        if (CurrentPhase == Phase.Setup) return;
+        if (phaseManager.CurrentPhase == Phase.Setup) return;
 
         if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
             WinEvent?.Invoke(Win.Enemy);
@@ -258,72 +230,30 @@ public class GameManager : MonoBehaviour
             WinEvent?.Invoke(Win.Player);
     }
 
-    // should only be called in OnPhaseChange
-    public void AddPhaseProcessing(PhaseListener listener) {
-        phaseProcessing.Add(listener);
-
-        string str = Utilities.EnumerableString(phaseProcessing.Select(e => e.name));
-        Debug.Log("Still waiting for " + str);
-    }
-
-    // must be a coroutine to remove only after a frame has passed
-    public void RemovePhaseProcessing(PhaseListener listener) {
-        phaseProcessing.Remove(listener);
-
-        string str = Utilities.EnumerableString(phaseProcessing.Select(e => e.name));
-        Debug.Log("Still waiting for " + str);
-    }
-
     private async UniTask RunPhaseUpdate() {
-        Debug.Log("Start Run Phase Update: " + CurrentPhase);
+        Debug.Log("Start Run Phase Update: " + phaseManager.CurrentPhase);
 
         while (true) {
-            // copy list to protect from manipulation in the middle of processing
-            List<PhaseListener> toUpdate = new List<PhaseListener>(phaseProcessing);
-            List<UniTask> tasks = new List<UniTask>();
-
-            foreach (var l in toUpdate) {
-                tasks.Add(TryPhaseUpdate(l, l.Self.GetCancellationTokenOnDestroy()));
-            }
-
-            if (tasks.Count > 0) {
-                await UniTask.WhenAll(tasks);
-            } else {
-                await UniTask.WaitForFixedUpdate();
-            }
+            await phaseManager.PhaseUpdate();
 
             TryAdvancePhase();
         }
     }
 
-    private async UniTask TryPhaseUpdate(PhaseListener listener, CancellationToken token) {
-        try {
-            await listener.OnPhaseUpdate(CurrentPhase, token);
-        } catch (MissingReferenceException) {
-            return;
-        } catch (OperationCanceledException e) {
-            Debug.Log(e);
-            return;
-        } catch (Exception e) {
-            Debug.LogError(e);
-            return;
-        }
-    }
-
     private bool TryAdvancePhase() {
-        if (phaseProcessing.Count != 0) return false;
+        if (phaseManager.PhaseProcessingCount() != 0) return false;
 
-        switch (CurrentPhase) {
+        switch (phaseManager.CurrentPhase) {
             case Phase.Setup:
-                //CurrentPhase = Phase.Player;
+                //phaseManager.Transition(Phase.Player);
                 //return true;
                 return false;
             case Phase.Enemy:
-                CurrentPhase = Phase.Player;
+                phaseManager.Transition(Phase.Player);
                 return true;
             case Phase.Player:
                 if (_playerMoveRemaining <= 0) {
-                    CurrentPhase = Phase.Enemy;
+                    phaseManager.Transition(Phase.Enemy);
                     return true;
                 } else {
                     return false;
@@ -334,13 +264,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void OnPhaseChange(Phase phase) {
+    public bool OnPhaseChange(Phase phase) {
         if (phase == Phase.Player) {
             CurrentRound++;
             PlayerPiecesMoved = 0;
             MovedPieces.Clear();
             _playerMoveRemaining = _maxPlayerMoves;
         }
+
+        return false;
+    }
+
+    public async UniTask OnPhaseUpdate(Phase phase, CancellationToken token) {
+        return;
     }
 
     public void SetMaxMoves()

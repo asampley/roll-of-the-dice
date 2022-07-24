@@ -81,13 +81,13 @@ public class DieManager : MonoBehaviour, PhaseListener
     }
 
     void OnEnable() {
-        GameManager.Instance.PhaseChange += OnPhaseChange;
+        GameManager.Instance.phaseManager.AllPhaseListeners.Add(this);
         DebugConsole.DebugNames += OnDebugNames;
     }
 
     void OnDisable() {
-        GameManager.Instance.PhaseChange += OnPhaseChange;
-        DebugConsole.DebugNames += OnDebugNames;
+        GameManager.Instance.phaseManager.AllPhaseListeners.Remove(this);
+        DebugConsole.DebugNames -= OnDebugNames;
     }
 
     private void Update()
@@ -96,7 +96,7 @@ public class DieManager : MonoBehaviour, PhaseListener
         {
             if (GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(this))
             {
-                if (GameManager.Instance.CurrentPhase == Phase.Player && _movesAvailable > 0)
+                if (GameManager.Instance.phaseManager.CurrentPhase == Phase.Player && _movesAvailable > 0)
                     _moveIndicator.SetActive(true);
                 else
                     _moveIndicator.SetActive(false);
@@ -552,7 +552,7 @@ public class DieManager : MonoBehaviour, PhaseListener
         await UpdateTilePos(tile, token, false);
     }
 
-    public void OnPhaseChange(Phase phase) {
+    public bool OnPhaseChange(Phase phase) {
         switch (phase) {
             case Phase.Enemy:
                 if (isEnemy) {
@@ -565,6 +565,8 @@ public class DieManager : MonoBehaviour, PhaseListener
                 }
                 break;
         }
+
+        return false;
     }
 
     public async UniTask OnPhaseUpdate(Phase phase, CancellationToken token) {
@@ -581,8 +583,6 @@ public class DieManager : MonoBehaviour, PhaseListener
         if (Globals.SELECTED_UNIT == this) {
             Globals.SELECTED_UNIT = null;
         }
-
-        GameManager.Instance.PhaseChange -= OnPhaseChange;
 
         if (isEnemy)
         {
