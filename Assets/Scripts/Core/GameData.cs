@@ -2,14 +2,14 @@ using System.Runtime.Serialization;
 using UnityEngine;
 
 [System.Serializable]
-public class GameDiceData : BinarySerializable
+public class GameUnitData : BinarySerializable
 {
     public bool isEnemy;
     public Vector3 position;
 
-    public GameDiceData() { }
+    public GameUnitData() { }
 
-    protected GameDiceData(SerializationInfo info, StreamingContext context)
+    protected GameUnitData(SerializationInfo info, StreamingContext context)
     {
         BinarySerializable.Deserialize(this, info, context);
     }
@@ -19,7 +19,7 @@ public class GameDiceData : BinarySerializable
 public class GameData : BinarySerializable
 {
     public Vector3 camPosition;
-    public GameDiceData[] dice;
+    public GameUnitData[] dice;
 
     public static string gameUid;
     public static string DATA_FILE_NAME = "GameData.data";

@@ -84,8 +84,8 @@ public class GameManager : MonoBehaviour
         get { return _playerpiecesMoved; }
         set { _playerpiecesMoved = value; }
     }
-    private List<DieManager> _movedPieces = new List<DieManager>();
-    public List<DieManager> MovedPieces
+    private List<UnitManager> _movedPieces = new List<UnitManager>();
+    public List<UnitManager> MovedPieces
     {
         get { return _movedPieces; }
         set { _movedPieces = value; }
@@ -158,16 +158,16 @@ public class GameManager : MonoBehaviour
         GameObject die = Instantiate(prefab, pos, Quaternion.identity);
         die.transform.SetParent(diceParent.transform);
         die.name = prefab.name + (isEnemy ? " Enemy " : " Player ") + (DieSpawnID++);
-        DieManager dieManager = die.GetComponent<DieManager>();
+        UnitManager UnitManager = die.GetComponent<UnitManager>();
         var placedOnTile = MapManager.Instance.GetTileAtPos(startPos);
 
-        dieManager.Initialize(isEnemy, orientation);
+        UnitManager.Initialize(isEnemy, orientation);
         if (placedOnTile != null)
         {
             GameObject overlayTile = placedOnTile.gameObject;
             OverlayTile overlayTileManager = overlayTile.GetComponent<OverlayTile>();
 
-            overlayTileManager.MoveDiceToTile(dieManager);
+            overlayTileManager.MoveDiceToTile(UnitManager);
         }
         else
         {

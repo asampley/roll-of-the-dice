@@ -24,7 +24,7 @@ public class GhostManager : MonoBehaviour {
     }
 
     public GameObject CreateGhost(GameObject toGhost, Vector3? translation, Vector2Int? tileDelta, int rotationCount = 1) {
-        var dieManager = toGhost.GetComponent<DieManager>();
+        var dieManager = toGhost.GetComponent<UnitManager>();
         var ghostComponents = dieManager.ghostComponents;
 
         var ghost = Instantiate(ghostContainer, toGhost.transform.position, toGhost.transform.rotation, this.transform);
@@ -67,7 +67,7 @@ public class GhostManager : MonoBehaviour {
 
     public void SetEnemyGhostsVisible(bool visible) {
         ghostsByContext
-            .Where(kv => kv.Key.GetComponent<DieManager>().IsEnemy)
+            .Where(kv => kv.Key.GetComponent<UnitManager>().IsEnemy)
             .ToList()
             .ForEach(kv => {
                 foreach (var ghost in kv.Value) {

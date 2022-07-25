@@ -47,7 +47,7 @@ public class MouseController : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(1))
             {
-                if (Globals.SELECTED_UNIT.GetComponent<DieManager>().IsEnemy) return;
+                if (Globals.SELECTED_UNIT.GetComponent<UnitManager>().IsEnemy) return;
 
                 if (!overlayTileManager.IsBlocked && Globals.SELECTED_UNIT != null)
                 {
@@ -55,12 +55,12 @@ public class MouseController : MonoBehaviour
                     {
                         if (Globals.SELECTED_UNIT.movesInStraightLine)
                         {
-                            var path = Globals.SELECTED_UNIT.GetComponent<DieManager>().PathGenerator(overlayTileManager);
-                            Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(path);
+                            var path = Globals.SELECTED_UNIT.GetComponent<UnitManager>().PathGenerator(overlayTileManager);
+                            Globals.SELECTED_UNIT.GetComponent<UnitManager>().Move(path);
                         }
                         else
                         {
-                            Globals.SELECTED_UNIT.GetComponent<DieManager>().Move(overlayTileManager);
+                            Globals.SELECTED_UNIT.GetComponent<UnitManager>().Move(overlayTileManager);
                         }
                     }
                 }

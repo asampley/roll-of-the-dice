@@ -30,12 +30,12 @@ public class DataHandler : MonoBehaviour
     public static GameData SerializeGameData()
     {
         GameData data = new GameData();
-        List<GameDiceData> dice = new List<GameDiceData>();
-        foreach (DieManager die in DieManager.DICE_LIST)
+        List<GameUnitData> dice = new List<GameUnitData>();
+        foreach (UnitManager die in UnitManager.DICE_LIST)
         {
             if (!die.transform) continue;
 
-            GameDiceData d = new GameDiceData()
+            GameUnitData d = new GameUnitData()
             {
                 isEnemy = die.IsEnemy,
                 position = die.transform.position,
@@ -56,12 +56,10 @@ public class DataHandler : MonoBehaviour
         if (data == null) return;
 
 
-        foreach (GameDiceData die in data.dice)
+        foreach (GameUnitData die in data.dice)
         {
-            DieManager d;
+            UnitManager d;
 
-            d.IsEnemy = die.isEnemy;
-            d.
         }
 
         Camera.main.transform.position = data.camPosition;

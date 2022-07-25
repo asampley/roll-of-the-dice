@@ -15,7 +15,14 @@ public enum DiceState : uint
     King = 5,
 }
 
-public class DieManager : MonoBehaviour, PhaseListener
+public enum MovementPattern
+{
+    Single,
+    Straight,
+    Knight,
+}
+
+public class UnitManager : MonoBehaviour, PhaseListener
 {
     //Properties
     public string diceName;
@@ -73,9 +80,9 @@ public class DieManager : MonoBehaviour, PhaseListener
     private TextMeshProUGUI nameText;
 
     public event Action<OverlayTile> MoveFinished;
-    public static event Action<DieManager, DieManager> ABeatsB;
-    public static event Action<DieManager, DieManager> Draw;
-    public static List<DieManager> DICE_LIST;
+    public static event Action<UnitManager, UnitManager> ABeatsB;
+    public static event Action<UnitManager, UnitManager> Draw;
+    public static List<UnitManager> DICE_LIST;
 
 
 
@@ -122,7 +129,7 @@ public class DieManager : MonoBehaviour, PhaseListener
     public void Initialize(bool enemy, DiceOrientation orientation)
     {
         if (DICE_LIST == null)
-            DICE_LIST = new List<DieManager>();
+            DICE_LIST = new List<UnitManager>();
         DICE_LIST.Add(this);
 
         IsEnemy = enemy;
@@ -257,13 +264,13 @@ public class DieManager : MonoBehaviour, PhaseListener
 
     public void Fight()
     {
-        List<DieManager> toKill = new List<DieManager>();
+        List<UnitManager> toKill = new List<UnitManager>();
 
         foreach (OverlayTile tile in GetTilesAdjacent())
         {
             if (tile.occupyingDie != null && IsEnemy != tile.occupyingDie.IsEnemy)
             {
-                DieManager enemyDie = tile.occupyingDie;
+                UnitManager enemyDie = tile.occupyingDie;
                 DiceState enemyState = enemyDie.State;
 
                 switch (State) {
@@ -388,7 +395,7 @@ public class DieManager : MonoBehaviour, PhaseListener
             }
         }
 
-        foreach (DieManager die in toKill)
+        foreach (UnitManager die in toKill)
         {
             if (!die.IsEnemy && die.State == DiceState.King) {
                 GameManager.Instance.PlayerKingDefeated = true;
@@ -583,11 +590,11 @@ public class DieManager : MonoBehaviour, PhaseListener
         nameText.enabled = !nameText.enabled;
     }
 
-    void OnABeatsB(DieManager a, DieManager b) {
+    void OnABeatsB(UnitManager a, UnitManager b) {
         Debug.Log(a.State + "(" + a.name + ") beats " + b.State + "(" + b.name + ")");
     }
 
-    void OnDraw(DieManager a, DieManager b) {
+    void OnDraw(UnitManager a, UnitManager b) {
         Debug.Log(a.State + "(" + a.name + ") draws with " + b.State + "(" + b.name + ")");
     }
 

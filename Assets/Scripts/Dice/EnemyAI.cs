@@ -7,7 +7,7 @@ using UnityEngine;
 public class EnemyAI : MonoBehaviour, PhaseListener {
     private List<Vector2Int> path = new List<Vector2Int>();
 
-    private DieManager dieManager;
+    private UnitManager dieManager;
 
     // Start is called before the first frame update
     void Start() {
@@ -15,7 +15,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
     }
 
     void OnEnable() {
-        dieManager = GetComponent<DieManager>();
+        dieManager = GetComponent<UnitManager>();
 
         GameManager.Instance.PhaseChange += OnPhaseChange;
         dieManager.MoveFinished += OnMoveFinished;

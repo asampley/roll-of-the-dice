@@ -6,7 +6,7 @@ using TMPro;
 public class OverlayTile : MonoBehaviour
 {
     public Vector3Int gridLocation;
-    public DieManager occupyingDie;
+    public UnitManager occupyingDie;
 
     public TileData data;
     private TextMeshProUGUI gridLocationText;
@@ -53,7 +53,7 @@ public class OverlayTile : MonoBehaviour
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
     }
 
-    public void MoveDiceToTile(DieManager die)
+    public void MoveDiceToTile(UnitManager die)
     {
         occupyingDie = die;
         die.parentTile = this;

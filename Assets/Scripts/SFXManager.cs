@@ -19,18 +19,18 @@ public class SFXManager : MonoBehaviour
     private void OnEnable()
     {
         EventManager.AddListener("Move", _onMove);
-        DieManager.ABeatsB += OnABeatsB;
-        DieManager.Draw += OnDraw;
+        UnitManager.ABeatsB += OnABeatsB;
+        UnitManager.Draw += OnDraw;
     }
 
     private void OnDisable()
     {
         EventManager.RemoveListener("Move", _onMove);
-        DieManager.ABeatsB -= OnABeatsB;
-        DieManager.Draw -= OnDraw;
+        UnitManager.ABeatsB -= OnABeatsB;
+        UnitManager.Draw -= OnDraw;
     }
 
-    private void OnABeatsB(DieManager a, DieManager b) {
+    private void OnABeatsB(UnitManager a, UnitManager b) {
         switch (a.State) {
             case DiceState.King: PlaySound(kingWins); break;
             case DiceState.Lich: PlaySound(lichWins); break;
@@ -40,7 +40,7 @@ public class SFXManager : MonoBehaviour
         }
     }
 
-    private void OnDraw(DieManager a, DieManager b) {
+    private void OnDraw(UnitManager a, UnitManager b) {
         PlaySound(draw);
     }
 

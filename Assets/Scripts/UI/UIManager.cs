@@ -42,16 +42,16 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        DieManager.ABeatsB += OnABeatsB;
-        DieManager.Draw += OnDraw;
+        UnitManager.ABeatsB += OnABeatsB;
+        UnitManager.Draw += OnDraw;
 
         EventManager.AddListener("SelectUnit", OnSelectUnit);
     }
 
     private void OnDisable()
     {
-        DieManager.ABeatsB -= OnABeatsB;
-        DieManager.Draw -= OnDraw;
+        UnitManager.ABeatsB -= OnABeatsB;
+        UnitManager.Draw -= OnDraw;
 
         EventManager.RemoveListener("SelectUnit", OnSelectUnit);
     }
@@ -106,7 +106,7 @@ public class UIManager : MonoBehaviour
         gameInfo.SetActive(true);
         diceName.text = Globals.SELECTED_UNIT.diceName;
         movesAvailable.text = "Moves Available: " + Globals.SELECTED_UNIT.MovesAvailable.ToString();
-        GameObject inspectDie = Globals.SELECTED_UNIT.GetComponent<DieManager>().ghostComponents.gameObject;
+        GameObject inspectDie = Globals.SELECTED_UNIT.GetComponent<UnitManager>().ghostComponents.gameObject;
         inspectorObject = Instantiate(inspectDie);
         inspectorObject.transform.parent = inspector;
         Vector3 pos = inspector.transform.position;
@@ -134,7 +134,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    private void OnABeatsB(DieManager a, DieManager b) {
+    private void OnABeatsB(UnitManager a, UnitManager b) {
         var spriteA = Resources.Load<Sprite>("Sprites/" + a.State);
         var spriteB = Resources.Load<Sprite>("Sprites/" + b.State);
 
@@ -149,7 +149,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void OnDraw(DieManager a, DieManager b)
+    private void OnDraw(UnitManager a, UnitManager b)
     {
         logText.text = "Draw.";
     }
