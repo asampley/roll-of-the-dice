@@ -28,8 +28,21 @@ public class DieManager : MonoBehaviour, PhaseListener
     }
 
     public bool movesInStraightLine;
-    public bool isEnemy;
-    public DiceState state;
+
+    private bool _isEnemy;
+    public bool IsEnemy
+    {
+        get { return _isEnemy; }
+        set { _isEnemy = value; }
+    }
+
+    private DiceState _state;
+    public DiceState State
+    {
+        get { return _state; }
+        set { _state = value; }
+    }
+
     private bool _isMoving;
     public bool IsMoving
     {
@@ -62,6 +75,9 @@ public class DieManager : MonoBehaviour, PhaseListener
     public event Action<OverlayTile> MoveFinished;
     public static event Action<DieManager, DieManager> ABeatsB;
     public static event Action<DieManager, DieManager> Draw;
+    public static List<DieManager> DICE_LIST;
+
+
 
     void Start() {
         nameText = GetComponentInChildren<TextMeshProUGUI>();
@@ -87,7 +103,7 @@ public class DieManager : MonoBehaviour, PhaseListener
 
     private void Update()
     {
-        if (!isEnemy)
+        if (!IsEnemy)
         {
             if (GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(this))
             {
@@ -105,9 +121,13 @@ public class DieManager : MonoBehaviour, PhaseListener
 
     public void Initialize(bool enemy, DiceOrientation orientation)
     {
-        isEnemy = enemy;
+        if (DICE_LIST == null)
+            DICE_LIST = new List<DieManager>();
+        DICE_LIST.Add(this);
 
-        if (isEnemy)
+        IsEnemy = enemy;
+
+        if (IsEnemy)
         {
             GameManager.Instance.EnemyCount++;
             enemyAI.enabled = true;
@@ -129,7 +149,7 @@ public class DieManager : MonoBehaviour, PhaseListener
         _dieRotator.RotateTileDelta(Vector2Int.up, orientation.yRolls);
         _dieRotator.RotateZ(orientation.zRolls);
         _dieRotator.RotateNow();
-        state = _dieRotator.GetUpFace();
+        State = _dieRotator.GetUpFace();
         IsMoving = false;
     }
 
@@ -153,7 +173,7 @@ public class DieManager : MonoBehaviour, PhaseListener
             _movesAvailable--;
 
             EventManager.TriggerEvent("SelectUnit");
-            if (!isEnemy)
+            if (!IsEnemy)
             {
                 if (!GameManager.Instance.MovedPieces.Contains(this))
                     {
@@ -201,7 +221,7 @@ public class DieManager : MonoBehaviour, PhaseListener
 
     public void Deselect()
     {
-        if (!isEnemy)
+        if (!IsEnemy)
             GhostManager.Instance.SetEnemyGhostsVisible(true);
 
         HideTilesInRange();
@@ -241,12 +261,12 @@ public class DieManager : MonoBehaviour, PhaseListener
 
         foreach (OverlayTile tile in GetTilesAdjacent())
         {
-            if (tile.occupyingDie != null && isEnemy != tile.occupyingDie.isEnemy)
+            if (tile.occupyingDie != null && IsEnemy != tile.occupyingDie.IsEnemy)
             {
                 DieManager enemyDie = tile.occupyingDie;
-                DiceState enemyState = enemyDie.state;
+                DiceState enemyState = enemyDie.State;
 
-                switch (state) {
+                switch (State) {
                     case DiceState.King:
                         switch (enemyState) {
                             case DiceState.Blank:
@@ -260,7 +280,7 @@ public class DieManager : MonoBehaviour, PhaseListener
                             case DiceState.Lich:
                                 ABeatsB?.Invoke(enemyDie, this);
 
-                                if (!this.isEnemy) {
+                                if (!this.IsEnemy) {
                                     GameManager.Instance.PlayerKingDefeated = true;
                                 }
 
@@ -370,7 +390,7 @@ public class DieManager : MonoBehaviour, PhaseListener
 
         foreach (DieManager die in toKill)
         {
-            if (!die.isEnemy && die.state == DiceState.King) {
+            if (!die.IsEnemy && die.State == DiceState.King) {
                 GameManager.Instance.PlayerKingDefeated = true;
             }
             die.Kill();
@@ -383,14 +403,14 @@ public class DieManager : MonoBehaviour, PhaseListener
     {
         Deselect();
         parentTile.RemoveDiceFromTile();
-        if (isEnemy)
+        if (IsEnemy)
             Destroy(gameObject.GetComponent<EnemyAI>());
         Destroy(gameObject);
     }
 
     public void ShowTilesInRange()
     {
-        if (isEnemy) return;
+        if (IsEnemy) return;
 
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
@@ -407,7 +427,7 @@ public class DieManager : MonoBehaviour, PhaseListener
 
     public void HideTilesInRange()
     {
-        if (isEnemy) return;
+        if (IsEnemy) return;
 
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
@@ -457,7 +477,7 @@ public class DieManager : MonoBehaviour, PhaseListener
     private IEnumerator UpdateTilePos(OverlayTile newTile, bool rotate = true)
     {
         MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
-        state = _dieRotator.GetUpFace();
+        State = _dieRotator.GetUpFace();
         HideTilesInRange();
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
@@ -546,12 +566,12 @@ public class DieManager : MonoBehaviour, PhaseListener
     public void OnPhaseChange(Phase phase) {
         switch (phase) {
             case Phase.Enemy:
-                if (isEnemy) {
+                if (IsEnemy) {
                     ResetRange();
                 }
                 break;
             case Phase.Player:
-                if (!isEnemy) {
+                if (!IsEnemy) {
                     ResetRange();
                 }
                 break;
@@ -564,11 +584,11 @@ public class DieManager : MonoBehaviour, PhaseListener
     }
 
     void OnABeatsB(DieManager a, DieManager b) {
-        Debug.Log(a.state + "(" + a.name + ") beats " + b.state + "(" + b.name + ")");
+        Debug.Log(a.State + "(" + a.name + ") beats " + b.State + "(" + b.name + ")");
     }
 
     void OnDraw(DieManager a, DieManager b) {
-        Debug.Log(a.state + "(" + a.name + ") draws with " + b.state + "(" + b.name + ")");
+        Debug.Log(a.State + "(" + a.name + ") draws with " + b.State + "(" + b.name + ")");
     }
 
     void OnDestroy() {
@@ -580,7 +600,7 @@ public class DieManager : MonoBehaviour, PhaseListener
 
         GameManager.Instance.PhaseChange -= OnPhaseChange;
 
-        if (isEnemy)
+        if (IsEnemy)
         {
             GameManager.Instance.EnemyCount--;
         }

@@ -135,16 +135,16 @@ public class UIManager : MonoBehaviour
 
 
     private void OnABeatsB(DieManager a, DieManager b) {
-        var spriteA = Resources.Load<Sprite>("Sprites/" + a.state);
-        var spriteB = Resources.Load<Sprite>("Sprites/" + b.state);
+        var spriteA = Resources.Load<Sprite>("Sprites/" + a.State);
+        var spriteB = Resources.Load<Sprite>("Sprites/" + b.State);
 
-        if (!a.isEnemy) {
+        if (!a.IsEnemy) {
             img1.sprite = spriteA;
-            logText.text = a.state + " beats " + b.state + "!";
+            logText.text = a.State + " beats " + b.State + "!";
             img2.sprite = spriteB;
         } else {
             img1.sprite = spriteB;
-            logText.text = a.state + " beaten by " + b.state + "!";
+            logText.text = a.State + " beaten by " + b.State + "!";
             img2.sprite = spriteA;
         }
     }

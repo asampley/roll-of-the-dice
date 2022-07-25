@@ -31,7 +31,7 @@ public class SFXManager : MonoBehaviour
     }
 
     private void OnABeatsB(DieManager a, DieManager b) {
-        switch (a.state) {
+        switch (a.State) {
             case DiceState.King: PlaySound(kingWins); break;
             case DiceState.Lich: PlaySound(lichWins); break;
             case DiceState.Rock: PlaySound(rockWins); break;

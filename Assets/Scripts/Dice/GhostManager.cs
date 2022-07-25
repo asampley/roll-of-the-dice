@@ -67,7 +67,7 @@ public class GhostManager : MonoBehaviour {
 
     public void SetEnemyGhostsVisible(bool visible) {
         ghostsByContext
-            .Where(kv => kv.Key.GetComponent<DieManager>().isEnemy)
+            .Where(kv => kv.Key.GetComponent<DieManager>().IsEnemy)
             .ToList()
             .ForEach(kv => {
                 foreach (var ghost in kv.Value) {

@@ -47,7 +47,7 @@ public class MouseController : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(1))
             {
-                if (Globals.SELECTED_UNIT.GetComponent<DieManager>().isEnemy) return;
+                if (Globals.SELECTED_UNIT.GetComponent<DieManager>().IsEnemy) return;
 
                 if (!overlayTileManager.IsBlocked && Globals.SELECTED_UNIT != null)
                 {

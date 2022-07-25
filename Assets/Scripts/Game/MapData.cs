@@ -13,8 +13,8 @@ public enum GridType
 [CreateAssetMenu(fileName = "MapData", menuName = "Scriptable Objects/MapData", order = 2)]
 public class MapData : ScriptableObject
 {
+    public string levelName;
     public GridType gridType;
-
 
     public DiceSpawn[] alliedDice;
     public DiceSpawn[] enemyDice;
