@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour, PhaseListener
     private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
 
+    private CancellationTokenSource phaseUpdateCancel = new CancellationTokenSource();
     public PhaseManager phaseManager = new PhaseManager();
 
     private int _enemies;
@@ -120,7 +121,6 @@ public class GameManager : MonoBehaviour, PhaseListener
         FindPrefabs();
         RollPositions();
         StartGame();
-        RunPhaseUpdate().Forget();
     }
 
     private void FindPrefabs()
@@ -176,8 +176,15 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void StartGame()
     {
+        phaseUpdateCancel?.Cancel();
+        phaseUpdateCancel?.Dispose();
+        phaseUpdateCancel = new CancellationTokenSource();
+
         phaseManager.Clear();
         phaseManager.Push(Phase.Setup);
+
+        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
+
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
         CurrentRound = 1;
@@ -226,11 +233,15 @@ public class GameManager : MonoBehaviour, PhaseListener
             WinEvent?.Invoke(Win.Player);
     }
 
-    private async UniTask RunPhaseUpdate() {
+    private async UniTask RunPhaseUpdate(CancellationToken token) {
         Debug.Log("Start Run Phase Update: " + phaseManager.CurrentPhase);
 
         while (true) {
-            await phaseManager.PhaseUpdate();
+            await phaseManager.PhaseStep(token);
+
+            if (token.IsCancellationRequested) {
+                return;
+            }
 
             TryAdvancePhase();
         }
@@ -292,7 +303,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         }
     }
 
-    public async UniTask<PhaseStepResult> OnPhaseUpdate(Phase phase, CancellationToken token) {
+    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
         switch (phase) {
             case Phase.Setup:
                 await UniTask.DelayFrame(1);

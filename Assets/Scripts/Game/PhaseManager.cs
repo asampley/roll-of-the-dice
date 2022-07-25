@@ -34,12 +34,12 @@ public interface PhaseListener {
 
     // async function that is called again once all listeners have completed a step in the phase
     // only called if the item has been added to phase processing
-    UniTask<PhaseStepResult> OnPhaseUpdate(Phase phase, CancellationToken token);
+    UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token);
 }
 
 public class PhaseData {
     public Phase phase;
-    public HashSet<PhaseListener> phaseUpdate = new HashSet<PhaseListener>();
+    public HashSet<PhaseListener> phaseStep = new HashSet<PhaseListener>();
     public PhaseStepResult[] results = new PhaseStepResult[] {};
 
     public PhaseData(Phase phase) {
@@ -47,7 +47,7 @@ public class PhaseData {
     }
 
     override public string ToString() {
-        return phase + Utilities.EnumerableString(phaseUpdate);
+        return phase + Utilities.EnumerableString(phaseStep);
     }
 }
 
@@ -113,17 +113,24 @@ public class PhaseManager {
         Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
     }
 
-    public async UniTask PhaseUpdate() {
+    public async UniTask PhaseStep(CancellationToken token) {
         // clean up anyone destroyed
-        Current.phaseUpdate.RemoveWhere(l => l.Self == null);
+        Current.phaseStep.RemoveWhere(l => l.Self == null);
 
         // copy list to protect from manipulation in the middle of processing
-        List<PhaseListener> toUpdate = new List<PhaseListener>(Current.phaseUpdate);
+        List<PhaseListener> toStep = new List<PhaseListener>(Current.phaseStep);
 
         List<UniTask<PhaseStepResult>> tasks = new List<UniTask<PhaseStepResult>>();
+        List<CancellationTokenSource> sources = new List<CancellationTokenSource>();
 
-        foreach (var l in toUpdate) {
-            tasks.Add(SafePhaseUpdate(l, l.Self.GetCancellationTokenOnDestroy()));
+        foreach (var l in toStep) {
+            var source = CancellationTokenSource.CreateLinkedTokenSource(
+                l.Self.GetCancellationTokenOnDestroy(),
+                token
+            );
+
+            tasks.Add(SafePhaseStep(l, source.Token));
+            sources.Add(source);
         }
 
         if (tasks.Count > 0) {
@@ -132,15 +139,19 @@ public class PhaseManager {
             // for each result that is Done, remove it from listeners
             for (int i = results.Length - 1; i >= 0; --i) {
                 if (results[i] == PhaseStepResult.Done) {
-                    Current.phaseUpdate.Remove(toUpdate[i]);
+                    Current.phaseStep.Remove(toStep[i]);
                 }
             }
 
             Current.results = results;
         } else {
-            await UniTask.DelayFrame(1);
+            await UniTask.DelayFrame(1, cancellationToken: token);
 
             Current.results = new PhaseStepResult[] {};
+        }
+
+        foreach (var s in sources) {
+            s.Dispose();
         }
     }
 
@@ -148,9 +159,9 @@ public class PhaseManager {
         return Current.results;
     }
 
-    private async UniTask<PhaseStepResult> SafePhaseUpdate(PhaseListener listener, CancellationToken token) {
+    private async UniTask<PhaseStepResult> SafePhaseStep(PhaseListener listener, CancellationToken token) {
         try {
-            return await listener.OnPhaseUpdate(Current.phase, token);
+            return await listener.OnPhaseStep(Current.phase, token);
         } catch (MissingReferenceException) {
             return PhaseStepResult.Done;
         } catch (OperationCanceledException e) {
@@ -163,13 +174,13 @@ public class PhaseManager {
     }
 
     public void AddPhaseProcessing(PhaseListener listener) {
-        Current.phaseUpdate.Add(listener);
+        Current.phaseStep.Add(listener);
 
-        string str = Utilities.EnumerableString(Current.phaseUpdate.Select(e => e.name));
+        string str = Utilities.EnumerableString(Current.phaseStep.Select(e => e.name));
         Debug.Log("Still waiting for " + str);
     }
 
     public int PhaseProcessingCount() {
-        return Current.phaseUpdate.Count;
+        return Current.phaseStep.Count;
     }
 }

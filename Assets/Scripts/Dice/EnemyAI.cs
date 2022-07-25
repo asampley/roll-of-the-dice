@@ -128,7 +128,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         }
     }
 
-    public async UniTask<PhaseStepResult> OnPhaseUpdate(Phase phase, CancellationToken token) {
+    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
         Debug.Log("Phase update: " + name);
         switch(phase) {
             case Phase.Enemy:

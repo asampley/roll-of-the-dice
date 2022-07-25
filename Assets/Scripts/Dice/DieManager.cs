@@ -568,7 +568,7 @@ public class DieManager : MonoBehaviour, PhaseListener
 
     }
 
-    public async UniTask<PhaseStepResult> OnPhaseUpdate(Phase phase, CancellationToken token) {
+    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
         switch (phase) {
             case Phase.Fight:
                 await Fight();
