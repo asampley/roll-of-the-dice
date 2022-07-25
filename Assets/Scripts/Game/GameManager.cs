@@ -279,18 +279,18 @@ public class GameManager : MonoBehaviour, PhaseListener
         }
     }
 
-    public bool OnPhaseEnter(Phase phase) {
+    public PhaseStepResult OnPhaseEnter(Phase phase) {
         switch (phase) {
             case Phase.Setup:
-                return true;
+                return PhaseStepResult.ShouldContinue;
             case Phase.Player:
                 CurrentRound++;
                 PlayerPiecesMoved = 0;
                 MovedPieces.Clear();
                 _playerMoveRemaining = _maxPlayerMoves;
-                return true;
+                return PhaseStepResult.ShouldContinue;
             default:
-                return false;
+                return PhaseStepResult.Done;
         }
     }
 

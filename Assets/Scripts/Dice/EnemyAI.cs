@@ -116,15 +116,15 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         return (Vector2Int)dieManager.parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
     }
 
-    public bool OnPhaseEnter(Phase phase) {
+    public PhaseStepResult OnPhaseEnter(Phase phase) {
         switch(phase) {
             case Phase.Enemy:
-                return true;
+                return PhaseStepResult.ShouldContinue;
             case Phase.Player:
                 CreatePath();
-                return false;
+                return PhaseStepResult.Done;
             default:
-                return false;
+                return PhaseStepResult.Done;
         }
     }
 
@@ -155,8 +155,6 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
     }
 
     void OnDestroy() {
-        GameManager.Instance.phaseManager.RemovePhaseProcessing(this);
-
         UnreservePath();
     }
 }

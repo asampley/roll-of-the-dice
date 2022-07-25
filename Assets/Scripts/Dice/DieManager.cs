@@ -554,7 +554,7 @@ public class DieManager : MonoBehaviour, PhaseListener
         await UpdateTilePos(tile, token, false);
     }
 
-    public bool OnPhaseEnter(Phase phase) {
+    public PhaseStepResult OnPhaseEnter(Phase phase) {
         switch (phase) {
             case Phase.Enemy:
                 if (isEnemy) {
@@ -568,7 +568,7 @@ public class DieManager : MonoBehaviour, PhaseListener
                 break;
         }
 
-        return false;
+        return PhaseStepResult.Done;
     }
 
     public async UniTask<PhaseStepResult> OnPhaseUpdate(Phase phase, CancellationToken token) {

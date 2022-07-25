@@ -28,7 +28,8 @@ public interface PhaseListener {
     MonoBehaviour Self { get; }
 
     // called once when the phase is entered
-    bool OnPhaseEnter(Phase phase);
+    // returns a result identifying whether it is listening or not
+    PhaseStepResult OnPhaseEnter(Phase phase);
 
     // async function that is called again once all listeners have completed a step in the phase
     // only called if the item has been added to phase processing
@@ -73,9 +74,12 @@ public class PhaseManager {
         PhaseData phaseData = new PhaseData(phase);
         phaseStack.Add(phaseData);
 
-        foreach (var listener in AllPhaseListeners) {
-            if (listener.OnPhaseEnter(phase)) {
-                AddPhaseProcessing(listener);
+        var listeners = AllPhaseListeners.ToArray();
+        var results = listeners.Select(l => l.OnPhaseEnter(phase)).ToArray();
+
+        for (var i = 0; i < listeners.Length; ++i) {
+            if (results[i] != PhaseStepResult.Done) {
+                AddPhaseProcessing(listeners[i]);
             }
         }
 
@@ -86,9 +90,12 @@ public class PhaseManager {
         PhaseData phaseData = new PhaseData(phase);
         phaseStack.Add(phaseData);
 
-        foreach (var listener in AllPhaseListeners) {
-            if (listener.OnPhaseEnter(phase)) {
-                AddPhaseProcessing(listener);
+        var listeners = AllPhaseListeners.ToArray();
+        var results = listeners.Select(l => l.OnPhaseEnter(phase)).ToArray();
+
+        for (var i = 0; i < listeners.Length; ++i) {
+            if (results[i] != PhaseStepResult.Done) {
+                AddPhaseProcessing(listeners[i]);
             }
         }
 
