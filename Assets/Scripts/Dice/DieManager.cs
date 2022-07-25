@@ -246,7 +246,7 @@ public class DieManager : MonoBehaviour, PhaseListener
         }
     }
 
-    public void Fight()
+    public async UniTask Fight()
     {
         List<DieManager> toKill = new List<DieManager>();
 
@@ -474,59 +474,50 @@ public class DieManager : MonoBehaviour, PhaseListener
         newTile.MoveDiceToTile(this);
 
         await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME + 0.1f), cancellationToken: token);
-        await GetTileEffects(token);
     }
 
-    private async UniTask GetTileEffects(CancellationToken token)
+    private async UniTask<bool> GetTileEffects(CancellationToken token)
     {
         TileType tileType = parentTile.data.TileType;
         HideTilesInRange();
+        var moved = false;
         switch (tileType)
         {
             case TileType.Normal:
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.Stopping:
                 _movesAvailable = 0;
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.RotateClockwise:
                 _dieRotator.RotateZ(1);
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.RotateCounterClockwise:
                 _dieRotator.RotateZ(-1);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.ShovePosX:
-                await Shove(new Vector2Int(1, 0), token);
+                moved = await Shove(new Vector2Int(1, 0), token);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.ShovePosY:
-                await Shove(new Vector2Int(0, 1), token);
+                moved = await Shove(new Vector2Int(0, 1), token);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.ShoveNegX:
-                await Shove(new Vector2Int(-1, 0), token);
+                moved = await Shove(new Vector2Int(-1, 0), token);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.ShoveNegY:
-                await Shove(new Vector2Int(0, -1), token);
+                moved = await Shove(new Vector2Int(0, -1), token);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.RemoveFace:
                 _dieRotator.SetDownFace(DiceState.Blank);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.Randomize:
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
@@ -534,24 +525,26 @@ public class DieManager : MonoBehaviour, PhaseListener
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
-                Fight();
                 break;
             default:
                 GetTilesInRange();
-                Fight();
                 break;
         }
+
+        return moved;
     }
 
-    public async UniTask Shove(Vector2Int dir, CancellationToken token)
+    public async UniTask<bool> Shove(Vector2Int dir, CancellationToken token)
     {
         Vector2Int newPos = (Vector2Int)parentTile.gridLocation + dir;
 
         var tile = MapManager.Instance.GetTileAtPos(newPos);
 
-        if (tile.IsBlocked) return;
+        if (tile.IsBlocked) return false;
 
         await UpdateTilePos(tile, token, false);
+
+        return true;
     }
 
     public PhaseStepResult OnPhaseEnter(Phase phase) {
@@ -560,19 +553,35 @@ public class DieManager : MonoBehaviour, PhaseListener
                 if (isEnemy) {
                     ResetRange();
                 }
-                break;
+                return PhaseStepResult.Done;
             case Phase.Player:
                 if (!isEnemy) {
                     ResetRange();
                 }
-                break;
+                return PhaseStepResult.Done;
+            case Phase.TileEffects:
+            case Phase.Fight:
+                return PhaseStepResult.Blocking;
+            default:
+                return PhaseStepResult.Done;
         }
 
-        return PhaseStepResult.Done;
     }
 
     public async UniTask<PhaseStepResult> OnPhaseUpdate(Phase phase, CancellationToken token) {
-        return PhaseStepResult.Done;
+        switch (phase) {
+            case Phase.Fight:
+                await Fight();
+                return PhaseStepResult.Done;
+            case Phase.TileEffects:
+                if (await GetTileEffects(token)) {
+                    return PhaseStepResult.Blocking;
+                } else {
+                    return PhaseStepResult.Done;
+                }
+            default:
+                return PhaseStepResult.Done;
+        }
     }
 
     void OnDebugNames() {

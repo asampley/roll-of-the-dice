@@ -236,59 +236,57 @@ public class GameManager : MonoBehaviour, PhaseListener
         }
     }
 
-    private bool TryAdvancePhase() {
-        var popped = false;
+    private void TryAdvancePhase() {
+        var results = phaseManager.CurrentPhaseResults();
 
-        while (true) {
-            var results = phaseManager.CurrentPhaseResults();
-
-            Debug.Log("TryAdvancePhase: " + Utilities.EnumerableString(results));
-            switch (phaseManager.CurrentPhase) {
-                case null:
-                case Phase.Setup:
+        Debug.Log("TryAdvancePhase: " + Utilities.EnumerableString(results));
+        switch (phaseManager.CurrentPhase) {
+            case null:
+            case Phase.Setup:
+                phaseManager.Transition(Phase.Player);
+                break;
+            case Phase.Enemy:
+                if (results.Any(r => r == PhaseStepResult.Blocking)) {
+                    phaseManager.Push(Phase.TileEffects);
+                    phaseManager.Push(Phase.Fight);
+                } else {
                     phaseManager.Transition(Phase.Player);
-                    return true;
-                case Phase.Enemy:
-                    if (!popped) {
-                        phaseManager.Push(Phase.Fight);
-                        return true;
-                    } else if (results.Any(r => r == PhaseStepResult.ShouldContinue)) {
-                        return false;
-                    } else {
-                        phaseManager.Transition(Phase.Player);
-                        return true;
-                    }
-                case Phase.Player:
-                    if (!popped) {
-                        phaseManager.Push(Phase.Fight);
-                        return true;
-                    } else if (results.Any(r => r == PhaseStepResult.ShouldContinue)) {
-                        return false;
-                    } else {
-                        phaseManager.Transition(Phase.Enemy);
-                        return true;
-                    }
-                case Phase.Fight:
+                }
+                break;
+            case Phase.Player:
+                if (results.Any(r => r == PhaseStepResult.Blocking)) {
+                    phaseManager.Push(Phase.TileEffects);
+                    phaseManager.Push(Phase.Fight);
+                } else {
+                    phaseManager.Transition(Phase.Enemy);
+                }
+                break;
+            case Phase.Fight:
+                phaseManager.Pop();
+                break;
+            case Phase.TileEffects:
+                if (results.Any(r => r == PhaseStepResult.Blocking)) {
+                    phaseManager.Push(Phase.Fight);
+                } else {
                     phaseManager.Pop();
-                    popped = true;
-                    continue;
-                default:
-                    Debug.LogError("Unreconized phase. Cannot advance");
-                    return false;
-            }
+                }
+                break;
+            default:
+                Debug.LogError("Unreconized phase. Cannot advance");
+                break;
         }
     }
 
     public PhaseStepResult OnPhaseEnter(Phase phase) {
         switch (phase) {
             case Phase.Setup:
-                return PhaseStepResult.ShouldContinue;
+                return PhaseStepResult.Blocking;
             case Phase.Player:
                 CurrentRound++;
                 PlayerPiecesMoved = 0;
                 MovedPieces.Clear();
                 _playerMoveRemaining = _maxPlayerMoves;
-                return PhaseStepResult.ShouldContinue;
+                return PhaseStepResult.Blocking;
             default:
                 return PhaseStepResult.Done;
         }
@@ -300,11 +298,11 @@ public class GameManager : MonoBehaviour, PhaseListener
                 await UniTask.DelayFrame(1);
                 return PhaseStepResult.Done;
             case Phase.Player:
-                await UniTask.WaitUntilValueChanged(this, m => m.PlayerSteps);
                 if (_playerMoveRemaining <= 0) {
                     return PhaseStepResult.Done;
                 } else {
-                    return PhaseStepResult.ShouldContinue;
+                    await UniTask.WaitUntilValueChanged(this, m => m.PlayerSteps);
+                    return PhaseStepResult.Blocking;
                 }
             default:
                 return PhaseStepResult.Done;

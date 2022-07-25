@@ -12,15 +12,16 @@ public enum Phase
     Player,
     Enemy,
     Fight,
+    TileEffects,
 }
 
 public enum PhaseStepResult {
     // it will be removed from the current state listeners
     Done,
     // you can transition or push states, but if there is no transition it will run again
-    CanContinue,
+    Passive,
     // you can push new states, but you shouldn't transition
-    ShouldContinue,
+    Blocking,
 }
 
 public interface PhaseListener {
@@ -83,6 +84,8 @@ public class PhaseManager {
             }
         }
 
+        Current.results = results;
+
         Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
     }
 
@@ -98,6 +101,8 @@ public class PhaseManager {
                 AddPhaseProcessing(listeners[i]);
             }
         }
+
+        Current.results = results;
 
         Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
     }
@@ -159,14 +164,6 @@ public class PhaseManager {
 
     public void AddPhaseProcessing(PhaseListener listener) {
         Current.phaseUpdate.Add(listener);
-
-        string str = Utilities.EnumerableString(Current.phaseUpdate.Select(e => e.name));
-        Debug.Log("Still waiting for " + str);
-    }
-
-    // must be a coroutine to remove only after a frame has passed
-    public void RemovePhaseProcessing(PhaseListener listener) {
-        Current.phaseUpdate.Remove(listener);
 
         string str = Utilities.EnumerableString(Current.phaseUpdate.Select(e => e.name));
         Debug.Log("Still waiting for " + str);
