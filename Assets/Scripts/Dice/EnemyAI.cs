@@ -18,7 +18,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         dieManager = GetComponent<DieManager>();
 
         if (GameManager.Instance.phaseManager.CurrentPhase != null) {
-            OnPhaseChange(GameManager.Instance.phaseManager.CurrentPhase.Value);
+            OnPhaseEnter(GameManager.Instance.phaseManager.CurrentPhase.Value);
         }
     }
 
@@ -116,7 +116,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         return (Vector2Int)dieManager.parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
     }
 
-    public bool OnPhaseChange(Phase phase) {
+    public bool OnPhaseEnter(Phase phase) {
         switch(phase) {
             case Phase.Enemy:
                 return true;
@@ -128,18 +128,19 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         }
     }
 
-    public async UniTask OnPhaseUpdate(Phase phase, CancellationToken token) {
+    public async UniTask<PhaseStepResult> OnPhaseUpdate(Phase phase, CancellationToken token) {
         Debug.Log("Phase update: " + name);
         switch(phase) {
             case Phase.Enemy:
                 if (path.Count == 0) {
                     ClearPath();
-
-                    GameManager.Instance.phaseManager.RemovePhaseProcessing(this);
+                    return PhaseStepResult.Done;
                 } else {
                     await StepPath(token);
+                    return PhaseStepResult.ShouldContinue;
                 }
-                break;
+            default:
+                return PhaseStepResult.Done;
         }
     }
 

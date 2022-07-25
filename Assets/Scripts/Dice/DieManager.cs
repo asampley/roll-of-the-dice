@@ -160,6 +160,8 @@ public class DieManager : MonoBehaviour, PhaseListener
             EventManager.TriggerEvent("SelectUnit");
             if (!isEnemy)
             {
+                GameManager.Instance.PlayerSteps++;
+
                 if (!GameManager.Instance.MovedPieces.Contains(this))
                     {
                     GameManager.Instance.MovedPieces.Add(this);
@@ -552,7 +554,7 @@ public class DieManager : MonoBehaviour, PhaseListener
         await UpdateTilePos(tile, token, false);
     }
 
-    public bool OnPhaseChange(Phase phase) {
+    public bool OnPhaseEnter(Phase phase) {
         switch (phase) {
             case Phase.Enemy:
                 if (isEnemy) {
@@ -569,8 +571,8 @@ public class DieManager : MonoBehaviour, PhaseListener
         return false;
     }
 
-    public async UniTask OnPhaseUpdate(Phase phase, CancellationToken token) {
-        return;
+    public async UniTask<PhaseStepResult> OnPhaseUpdate(Phase phase, CancellationToken token) {
+        return PhaseStepResult.Done;
     }
 
     void OnDebugNames() {

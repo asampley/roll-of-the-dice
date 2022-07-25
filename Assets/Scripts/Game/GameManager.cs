@@ -55,6 +55,8 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public event Action<Win> WinEvent;
 
+    public int PlayerSteps;
+
     private int _maxPlayerMoves;
     public int MaxPlayerMoves
     {
@@ -174,6 +176,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void StartGame()
     {
+        phaseManager.Clear();
         phaseManager.Push(Phase.Setup);
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
@@ -191,13 +194,6 @@ public class GameManager : MonoBehaviour, PhaseListener
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         }
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
-
-        UniTask.Create(async () => await SleepyPhaseSwitch(Phase.Player));
-    }
-
-    public async UniTask SleepyPhaseSwitch(Phase phase) {
-        await UniTask.DelayFrame(1);
-        phaseManager.Transition(phase);
     }
 
     public void RerollGame()
@@ -241,42 +237,78 @@ public class GameManager : MonoBehaviour, PhaseListener
     }
 
     private bool TryAdvancePhase() {
-        if (phaseManager.PhaseProcessingCount() != 0) return false;
+        var popped = false;
 
-        switch (phaseManager.CurrentPhase) {
+        while (true) {
+            var results = phaseManager.CurrentPhaseResults();
+
+            Debug.Log("TryAdvancePhase: " + Utilities.EnumerableString(results));
+            switch (phaseManager.CurrentPhase) {
+                case null:
+                case Phase.Setup:
+                    phaseManager.Transition(Phase.Player);
+                    return true;
+                case Phase.Enemy:
+                    if (!popped) {
+                        phaseManager.Push(Phase.Fight);
+                        return true;
+                    } else if (results.Any(r => r == PhaseStepResult.ShouldContinue)) {
+                        return false;
+                    } else {
+                        phaseManager.Transition(Phase.Player);
+                        return true;
+                    }
+                case Phase.Player:
+                    if (!popped) {
+                        phaseManager.Push(Phase.Fight);
+                        return true;
+                    } else if (results.Any(r => r == PhaseStepResult.ShouldContinue)) {
+                        return false;
+                    } else {
+                        phaseManager.Transition(Phase.Enemy);
+                        return true;
+                    }
+                case Phase.Fight:
+                    phaseManager.Pop();
+                    popped = true;
+                    continue;
+                default:
+                    Debug.LogError("Unreconized phase. Cannot advance");
+                    return false;
+            }
+        }
+    }
+
+    public bool OnPhaseEnter(Phase phase) {
+        switch (phase) {
             case Phase.Setup:
-                //phaseManager.Transition(Phase.Player);
-                //return true;
-                return false;
-            case Phase.Enemy:
-                phaseManager.Transition(Phase.Player);
                 return true;
             case Phase.Player:
-                if (_playerMoveRemaining <= 0) {
-                    phaseManager.Transition(Phase.Enemy);
-                    return true;
-                } else {
-                    return false;
-                }
+                CurrentRound++;
+                PlayerPiecesMoved = 0;
+                MovedPieces.Clear();
+                _playerMoveRemaining = _maxPlayerMoves;
+                return true;
             default:
-                Debug.LogError("Unreconized phase. Cannot advance");
                 return false;
         }
     }
 
-    public bool OnPhaseChange(Phase phase) {
-        if (phase == Phase.Player) {
-            CurrentRound++;
-            PlayerPiecesMoved = 0;
-            MovedPieces.Clear();
-            _playerMoveRemaining = _maxPlayerMoves;
+    public async UniTask<PhaseStepResult> OnPhaseUpdate(Phase phase, CancellationToken token) {
+        switch (phase) {
+            case Phase.Setup:
+                await UniTask.DelayFrame(1);
+                return PhaseStepResult.Done;
+            case Phase.Player:
+                await UniTask.WaitUntilValueChanged(this, m => m.PlayerSteps);
+                if (_playerMoveRemaining <= 0) {
+                    return PhaseStepResult.Done;
+                } else {
+                    return PhaseStepResult.ShouldContinue;
+                }
+            default:
+                return PhaseStepResult.Done;
         }
-
-        return false;
-    }
-
-    public async UniTask OnPhaseUpdate(Phase phase, CancellationToken token) {
-        return;
     }
 
     public void SetMaxMoves()

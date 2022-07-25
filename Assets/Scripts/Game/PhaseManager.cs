@@ -11,26 +11,41 @@ public enum Phase
     Setup,
     Player,
     Enemy,
+    Fight,
+}
+
+public enum PhaseStepResult {
+    // it will be removed from the current state listeners
+    Done,
+    // you can transition or push states, but if there is no transition it will run again
+    CanContinue,
+    // you can push new states, but you shouldn't transition
+    ShouldContinue,
 }
 
 public interface PhaseListener {
     string name { get; }
     MonoBehaviour Self { get; }
 
-    // called once when the phase changes
-    bool OnPhaseChange(Phase phase);
+    // called once when the phase is entered
+    bool OnPhaseEnter(Phase phase);
 
     // async function that is called again once all listeners have completed a step in the phase
     // only called if the item has been added to phase processing
-    UniTask OnPhaseUpdate(Phase phase, CancellationToken token);
+    UniTask<PhaseStepResult> OnPhaseUpdate(Phase phase, CancellationToken token);
 }
 
 public class PhaseData {
     public Phase phase;
     public HashSet<PhaseListener> phaseUpdate = new HashSet<PhaseListener>();
+    public PhaseStepResult[] results = new PhaseStepResult[] {};
 
     public PhaseData(Phase phase) {
         this.phase = phase;
+    }
+
+    override public string ToString() {
+        return phase + Utilities.EnumerableString(phaseUpdate);
     }
 }
 
@@ -46,78 +61,92 @@ public class PhaseManager {
         get { return Current?.phase; }
     }
 
+    public void Clear() {
+        while (phaseStack.Count > 0) {
+            Pop();
+        }
+    }
+
     public void Transition(Phase phase) {
         phaseStack.RemoveAt(phaseStack.Count - 1);
 
         PhaseData phaseData = new PhaseData(phase);
+        phaseStack.Add(phaseData);
 
         foreach (var listener in AllPhaseListeners) {
-            if (listener.OnPhaseChange(phase)) {
-                phaseData.phaseUpdate.Add(listener);
+            if (listener.OnPhaseEnter(phase)) {
+                AddPhaseProcessing(listener);
             }
         }
 
-        phaseStack.Add(phaseData);
-
-        Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack.Select(s => s.phase)));
+        Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
     }
 
     public void Push(Phase phase) {
         PhaseData phaseData = new PhaseData(phase);
+        phaseStack.Add(phaseData);
 
         foreach (var listener in AllPhaseListeners) {
-            if (listener.OnPhaseChange(phase)) {
-                phaseData.phaseUpdate.Add(listener);
+            if (listener.OnPhaseEnter(phase)) {
+                AddPhaseProcessing(listener);
             }
         }
 
-        phaseStack.Add(phaseData);
-
-        Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack.Select(s => s.phase)));
+        Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
     }
 
     public void Pop() {
         phaseStack.RemoveAt(phaseStack.Count - 1);
 
-        foreach (var listener in AllPhaseListeners) {
-            if (listener.OnPhaseChange(Current.phase)) {
-                Current.phaseUpdate.Add(listener);
-            } else {
-                Current.phaseUpdate.Remove(listener);
-            }
-        }
-
-        Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack.Select(s => s.phase)));
+        Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
     }
 
     public async UniTask PhaseUpdate() {
+        // clean up anyone destroyed
+        Current.phaseUpdate.RemoveWhere(l => l.Self == null);
+
         // copy list to protect from manipulation in the middle of processing
         List<PhaseListener> toUpdate = new List<PhaseListener>(Current.phaseUpdate);
 
-        List<UniTask> tasks = new List<UniTask>();
+        List<UniTask<PhaseStepResult>> tasks = new List<UniTask<PhaseStepResult>>();
 
         foreach (var l in toUpdate) {
             tasks.Add(SafePhaseUpdate(l, l.Self.GetCancellationTokenOnDestroy()));
         }
 
         if (tasks.Count > 0) {
-            await UniTask.WhenAll(tasks);
+            var results = await UniTask.WhenAll(tasks);
+
+            // for each result that is Done, remove it from listeners
+            for (int i = results.Length - 1; i >= 0; --i) {
+                if (results[i] == PhaseStepResult.Done) {
+                    Current.phaseUpdate.Remove(toUpdate[i]);
+                }
+            }
+
+            Current.results = results;
         } else {
             await UniTask.DelayFrame(1);
+
+            Current.results = new PhaseStepResult[] {};
         }
     }
 
-    private async UniTask SafePhaseUpdate(PhaseListener listener, CancellationToken token) {
+    public PhaseStepResult[] CurrentPhaseResults() {
+        return Current.results;
+    }
+
+    private async UniTask<PhaseStepResult> SafePhaseUpdate(PhaseListener listener, CancellationToken token) {
         try {
-            await listener.OnPhaseUpdate(Current.phase, token);
+            return await listener.OnPhaseUpdate(Current.phase, token);
         } catch (MissingReferenceException) {
-            return;
+            return PhaseStepResult.Done;
         } catch (OperationCanceledException e) {
             Debug.Log(e);
-            return;
+            return PhaseStepResult.Done;
         } catch (Exception e) {
             Debug.LogError(e);
-            return;
+            return PhaseStepResult.Done;
         }
     }
 
