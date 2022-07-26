@@ -5,11 +5,15 @@ using UnityEngine;
 public class CoreDataHandler : MonoBehaviour
 {
     public static CoreDataHandler instance;
-    private MapData _mapData;
+    private LevelData _levelData;
+    public LevelData LevelData
+    {
+        get { return _levelData; }
+    }
     private string _gameUID;
 
 
-    public string Scene => _mapData != null ? _mapData.levelName : null;
+    public string Scene => _levelData != null ? _levelData.levelName : null;
     public string GameUID => _gameUID;
 
     private void Awake()
@@ -18,12 +22,12 @@ public class CoreDataHandler : MonoBehaviour
             instance = this;
     }
 
-    public void SetMapData(MapData d)
+    public void SetLevelData(LevelData d)
     {
-        _mapData = d;
+        _levelData = d;
     }
 
-    public void SetGameUID(MapData d)
+    public void SetGameUID(LevelData d)
     {
         _gameUID = $"{d.levelName}__{System.Guid.NewGuid().ToString()}";
     }

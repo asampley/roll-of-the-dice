@@ -29,16 +29,32 @@ public class UnitManager : MonoBehaviour, PhaseListener
     public MonoBehaviour Self { get { return this; } }
 
     //Properties
-    public string diceName;
+    private string _unitName;
+    public string UnitName
+    {
+        get { return _unitName; }
+        set { _unitName = value; }
+    }
+
     [SerializeField]
-    private int _maxRange;
+    private int _maxMoves;
+    public int MaxMoves
+    {
+        get { return _maxMoves; }
+        set { _maxMoves = value; }
+    }
     private int _movesAvailable;
     public int MovesAvailable
     {
         get { return _movesAvailable; }
     }
 
-    public bool movesInStraightLine;
+    private MovementPattern _movementPattern;
+    public MovementPattern MovementPattern
+    {
+        get { return _movementPattern; }
+        set { _movementPattern = value; }
+    }
 
     private bool _isEnemy;
     public bool IsEnemy
@@ -68,7 +84,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
     [SerializeField]
     private GameObject _moveIndicator;
     [SerializeField]
-    private EnemyAI enemyAI;
+    private EnemyAI _enemyAI;
 
     //Materials
     [HideInInspector]
@@ -80,19 +96,29 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     public GameObject ghostComponents;
     private DieRotator _dieRotator;
+    public DieRotator DieRotator { get { return _dieRotator; }
+    }
+    private DieTexturer _dieTexturer;
+    public DieTexturer DieTexturer { get { return _dieTexturer; }
+    }
 
     private TextMeshProUGUI nameText;
 
     public event Action<OverlayTile> MoveFinished;
     public static event Action<UnitManager, UnitManager> ABeatsB;
     public static event Action<UnitManager, UnitManager> Draw;
-    public static List<UnitManager> DICE_LIST;
 
 
 
-    static DieManager() {
-        ABeatsB += (a,b) => Debug.Log(a.state + "(" + a.name + ") beats " + b.state + "(" + b.name + ")");
-        Draw += (a,b) => Debug.Log(a.state + "(" + a.name + ") draws with " + b.state + "(" + b.name + ")");
+    private void Awake()
+    {
+        _dieRotator = GetComponentInChildren<DieRotator>();
+        _dieTexturer = GetComponentInChildren<DieTexturer>();
+    }
+
+    static UnitManager() {
+        ABeatsB += (a,b) => Debug.Log(a.State + "(" + a.name + ") beats " + b.State + "(" + b.name + ")");
+        Draw += (a,b) => Debug.Log(a.State + "(" + a.name + ") draws with " + b.State + "(" + b.name + ")");
     }
 
     void Start() {
@@ -131,32 +157,25 @@ public class UnitManager : MonoBehaviour, PhaseListener
         }
     }
 
-    public void Initialize(bool enemy, DiceOrientation orientation)
+    public void Initialize(DiceOrientation orientation)
     {
-        if (DICE_LIST == null)
-            DICE_LIST = new List<UnitManager>();
-        DICE_LIST.Add(this);
-
-        IsEnemy = enemy;
-
         if (IsEnemy)
         {
             GameManager.Instance.EnemyCount++;
-            enemyAI.enabled = true;
+            _enemyAI.enabled = true;
             ghostMaterial = enemyGhostMaterial;
             GetComponentInChildren<MeshRenderer>().sharedMaterial = enemyMaterial;
         }
         else
         {
             GameManager.Instance.PlayerCount++;
-            enemyAI.enabled = false;
-            Destroy(enemyAI);
+            _enemyAI.enabled = false;
+            Destroy(_enemyAI);
             ghostMaterial = alliedGhostMaterial;
             GetComponentInChildren<MeshRenderer>().sharedMaterial = alliedMaterial; ;
         }
 
         ResetRange();
-        _dieRotator = GetComponentInChildren<DieRotator>();
         _dieRotator.RotateTileDelta(Vector2Int.right, orientation.xRolls);
         _dieRotator.RotateTileDelta(Vector2Int.up, orientation.yRolls);
         _dieRotator.RotateZ(orientation.zRolls);
@@ -457,9 +476,9 @@ public class UnitManager : MonoBehaviour, PhaseListener
         _tilesInRange.Clear();
         if (_movesAvailable <= 0) return;
 
-        if (movesInStraightLine)
+        if (MovementPattern == MovementPattern.Straight)
             _tilesInRange = GetTilesStraightLine();
-        else if (!movesInStraightLine)
+        else if (MovementPattern == MovementPattern.Single)
             _tilesInRange = GetTilesAdjacent();
     }
 
@@ -474,11 +493,11 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     public void ResetRange()
     {
-        _movesAvailable = _maxRange;
+        _movesAvailable = MaxMoves;
     }
 
     public int MaxRange() {
-        return _maxRange;
+        return MaxMoves;
     }
 
     private void MoveToPos(Vector2Int delta, bool rotate = true)
@@ -622,7 +641,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
             Globals.SELECTED_UNIT = null;
         }
 
-        if (isEnemy)
+        if (IsEnemy)
         {
             GameManager.Instance.EnemyCount--;
         }

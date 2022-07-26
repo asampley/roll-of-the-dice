@@ -42,12 +42,12 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         Vector2Int start = (Vector2Int)dieManager.parentTile.gridLocation;
         Vector2Int pos = start;
 
-        int currentRange = dieManager.MaxRange();
+        int currentMoves = dieManager.MaxMoves;
 
         List<Vector2Int> deltas = new List<Vector2Int>();
         List<Vector3> trans = new List<Vector3>();
 
-        while (currentRange > 0) {
+        while (currentMoves > 0) {
             var adjacent = GetTilesBeside(pos)
                 .Where(a => !a.IsBlocked)
                 .Select(a => (Vector2Int)a.gridLocation)
@@ -79,7 +79,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                 rotator.RotateTileDelta(delta);
             }
 
-            currentRange--;
+            currentMoves--;
             pos = next;
         }
         Debug.Log("Garfield Ending CreatePath: " + transform.name);

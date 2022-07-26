@@ -4,8 +4,11 @@ using UnityEngine;
 [System.Serializable]
 public class GameUnitData : BinarySerializable
 {
+    public DiceClass diceClass;
+    public DiceOrientation orientation;
     public bool isEnemy;
-    public Vector3 position;
+    public Vector2Int position;
+    public Face[] faces;
 
     public GameUnitData() { }
 

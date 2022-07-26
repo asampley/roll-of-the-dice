@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7dd620c08bac8c46b8796d7e921ab86, type: 3}
+  m_Name: Lich
+  m_EditorClassIdentifier: 
+  unitName: Lich
+  unitClass: 5
+  prefab: {fileID: 4210247315298935970, guid: 37e6741a749cf534ebccf29ecce85a03, type: 3}
+  alliedMaterial: {fileID: 2100000, guid: f92fedead821bdf468e4821c57b5f8ca, type: 2}
+  alliedGhostMaterial: {fileID: 2100000, guid: 2e81e85928ee17246ab6355c5748ec16, type: 2}
+  enemyMaterial: {fileID: 2100000, guid: 5896dd23fe6785549853eb576976911c, type: 2}
+  enemyGhostMaterial: {fileID: 2100000, guid: 9cd7da0180ff26e41a58752a84158e7b, type: 2}
+  maxMoves: 3
+  movementPattern: 0
+  faces:
+  - state: 3
+    position: {x: 0.5, y: 0, z: 0}
+  - state: 3
+    position: {x: -0.5, y: 0, z: 0}
+  - state: 3
+    position: {x: 0, y: 0.5, z: 0}
+  - state: 4
+    position: {x: 0, y: -0.5, z: 0}
+  - state: 3
+    position: {x: 0, y: 0, z: 0.5}
+  - state: 3
+    position: {x: 0, y: 0, z: -0.5}
+  offsetRotation: {x: 60, y: 0, z: 135}

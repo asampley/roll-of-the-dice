@@ -19,10 +19,17 @@ public class DieTexturer : MonoBehaviour {
     private Mesh originalMesh;
 
     [SerializeField]
-    private Face[] faces;
+    private Face[] _faces;
+    public Face[] Faces
+    {
+        get { return _faces; }
+        set { _faces = value; }
+    }
 
-    void Start() {
-        if (originalMesh == null) {
+    public void Initialize()
+    {
+        if (originalMesh == null)
+        {
             originalMesh = this.GetComponent<MeshFilter>().sharedMesh;
 
             // by calling retexture only if the original mesh is not set
@@ -78,7 +85,7 @@ public class DieTexturer : MonoBehaviour {
         Face face = null;
         float dist = float.PositiveInfinity;
 
-        foreach (var f in this.faces) {
+        foreach (var f in this._faces) {
             var d = Vector3.Distance(f.position, position);
 
             if (d < dist) {

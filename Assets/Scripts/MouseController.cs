@@ -53,7 +53,7 @@ public class MouseController : MonoBehaviour
                 {
                     if (GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(Globals.SELECTED_UNIT) && !Globals.SELECTED_UNIT.IsMoving)
                     {
-                        if (Globals.SELECTED_UNIT.movesInStraightLine)
+                        if (Globals.SELECTED_UNIT.MovementPattern == MovementPattern.Straight)
                         {
                             var path = Globals.SELECTED_UNIT.GetComponent<UnitManager>().PathGenerator(overlayTileManager);
                             Globals.SELECTED_UNIT.GetComponent<UnitManager>().Move(path);

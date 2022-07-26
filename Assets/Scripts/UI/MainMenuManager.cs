@@ -48,7 +48,9 @@ public class MainMenuManager : MonoBehaviour
 
 
     // LEVEL SELECT ----------------------------------------------------------
-    public void Level(int level) {
-        Loader.LoadLevelNum(level);
+    public void Level(LevelData level)
+    {
+        CoreDataHandler.instance.SetGameUID(level);
+        CoreBooter.instance.LoadLevel(level);
     }
 }

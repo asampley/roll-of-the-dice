@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class DataHandler : MonoBehaviour
 {
@@ -14,6 +12,9 @@ public class DataHandler : MonoBehaviour
 
     public static void LoadGameData()
     {
+        Globals.UNIT_DATA = Resources.LoadAll<UnitData>(Globals.DICE_CLASS_SO) as UnitData[];
+        Debug.Log(Globals.UNIT_DATA);
+
         string gameUid = CoreDataHandler.instance.GameUID;
 
         // Load game scene data
@@ -31,14 +32,21 @@ public class DataHandler : MonoBehaviour
     {
         GameData data = new GameData();
         List<GameUnitData> dice = new List<GameUnitData>();
-        foreach (UnitManager die in UnitManager.DICE_LIST)
+        foreach (Unit die in Unit.DICE_LIST)
         {
-            if (!die.transform) continue;
+            if (!die.Transform) continue;
+
+            Face[] saveFaces = new Face[die.Faces.Length];
+
+            for (int n = 0; n < die.Faces.Length; n++)
+                saveFaces[n] = die.Faces[n];
+
 
             GameUnitData d = new GameUnitData()
             {
                 isEnemy = die.IsEnemy,
-                position = die.transform.position,
+                position = die.GetPosition(),
+                faces = saveFaces,
             };
 
             dice.Add(d);
@@ -55,11 +63,13 @@ public class DataHandler : MonoBehaviour
         GameData data = GameData.Instance;
         if (data == null) return;
 
-
         foreach (GameUnitData die in data.dice)
         {
-            UnitManager d;
+            UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => x.unitClass == die.diceClass).First();
+            Unit u = new Unit(unitData, die.isEnemy, die.orientation);
 
+            u.SetPosition(die.position);
+            u.Faces = die.faces;
         }
 
         Camera.main.transform.position = data.camPosition;
@@ -69,6 +79,8 @@ public class DataHandler : MonoBehaviour
     public static List<(string, System.DateTime)> GetGamesList()
     {
         string rootPath = Path.Combine(Application.persistentDataPath, BinarySerializable.DATA_DIRECTORY, "Games");
+        if (!Directory.Exists(rootPath))
+            Directory.CreateDirectory(rootPath);
         string[] gameDirs = Directory.GetDirectories(rootPath);
 
         IEnumerable<string> validGameDirs = gameDirs.Where((string d) => File.Exists(Path.Combine(d, GameData.DATA_FILE_NAME)));

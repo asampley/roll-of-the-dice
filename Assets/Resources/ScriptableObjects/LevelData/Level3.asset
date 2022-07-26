@@ -10,8 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23ae3ea75ab725f4e8f9e1a9f8bb62da, type: 3}
-  m_Name: Map3
+  m_Name: Level3
   m_EditorClassIdentifier: Assembly-CSharp::StartPosition
+  levelName: Level3
+  sceneName: Level3
+  nextLevel: {fileID: 11400000, guid: 8d99783e68b3b24469cd767e4698ff0b, type: 2}
+  gameRules: {fileID: 11400000, guid: 8fcb3547f400cc14bb10d7414947a2c2, type: 2}
+  gridType: 0
   alliedDice:
   - diceClass: 1
     tilePosition: {x: 11, y: 0}

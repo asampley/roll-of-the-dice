@@ -18,11 +18,8 @@ public class GameManager : MonoBehaviour, PhaseListener
     public static GameManager Instance { get { return _instance; } }
 
     public MonoBehaviour Self { get { return this; } }
-
-    private static uint DieSpawnID = 0;
-
     //Dice
-    public MapData mapData;
+    public LevelData levelData;
     public GameRulesData gameRulesData;
     public GameObject diceParent;
 
@@ -108,6 +105,8 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     private void Awake()
     {
+        DataHandler.LoadGameData();
+
         if (_instance != null && _instance != this)
             Destroy(this.gameObject);
         else
@@ -116,50 +115,30 @@ public class GameManager : MonoBehaviour, PhaseListener
         phaseManager.AllPhaseListeners.Add(this);
     }
 
+
     private void Start()
     {
-        FindPrefabs();
+        levelData = CoreDataHandler.instance.LevelData;
+        gameRulesData = levelData.gameRules;
         RollPositions();
         StartGame();
     }
 
-    private void FindPrefabs()
-    {
-        foreach (DiceClass diceClass in Enum.GetValues(typeof(DiceClass)))
-            _dicePrefabs.Add(diceClass, Resources.Load<GameObject>(_dicePrefabLocation + diceClass));
-    }
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
     {
-        GameObject prefab = _dicePrefabs[diceClass];
-
-        Vector3 pos = MapManager.Instance.TileToWorldSpace(startPos);
-        GameObject die = Instantiate(prefab, pos, Quaternion.identity);
-        die.transform.SetParent(diceParent.transform);
-        die.name = prefab.name + (isEnemy ? " Enemy " : " Player ") + (DieSpawnID++);
-        UnitManager UnitManager = die.GetComponent<UnitManager>();
-        var placedOnTile = MapManager.Instance.GetTileAtPos(startPos);
-
-        UnitManager.Initialize(isEnemy, orientation);
-        if (placedOnTile != null)
-        {
-            GameObject overlayTile = placedOnTile.gameObject;
-            OverlayTile overlayTileManager = overlayTile.GetComponent<OverlayTile>();
-
-            overlayTileManager.MoveDiceToTile(UnitManager);
-        }
-        else
-        {
-            Debug.LogError("Dice spawning off map.");
-        }
+        Debug.Log("garfield " + diceClass);
+        UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => (int)x.unitClass == (int)diceClass).First();
+        Unit die = new Unit(unitData, isEnemy, orientation);
+        die.SetPosition(startPos);
     }
 
     public void RollPositions()
     {
         ClearDictionaries();
-        foreach (DiceSpawn spawn in mapData.alliedDice)
+        foreach (DiceSpawn spawn in levelData.alliedDice)
             alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
-        foreach (DiceSpawn spawn in mapData.enemyDice)
+        foreach (DiceSpawn spawn in levelData.enemyDice)
             enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
     }
 

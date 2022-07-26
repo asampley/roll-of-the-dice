@@ -10,8 +10,13 @@ public class DieRotator : MonoBehaviour {
 
     [SerializeField]
     private Vector3 _offsetRotation;
-    private Quaternion offsetRotation;
+    public Vector3 OffsetRotation
+    {
+        get { return _offsetRotation; }
+        set { _offsetRotation = value; }
+    }
 
+    private Quaternion _qOffsetRotation;
     public Axes axes;
 
     private bool _collapse;
@@ -21,7 +26,7 @@ public class DieRotator : MonoBehaviour {
     }
 
     void Awake() {
-        this.offsetRotation = Quaternion.Euler(_offsetRotation);
+        this._qOffsetRotation = Quaternion.Euler(_offsetRotation);
         this.startRot = this.transform.localRotation;
     }
 
@@ -60,7 +65,7 @@ public class DieRotator : MonoBehaviour {
 
     // rotate around an axis that is relative to the mesh original orientation
     void RotateAngleAxis(float angle, Vector3 axis, int count) {
-        Rotate(Quaternion.AngleAxis(angle, offsetRotation * axis), count);
+        Rotate(Quaternion.AngleAxis(angle, _qOffsetRotation * axis), count);
     }
 
     // Computes an axis based on the tile delta.

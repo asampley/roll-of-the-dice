@@ -22,11 +22,10 @@ public class CoreBooter : MonoBehaviour
 
     public void LoadMenu() => StartCoroutine(_SwitchingScene("menu"));
 
-    public void LoadMap(string mapReference)
+    public void LoadLevel(LevelData level)
     {
-        MapData d = Resources.Load<MapData>($"ScriptableObjects/Maps/{mapReference}");
-        CoreDataHandler.instance.SetMapData(d);
-        string s = d.levelName;
+        CoreDataHandler.instance.SetLevelData(level);
+        string s = level.levelName;
         StartCoroutine(_SwitchingScene("game", s));
     }
 
@@ -44,7 +43,7 @@ public class CoreBooter : MonoBehaviour
         return op;
     }
 
-    private AsyncOperation _LoadMap(string map)
+    private AsyncOperation _LoadLevel(string map)
     {
         AsyncOperation op = SceneManager.LoadSceneAsync(map, LoadSceneMode.Additive);
         AudioListener prevListener = Object.FindObjectOfType<AudioListener>();
@@ -80,7 +79,7 @@ public class CoreBooter : MonoBehaviour
         if (to == "menu")
             op = _LoadMenu();
         else
-            op = _LoadMap(map);
+            op = _LoadLevel(map);
 
         yield return new WaitUntil(() => op.isDone);
 

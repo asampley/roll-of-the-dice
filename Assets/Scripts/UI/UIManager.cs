@@ -104,7 +104,7 @@ public class UIManager : MonoBehaviour
             GameObject.Destroy(child.gameObject);
         }
         gameInfo.SetActive(true);
-        diceName.text = Globals.SELECTED_UNIT.diceName;
+        diceName.text = Globals.SELECTED_UNIT.UnitName;
         movesAvailable.text = "Moves Available: " + Globals.SELECTED_UNIT.MovesAvailable.ToString();
         GameObject inspectDie = Globals.SELECTED_UNIT.GetComponent<UnitManager>().ghostComponents.gameObject;
         inspectorObject = Instantiate(inspectDie);
@@ -118,8 +118,11 @@ public class UIManager : MonoBehaviour
         inspectorObject.GetComponent<SortingGroup>().enabled = true;
     }
 
-    public void NextLevel() {
-        Loader.LoadNext();
+    public void NextLevel()
+    {
+        LevelData level = CoreDataHandler.instance.LevelData.nextLevel;
+        CoreDataHandler.instance.SetGameUID(level);
+        CoreBooter.instance.LoadLevel(level);
     }
 
     public void ShowVictoryScreen(bool victory) {

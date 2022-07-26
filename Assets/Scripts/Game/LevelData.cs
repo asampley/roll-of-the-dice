@@ -11,13 +11,19 @@ public enum GridType
 
 
 [CreateAssetMenu(fileName = "MapData", menuName = "Scriptable Objects/MapData", order = 2)]
-public class MapData : ScriptableObject
+public class LevelData : ScriptableObject
 {
     public string levelName;
+    public string sceneName;
+    public LevelData nextLevel;
+
+    public GameRulesData gameRules;
     public GridType gridType;
 
     public DiceSpawn[] alliedDice;
     public DiceSpawn[] enemyDice;
+
+    
 
     private void OnValidate()
     {

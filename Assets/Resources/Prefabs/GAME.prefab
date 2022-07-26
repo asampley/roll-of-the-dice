@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 7400787855664400776}
   - component: {fileID: 1259873434514849420}
   - component: {fileID: 2646958015188573897}
+  - component: {fileID: 113428986604567986}
   m_Layer: 0
   m_Name: GAME
   m_TagString: Untagged
@@ -127,8 +128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c2bae854c944fc41b1c52403c51f309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPositions: {fileID: 11400000, guid: 5add61967d911994cbaad2e8c812522e, type: 2}
-  gameRules: {fileID: 0}
+  mapData: {fileID: 0}
+  gameRulesData: {fileID: 0}
   diceParent: {fileID: 584924817115488174}
 --- !u!114 &7400787855664400776
 MonoBehaviour:
@@ -167,6 +168,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _exitTime: 0.5
+--- !u!114 &113428986604567986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5726423595066037711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8745f2b691dbe424ba3e48fbb56056e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6593136774172439638
 GameObject:
   m_ObjectHideFlags: 0

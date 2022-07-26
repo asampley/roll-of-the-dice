@@ -15,4 +15,10 @@ public static class Globals
     public static float MAX_CAMERA_SIZE = 10;
 
     public static readonly uint DICE_STATES = Enum.GetValues(typeof(DiceState)).Cast<uint>().Max() + 1;
+    public static UnitData[] UNIT_DATA;
+
+
+    // FILE PATHS
+    public static string DICE_CLASS_SO = "ScriptableObjects/DiceClasses";
+    public static string LEVEL_DATA_SO = "ScriptableObjects/LevelData";
 }

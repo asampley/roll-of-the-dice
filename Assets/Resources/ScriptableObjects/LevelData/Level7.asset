@@ -10,22 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23ae3ea75ab725f4e8f9e1a9f8bb62da, type: 3}
-  m_Name: Map4
+  m_Name: Level7
   m_EditorClassIdentifier: Assembly-CSharp::StartPosition
+  levelName: Level7
+  sceneName: Level7
+  gameRules: {fileID: 11400000, guid: 8fcb3547f400cc14bb10d7414947a2c2, type: 2}
+  gridType: 0
   alliedDice:
-  - diceClass: 1
-    tilePosition: {x: 5, y: 2}
+  - diceClass: 0
+    tilePosition: {x: 0, y: 0}
+    isEnemy: 0
+  - diceClass: 0
+    tilePosition: {x: 3, y: 2}
     isEnemy: 0
   enemyDice:
   - diceClass: 5
-    tilePosition: {x: 2, y: 6}
+    tilePosition: {x: 1, y: 3}
     isEnemy: 1
   - diceClass: 5
-    tilePosition: {x: 2, y: -2}
+    tilePosition: {x: 4, y: 0}
     isEnemy: 1
   - diceClass: 5
-    tilePosition: {x: 9, y: -2}
-    isEnemy: 1
-  - diceClass: 5
-    tilePosition: {x: 9, y: 6}
+    tilePosition: {x: 0, y: -2}
     isEnemy: 1
