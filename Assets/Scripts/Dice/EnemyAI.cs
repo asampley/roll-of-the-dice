@@ -11,19 +11,17 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
 
     private List<Vector2Int> path = new List<Vector2Int>();
 
-    private UnitManager dieManager;
+    private UnitManager _unitManager;
 
     // Start is called before the first frame update
     void Start() {
-        dieManager = GetComponent<DieManager>();
-
         if (GameManager.Instance.phaseManager.CurrentPhase != null) {
             OnPhaseEnter(GameManager.Instance.phaseManager.CurrentPhase.Value);
         }
     }
 
     void OnEnable() {
-        dieManager = GetComponent<UnitManager>();
+        _unitManager = GetComponent<UnitManager>();
         GameManager.Instance.phaseManager.AllPhaseListeners.Add(this);
     }
 
@@ -39,10 +37,10 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         Debug.Log("Garfield Starting CreatePath: " + transform.name);
         Debug.Log("Create Path: currently taken " + EnemyPathManager.Instance.TakenStr());
 
-        Vector2Int start = (Vector2Int)dieManager.parentTile.gridLocation;
+        Vector2Int start = (Vector2Int)_unitManager.parentTile.gridLocation;
         Vector2Int pos = start;
 
-        int currentMoves = dieManager.MaxMoves;
+        int currentMoves = _unitManager.MaxMoves;
 
         List<Vector2Int> deltas = new List<Vector2Int>();
         List<Vector3> trans = new List<Vector3>();
@@ -96,7 +94,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
             OverlayTile tile;
             try {
                 tile = MapManager.Instance.GetTileAtPos(
-                    (Vector2Int)dieManager.parentTile.gridLocation + path[0]
+                    (Vector2Int)_unitManager.parentTile.gridLocation + path[0]
                 );
 
                 path.RemoveAt(0);
@@ -107,14 +105,14 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                 return;
             }
 
-            await dieManager.MoveAsync(tile, token);
+            await _unitManager.MoveAsync(tile, token);
         }
 
         Debug.Log("Garfield Ending StepPath: " + transform.name);
     }
 
     private string PathStr() {
-        return (Vector2Int)dieManager.parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
+        return (Vector2Int)_unitManager.parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
     }
 
     public PhaseStepResult OnPhaseEnter(Phase phase) {
