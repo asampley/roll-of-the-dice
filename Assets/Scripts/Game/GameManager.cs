@@ -2,15 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
-
-
-public enum Phase
-{
-    Setup,
-    Player,
-    Enemy,
-}
+using Cysharp.Threading.Tasks;
 
 public enum Win
 {
@@ -18,16 +12,12 @@ public enum Win
     Enemy,
 }
 
-public interface PhaseListener {
-    string name { get; }
-
-    void OnPhaseChange(Phase phase);
-}
-
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, PhaseListener
 {
     private static GameManager _instance;
     public static GameManager Instance { get { return _instance; } }
+
+    public MonoBehaviour Self { get { return this; } }
 
     private static uint DieSpawnID = 0;
 
@@ -43,7 +33,8 @@ public class GameManager : MonoBehaviour
     private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
 
-    private HashSet<PhaseListener> phaseProcessing = new HashSet<PhaseListener>();
+    private CancellationTokenSource phaseUpdateCancel = new CancellationTokenSource();
+    public PhaseManager phaseManager = new PhaseManager();
 
     private int _enemies;
     public int EnemyCount {
@@ -65,6 +56,8 @@ public class GameManager : MonoBehaviour
 
     public event Action<Win> WinEvent;
 
+    public int PlayerSteps;
+
     private int _maxPlayerMoves;
     public int MaxPlayerMoves
     {
@@ -75,7 +68,7 @@ public class GameManager : MonoBehaviour
     private int _playerMoveRemaining;
     public int PlayerMoveRemaining {
         get { return _playerMoveRemaining; }
-        set { _playerMoveRemaining = value; TryAdvancePhase(); }
+        set { _playerMoveRemaining = value; }
     }
 
     private int _playerpiecesMoved;
@@ -113,20 +106,6 @@ public class GameManager : MonoBehaviour
         set { _maxNumberOfTurns = value; }
     }
 
-    private Phase _phase;
-    public Phase CurrentPhase {
-        get { return _phase; }
-        private set {
-            if (_phase != value) {
-                _phase = value;
-                PostPhaseChange();
-                PhaseChange?.Invoke(_phase);
-            }
-        }
-    }
-    public event Action<Phase> PhaseChange;
-
-
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -134,7 +113,7 @@ public class GameManager : MonoBehaviour
         else
             _instance = this;
 
-        PhaseChange += p => Debug.Log("Phase: " + p);
+        phaseManager.AllPhaseListeners.Add(this);
     }
 
     private void Start()
@@ -197,7 +176,15 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        CurrentPhase = Phase.Setup;
+        phaseUpdateCancel?.Cancel();
+        phaseUpdateCancel?.Dispose();
+        phaseUpdateCancel = new CancellationTokenSource();
+
+        phaseManager.Clear();
+        phaseManager.Push(Phase.Setup);
+
+        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
+
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
         CurrentRound = 1;
@@ -214,13 +201,6 @@ public class GameManager : MonoBehaviour
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         }
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
-
-        StartCoroutine(SleepyPhaseSwitch(Phase.Player));
-    }
-
-    public IEnumerator SleepyPhaseSwitch(Phase phase) {
-        yield return new WaitForFixedUpdate();
-        CurrentPhase = phase;
     }
 
     public void RerollGame()
@@ -243,7 +223,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void CheckWin() {
-        if (CurrentPhase == Phase.Setup) return;
+        if (phaseManager.CurrentPhase == Phase.Setup) return;
 
         if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
             WinEvent?.Invoke(Win.Enemy);
@@ -253,35 +233,53 @@ public class GameManager : MonoBehaviour
             WinEvent?.Invoke(Win.Player);
     }
 
-    public void AddPhaseProcessing(PhaseListener listener) {
-        phaseProcessing.Add(listener);
+    private async UniTask RunPhaseUpdate(CancellationToken token) {
+        Debug.Log("Start Run Phase Update: " + phaseManager.CurrentPhase);
 
-        string str = Utilities.EnumerableString(phaseProcessing.Select(e => e.name));
-        Debug.Log("Still waiting for " + str);
-    }
+        while (true) {
+            await phaseManager.PhaseStep(token);
 
-    public void RemovePhaseProcessing(PhaseListener listener) {
-        phaseProcessing.Remove(listener);
+            if (token.IsCancellationRequested) {
+                return;
+            }
 
-        string str = Utilities.EnumerableString(phaseProcessing.Select(e => e.name));
-        Debug.Log("Still waiting for " + str);
-
-        TryAdvancePhase();
+            TryAdvancePhase();
+        }
     }
 
     private void TryAdvancePhase() {
-        if (phaseProcessing.Count != 0) return;
+        var results = phaseManager.CurrentPhaseResults();
 
-        switch (CurrentPhase) {
+        Debug.Log("TryAdvancePhase: " + Utilities.EnumerableString(results));
+        switch (phaseManager.CurrentPhase) {
+            case null:
             case Phase.Setup:
-                CurrentPhase = Phase.Player;
+                phaseManager.Transition(Phase.Player);
                 break;
             case Phase.Enemy:
-                CurrentPhase = Phase.Player;
+                if (results.Any(r => r == PhaseStepResult.Blocking)) {
+                    phaseManager.Push(Phase.TileEffects);
+                    phaseManager.Push(Phase.Fight);
+                } else {
+                    phaseManager.Transition(Phase.Player);
+                }
                 break;
             case Phase.Player:
-                if (_playerMoveRemaining <= 0) {
-                    CurrentPhase = Phase.Enemy;
+                if (results.Any(r => r == PhaseStepResult.Blocking)) {
+                    phaseManager.Push(Phase.TileEffects);
+                    phaseManager.Push(Phase.Fight);
+                } else {
+                    phaseManager.Transition(Phase.Enemy);
+                }
+                break;
+            case Phase.Fight:
+                phaseManager.Pop();
+                break;
+            case Phase.TileEffects:
+                if (results.Any(r => r == PhaseStepResult.Blocking)) {
+                    phaseManager.Push(Phase.Fight);
+                } else {
+                    phaseManager.Pop();
                 }
                 break;
             default:
@@ -290,12 +288,35 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void PostPhaseChange() {
-        if (CurrentPhase == Phase.Player) {
-            CurrentRound++;
-            PlayerPiecesMoved = 0;
-            MovedPieces.Clear();
-            _playerMoveRemaining = _maxPlayerMoves;
+    public PhaseStepResult OnPhaseEnter(Phase phase) {
+        switch (phase) {
+            case Phase.Setup:
+                return PhaseStepResult.Blocking;
+            case Phase.Player:
+                CurrentRound++;
+                PlayerPiecesMoved = 0;
+                MovedPieces.Clear();
+                _playerMoveRemaining = _maxPlayerMoves;
+                return PhaseStepResult.Blocking;
+            default:
+                return PhaseStepResult.Done;
+        }
+    }
+
+    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
+        switch (phase) {
+            case Phase.Setup:
+                await UniTask.DelayFrame(1);
+                return PhaseStepResult.Done;
+            case Phase.Player:
+                if (_playerMoveRemaining <= 0) {
+                    return PhaseStepResult.Done;
+                } else {
+                    await UniTask.WaitUntilValueChanged(this, m => m.PlayerSteps);
+                    return PhaseStepResult.Blocking;
+                }
+            default:
+                return PhaseStepResult.Done;
         }
     }
 
