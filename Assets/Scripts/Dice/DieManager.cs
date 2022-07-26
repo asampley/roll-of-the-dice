@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using TMPro;
+using Cysharp.Threading.Tasks;
 
 public enum DiceState : uint
 {
@@ -17,6 +19,8 @@ public enum DiceState : uint
 
 public class DieManager : MonoBehaviour, PhaseListener
 {
+    public MonoBehaviour Self { get { return this; } }
+
     //Properties
     public string diceName;
     [SerializeField]
@@ -63,6 +67,11 @@ public class DieManager : MonoBehaviour, PhaseListener
     public static event Action<DieManager, DieManager> ABeatsB;
     public static event Action<DieManager, DieManager> Draw;
 
+    static DieManager() {
+        ABeatsB += (a,b) => Debug.Log(a.state + "(" + a.name + ") beats " + b.state + "(" + b.name + ")");
+        Draw += (a,b) => Debug.Log(a.state + "(" + a.name + ") draws with " + b.state + "(" + b.name + ")");
+    }
+
     void Start() {
         nameText = GetComponentInChildren<TextMeshProUGUI>();
         nameText.enabled = false;
@@ -72,17 +81,13 @@ public class DieManager : MonoBehaviour, PhaseListener
     }
 
     void OnEnable() {
-        GameManager.Instance.PhaseChange += OnPhaseChange;
+        GameManager.Instance.phaseManager.AllPhaseListeners.Add(this);
         DebugConsole.DebugNames += OnDebugNames;
-        ABeatsB += OnABeatsB;
-        Draw += OnDraw;
     }
 
     void OnDisable() {
-        GameManager.Instance.PhaseChange += OnPhaseChange;
-        DebugConsole.DebugNames += OnDebugNames;
-        ABeatsB -= OnABeatsB;
-        Draw -= OnDraw;
+        GameManager.Instance.phaseManager.AllPhaseListeners.Remove(this);
+        DebugConsole.DebugNames -= OnDebugNames;
     }
 
     private void Update()
@@ -91,7 +96,7 @@ public class DieManager : MonoBehaviour, PhaseListener
         {
             if (GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(this))
             {
-                if (GameManager.Instance.CurrentPhase == Phase.Player && _movesAvailable > 0)
+                if (GameManager.Instance.phaseManager.CurrentPhase == Phase.Player && _movesAvailable > 0)
                     _moveIndicator.SetActive(true);
                 else
                     _moveIndicator.SetActive(false);
@@ -134,7 +139,7 @@ public class DieManager : MonoBehaviour, PhaseListener
     }
 
     // consumes each step of the enumerator only after the last move has completed
-    private IEnumerator MoveMany(IEnumerator<OverlayTile> tiles) {
+    private async UniTask MoveMany(IEnumerator<OverlayTile> tiles, CancellationToken token) {
         IsMoving = true;
         if (tiles.MoveNext()) {
             OverlayTile tile;
@@ -145,9 +150,9 @@ public class DieManager : MonoBehaviour, PhaseListener
 
                 GetTilesInRange();
                 if (!_tilesInRange.Contains(tile)) {
-                    yield break;
+                    return;
                 }
-                yield return StartCoroutine(UpdateTilePos(tile));
+                await UpdateTilePos(tile, token);
             } while (tiles.MoveNext());
 
             _movesAvailable--;
@@ -155,6 +160,8 @@ public class DieManager : MonoBehaviour, PhaseListener
             EventManager.TriggerEvent("SelectUnit");
             if (!isEnemy)
             {
+                GameManager.Instance.PlayerSteps++;
+
                 if (!GameManager.Instance.MovedPieces.Contains(this))
                     {
                     GameManager.Instance.MovedPieces.Add(this);
@@ -177,12 +184,16 @@ public class DieManager : MonoBehaviour, PhaseListener
         IsMoving = false;
     }
 
+    public async UniTask MoveAsync(OverlayTile newTile, CancellationToken token) {
+        await MoveMany(new List<OverlayTile> { newTile }.GetEnumerator(), token);
+    }
+
     public void Move(OverlayTile newTile) {
-        StartCoroutine(MoveMany(new List<OverlayTile> { newTile }.GetEnumerator()));
+        MoveMany(new List<OverlayTile> { newTile }.GetEnumerator(), this.GetCancellationTokenOnDestroy()).Forget();
     }
 
     public void Move(IEnumerator<OverlayTile> tiles) {
-        StartCoroutine(MoveMany(tiles));
+        MoveMany(tiles, this.GetCancellationTokenOnDestroy()).Forget();
     }
 
     public void Select()
@@ -235,7 +246,7 @@ public class DieManager : MonoBehaviour, PhaseListener
         }
     }
 
-    public void Fight()
+    public async UniTask Fight()
     {
         List<DieManager> toKill = new List<DieManager>();
 
@@ -454,7 +465,7 @@ public class DieManager : MonoBehaviour, PhaseListener
         );
     }
 
-    private IEnumerator UpdateTilePos(OverlayTile newTile, bool rotate = true)
+    private async UniTask UpdateTilePos(OverlayTile newTile, CancellationToken token, bool rotate = true)
     {
         MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
         state = _dieRotator.GetUpFace();
@@ -462,113 +473,119 @@ public class DieManager : MonoBehaviour, PhaseListener
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
 
-        yield return new WaitForSeconds(Globals.MOVEMENT_TIME + 0.1f);
-        yield return StartCoroutine(GetTileEffects());
+        await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME + 0.1f), cancellationToken: token);
     }
 
-    private IEnumerator GetTileEffects()
+    private async UniTask<bool> GetTileEffects(CancellationToken token)
     {
         TileType tileType = parentTile.data.TileType;
         HideTilesInRange();
+        var moved = false;
         switch (tileType)
         {
             case TileType.Normal:
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.Stopping:
                 _movesAvailable = 0;
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.RotateClockwise:
                 _dieRotator.RotateZ(1);
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
+                await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.RotateCounterClockwise:
                 _dieRotator.RotateZ(-1);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.ShovePosX:
-                yield return StartCoroutine(Shove(new Vector2Int(1, 0)));
+                moved = await Shove(new Vector2Int(1, 0), token);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.ShovePosY:
-                yield return StartCoroutine(Shove(new Vector2Int(0, 1)));
+                moved = await Shove(new Vector2Int(0, 1), token);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.ShoveNegX:
-                yield return StartCoroutine(Shove(new Vector2Int(-1, 0)));
+                moved = await Shove(new Vector2Int(-1, 0), token);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.ShoveNegY:
-                yield return StartCoroutine(Shove(new Vector2Int(0, -1)));
+                moved = await Shove(new Vector2Int(0, -1), token);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.RemoveFace:
                 _dieRotator.SetDownFace(DiceState.Blank);
                 GetTilesInRange();
-                Fight();
                 break;
             case TileType.Randomize:
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
                 _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
-                yield return new WaitForSeconds(Globals.MOVEMENT_TIME);
+                await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
-                Fight();
                 break;
             default:
                 GetTilesInRange();
-                Fight();
                 break;
         }
+
+        return moved;
     }
 
-    public IEnumerator Shove(Vector2Int dir)
+    public async UniTask<bool> Shove(Vector2Int dir, CancellationToken token)
     {
         Vector2Int newPos = (Vector2Int)parentTile.gridLocation + dir;
 
         var tile = MapManager.Instance.GetTileAtPos(newPos);
 
-        if (tile.IsBlocked) yield break;
+        if (tile.IsBlocked) return false;
 
-        yield return StartCoroutine(UpdateTilePos(tile, false));
+        await UpdateTilePos(tile, token, false);
+
+        return true;
     }
 
-    public void OnPhaseChange(Phase phase) {
+    public PhaseStepResult OnPhaseEnter(Phase phase) {
         switch (phase) {
             case Phase.Enemy:
                 if (isEnemy) {
                     ResetRange();
                 }
-                break;
+                return PhaseStepResult.Done;
             case Phase.Player:
                 if (!isEnemy) {
                     ResetRange();
                 }
-                break;
+                return PhaseStepResult.Done;
+            case Phase.TileEffects:
+            case Phase.Fight:
+                return PhaseStepResult.Blocking;
+            default:
+                return PhaseStepResult.Done;
         }
-        Debug.Log("Phase change " + this + ":"+ _movesAvailable + "/" + _maxRange);
+
+    }
+
+    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
+        switch (phase) {
+            case Phase.Fight:
+                await Fight();
+                return PhaseStepResult.Done;
+            case Phase.TileEffects:
+                if (await GetTileEffects(token)) {
+                    return PhaseStepResult.Blocking;
+                } else {
+                    return PhaseStepResult.Done;
+                }
+            default:
+                return PhaseStepResult.Done;
+        }
     }
 
     void OnDebugNames() {
         nameText.enabled = !nameText.enabled;
-    }
-
-    void OnABeatsB(DieManager a, DieManager b) {
-        Debug.Log(a.state + "(" + a.name + ") beats " + b.state + "(" + b.name + ")");
-    }
-
-    void OnDraw(DieManager a, DieManager b) {
-        Debug.Log(a.state + "(" + a.name + ") draws with " + b.state + "(" + b.name + ")");
     }
 
     void OnDestroy() {
@@ -577,8 +594,6 @@ public class DieManager : MonoBehaviour, PhaseListener
         if (Globals.SELECTED_UNIT == this) {
             Globals.SELECTED_UNIT = null;
         }
-
-        GameManager.Instance.PhaseChange -= OnPhaseChange;
 
         if (isEnemy)
         {

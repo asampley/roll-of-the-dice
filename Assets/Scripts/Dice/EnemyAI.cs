@@ -2,28 +2,32 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class EnemyAI : MonoBehaviour, PhaseListener {
+    public MonoBehaviour Self { get { return this; } }
+
     private List<Vector2Int> path = new List<Vector2Int>();
 
     private DieManager dieManager;
 
     // Start is called before the first frame update
     void Start() {
-        OnPhaseChange(GameManager.Instance.CurrentPhase);
+        dieManager = GetComponent<DieManager>();
+
+        if (GameManager.Instance.phaseManager.CurrentPhase != null) {
+            OnPhaseEnter(GameManager.Instance.phaseManager.CurrentPhase.Value);
+        }
     }
 
     void OnEnable() {
-        dieManager = GetComponent<DieManager>();
-
-        GameManager.Instance.PhaseChange += OnPhaseChange;
-        dieManager.MoveFinished += OnMoveFinished;
+        GameManager.Instance.phaseManager.AllPhaseListeners.Add(this);
     }
 
     void OnDisable() {
-        GameManager.Instance.PhaseChange -= OnPhaseChange;
-        dieManager.MoveFinished -= OnMoveFinished;
+        GameManager.Instance.phaseManager.AllPhaseListeners.Remove(this);
     }
 
     private List<OverlayTile> GetTilesBeside(Vector2Int pos) {
@@ -81,52 +85,65 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         Debug.Log("Created Path: " + PathStr());
     }
 
-    public void FollowPath() {
-        Debug.Log("Garfield Starting FollowPath: " + transform.name);
+    public async UniTask StepPath(CancellationToken token) {
+        Debug.Log("Garfield Starting StepPath: " + transform.name);
         Debug.Log("Following Path: " + PathStr());
 
         GhostManager.Instance.RemoveGhosts(gameObject);
 
-        dieManager.Move(PathGenerator());
+        if (path.Count > 0) {
+            OverlayTile tile;
+            try {
+                tile = MapManager.Instance.GetTileAtPos(
+                    (Vector2Int)dieManager.parentTile.gridLocation + path[0]
+                );
 
-        Debug.Log("Garfield Ending FollowPath: " + transform.name);
+                path.RemoveAt(0);
+            } catch (KeyNotFoundException) {
+                Debug.Log("Tile does not exist, stopping path");
+                ClearPath();
+
+                return;
+            }
+
+            await dieManager.MoveAsync(tile, token);
+        }
+
+        Debug.Log("Garfield Ending StepPath: " + transform.name);
     }
 
     private string PathStr() {
         return (Vector2Int)dieManager.parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
     }
 
-    private IEnumerator<OverlayTile> PathGenerator() {
-        foreach (var p in path) {
-            OverlayTile tile;
-            try {
-                tile = MapManager.Instance.GetTileAtPos(
-                    (Vector2Int)dieManager.parentTile.gridLocation + p
-                );
-            } catch (KeyNotFoundException) {
-                Debug.Log("Tile does not exist, stopping path");
-                break;
-            }
-
-            yield return tile;
-        }
-    }
-
-    public void OnPhaseChange(Phase phase) {
+    public PhaseStepResult OnPhaseEnter(Phase phase) {
         switch(phase) {
             case Phase.Enemy:
-                GameManager.Instance.AddPhaseProcessing(this);
-                FollowPath();
-                break;
+                return PhaseStepResult.Blocking;
             case Phase.Player:
-                CreatePath();
-                break;
+                return PhaseStepResult.Blocking;
+            default:
+                return PhaseStepResult.Done;
         }
     }
 
-    private void OnMoveFinished(OverlayTile tile) {
-        ClearPath();
-        GameManager.Instance.RemovePhaseProcessing(this);
+    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
+        Debug.Log("Phase update: " + name);
+        switch(phase) {
+            case Phase.Enemy:
+                if (path.Count == 0) {
+                    ClearPath();
+                    return PhaseStepResult.Done;
+                } else {
+                    await StepPath(token);
+                    return PhaseStepResult.Blocking;
+                }
+            case Phase.Player:
+                CreatePath();
+                return PhaseStepResult.Done;
+            default:
+                return PhaseStepResult.Done;
+        }
     }
 
     void UnreservePath() {
@@ -140,8 +157,6 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
     }
 
     void OnDestroy() {
-        GameManager.Instance.RemovePhaseProcessing(this);
-
         UnreservePath();
     }
 }
