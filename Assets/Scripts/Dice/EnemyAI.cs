@@ -121,8 +121,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
             case Phase.Enemy:
                 return PhaseStepResult.Blocking;
             case Phase.Player:
-                CreatePath();
-                return PhaseStepResult.Done;
+                return PhaseStepResult.Blocking;
             default:
                 return PhaseStepResult.Done;
         }
@@ -139,6 +138,9 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                     await StepPath(token);
                     return PhaseStepResult.Blocking;
                 }
+            case Phase.Player:
+                CreatePath();
+                return PhaseStepResult.Done;
             default:
                 return PhaseStepResult.Done;
         }
