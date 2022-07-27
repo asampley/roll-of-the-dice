@@ -67,6 +67,7 @@ public class Unit
         // Setup Manager
         _manager = g.GetComponent<UnitManager>();
 
+        _manager.Unit = this;
         _manager.UnitName = _data.unitName;
         _manager.IsEnemy = isEnemy;
 

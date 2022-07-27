@@ -29,6 +29,12 @@ public class UnitManager : MonoBehaviour, PhaseListener
     public MonoBehaviour Self { get { return this; } }
 
     //Properties
+    private Unit _unit;
+    public Unit Unit
+    {
+        get { return _unit; }
+        set { _unit = value; }
+    }
     private string _unitName;
     public string UnitName
     {
@@ -424,6 +430,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         parentTile.RemoveDiceFromTile();
         if (IsEnemy)
             Destroy(gameObject.GetComponent<EnemyAI>());
+        Debug.Log("Killing " + UnitName);
         Destroy(gameObject);
     }
 
@@ -653,6 +660,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
     }
 
     void OnDestroy() {
+        Debug.Log("Destroying " + _unitName);
         GhostManager.Instance.RemoveGhosts(gameObject);
 
         if (Globals.SELECTED_UNIT == this) {
@@ -671,7 +679,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
     }
 
     public async UniTask StepPath(CancellationToken token) {
-        Debug.Log("Garfield Starting StepPath: " + transform.name);
         Debug.Log("Following Path: " + PathStr());
 
         if (path.Count > 0) {
