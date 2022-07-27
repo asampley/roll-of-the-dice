@@ -47,6 +47,11 @@ public class DebugConsole : MonoBehaviour
         {
             Globals.SELECTED_UNIT.Kill();
         });
+        new DebugCommand("phase", "Print the current phase information.", "phase", () =>
+        {
+            Debug.Log(GameManager.Instance.phaseManager.StackString());
+            Debug.Log(Utilities.EnumerableString(GameManager.Instance.phaseManager.CurrentPhaseResults()));
+        });
         new DebugCommand("win", "Win the game.", "win", () =>
         {
             GameManager.Instance.CheckWin(true);

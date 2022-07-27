@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour, PhaseListener
     private int _players;
     public int PlayerCount {
         get { return _players; }
-        set { _players = value; SetMaxMoves(); CheckWin(); }
+        set { _players = value; CheckWin(); }
     }
 
     private bool _playerKingDefeated;
@@ -278,6 +278,7 @@ public class GameManager : MonoBehaviour, PhaseListener
             case Phase.Setup:
                 return PhaseStepResult.Unchanged;
             case Phase.Player:
+                SetMaxMoves();
                 CurrentRound++;
                 PlayerPiecesMoved = 0;
                 MovedPieces.Clear();

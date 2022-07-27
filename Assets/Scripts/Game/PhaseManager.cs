@@ -179,12 +179,13 @@ public class PhaseManager {
 
     public void AddPhaseProcessing(PhaseListener listener) {
         Current.phaseStep.Add(listener);
-
-        string str = Utilities.EnumerableString(Current.phaseStep.Select(e => e.name));
-        Debug.Log("Still waiting for " + str);
     }
 
     public int PhaseProcessingCount() {
         return Current.phaseStep.Count;
+    }
+
+    public string StackString() {
+        return Utilities.EnumerableString(phaseStack);
     }
 }

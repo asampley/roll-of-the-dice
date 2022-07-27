@@ -614,8 +614,14 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 if (IsEnemy) return PhaseStepResult.Done;
 
                 if (path.Count == 0) {
+                    if (Globals.SELECTED_UNIT == this) {
+                        ShowTilesInRange();
+                    }
                     return PhaseStepResult.Passive;
                 } else {
+                    if (Globals.SELECTED_UNIT == this) {
+                        HideTilesInRange();
+                    }
                     await StepPath(token);
                     return PhaseStepResult.Changed;
                 }
