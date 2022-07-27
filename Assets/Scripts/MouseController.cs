@@ -51,16 +51,9 @@ public class MouseController : MonoBehaviour
 
                 if (!overlayTileManager.IsBlocked && Globals.SELECTED_UNIT != null)
                 {
-                    if (GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(Globals.SELECTED_UNIT) && !Globals.SELECTED_UNIT.IsMoving)
+                    if ((GameManager.Instance.PlayerPiecesMoved < GameManager.Instance.MaxPlayerMoves || GameManager.Instance.MovedPieces.Contains(Globals.SELECTED_UNIT)) && Globals.SELECTED_UNIT.path.Count == 0)
                     {
-                        if (Globals.SELECTED_UNIT.MovementPattern == MovementPattern.Straight)
-                        {
-                            Globals.SELECTED_UNIT.GetComponent<UnitManager>().AddPath(overlayTileManager);
-                        }
-                        else
-                        {
-                            Globals.SELECTED_UNIT.GetComponent<UnitManager>().AddPath(overlayTileManager);
-                        }
+                        Globals.SELECTED_UNIT.GetComponent<UnitManager>().AddPath(overlayTileManager);
                     }
                 }
             }

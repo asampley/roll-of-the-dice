@@ -18,14 +18,14 @@ public class SFXManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.AddListener("Move", _onMove);
+        UnitManager.MoveTile += OnMove;
         UnitManager.ABeatsB += OnABeatsB;
         UnitManager.Draw += OnDraw;
     }
 
     private void OnDisable()
     {
-        EventManager.RemoveListener("Move", _onMove);
+        UnitManager.MoveTile -= OnMove;
         UnitManager.ABeatsB -= OnABeatsB;
         UnitManager.Draw -= OnDraw;
     }
@@ -44,7 +44,7 @@ public class SFXManager : MonoBehaviour
         PlaySound(draw);
     }
 
-    private void _onMove()
+    private void OnMove()
     {
         PlaySound(move);
     }

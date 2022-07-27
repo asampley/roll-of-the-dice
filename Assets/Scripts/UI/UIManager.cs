@@ -43,16 +43,14 @@ public class UIManager : MonoBehaviour
     {
         UnitManager.ABeatsB += OnABeatsB;
         UnitManager.Draw += OnDraw;
-
-        EventManager.AddListener("SelectUnit", OnSelectUnit);
+        UnitManager.SelectUnit += OnSelectUnit;
     }
 
     private void OnDisable()
     {
         UnitManager.ABeatsB -= OnABeatsB;
         UnitManager.Draw -= OnDraw;
-
-        EventManager.RemoveListener("SelectUnit", OnSelectUnit);
+        UnitManager.SelectUnit -= OnSelectUnit;
     }
 
 
@@ -96,16 +94,16 @@ public class UIManager : MonoBehaviour
 
 
     // UNIT SELECTION ------------------------
-    private void OnSelectUnit()
+    private void OnSelectUnit(UnitManager unit)
     {
         foreach (Transform child in inspector.transform)
         {
             GameObject.Destroy(child.gameObject);
         }
         gameInfo.SetActive(true);
-        diceName.text = Globals.SELECTED_UNIT.UnitName;
-        movesAvailable.text = "Moves Available: " + Globals.SELECTED_UNIT.MovesAvailable.ToString();
-        GameObject inspectDie = Globals.SELECTED_UNIT.GetComponent<UnitManager>().ghostComponents.gameObject;
+        diceName.text = unit.UnitName;
+        movesAvailable.text = "Moves Available: " + unit.MovesAvailable.ToString();
+        GameObject inspectDie = unit.ghostComponents.gameObject;
         inspectorObject = Instantiate(inspectDie);
         inspectorObject.transform.parent = inspector;
         Vector3 pos = inspector.transform.position;

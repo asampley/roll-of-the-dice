@@ -76,13 +76,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
         set { _state = value; }
     }
 
-    private bool _isMoving;
-    public bool IsMoving
-    {
-        get { return _isMoving; }
-        set { _isMoving = value; }
-    }
-
     private List<OverlayTile> _tilesInRange = new List<OverlayTile>();
     public OverlayTile parentTile;
     [SerializeField]
@@ -110,6 +103,8 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     private TextMeshProUGUI nameText;
 
+    public static event Action MoveTile;
+    public static event Action<UnitManager> SelectUnit;
     public static event Action<UnitManager, UnitManager> ABeatsB;
     public static event Action<UnitManager, UnitManager> Draw;
 
@@ -131,7 +126,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         nameText.enabled = false;
         nameText.text = this.name;
 
-        GetComponentInChildren<DieTranslator>().ReachTarget += () => EventManager.TriggerEvent("Move");
+        GetComponentInChildren<DieTranslator>().ReachTarget += () => MoveTile?.Invoke();
     }
 
     void OnEnable() {
@@ -186,12 +181,10 @@ public class UnitManager : MonoBehaviour, PhaseListener
         _dieRotator.RotateZ(orientation.zRolls);
         _dieRotator.RotateNow();
         State = _dieRotator.GetUpFace();
-        IsMoving = false;
     }
 
     // consumes each step of the enumerator only after the last move has completed
     private async UniTask MoveMany(IEnumerator<OverlayTile> tiles, CancellationToken token) {
-        IsMoving = true;
         if (tiles.MoveNext()) {
             OverlayTile tile;
             do {
@@ -205,23 +198,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 }
                 await UpdateTilePos(tile, token);
             } while (tiles.MoveNext());
-
-            _movesAvailable--;
-
-            EventManager.TriggerEvent("SelectUnit");
-            if (!IsEnemy)
-            {
-                if (!GameManager.Instance.MovedPieces.Contains(this))
-                    {
-                    GameManager.Instance.MovedPieces.Add(this);
-                    GameManager.Instance.PlayerPiecesMoved += 1;
-                }
-
-                if (_movesAvailable <= 0)
-                    GameManager.Instance.PlayerMoveRemaining--;
-            }
         }
-        IsMoving = false;
     }
 
     public async UniTask MoveAsync(OverlayTile newTile, CancellationToken token) {
@@ -248,7 +225,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         GetTilesInRange();
         ShowTilesInRange();
 
-        EventManager.TriggerEvent("SelectUnit");
+        SelectUnit?.Invoke(this);
     }
 
     public void Deselect()
@@ -259,27 +236,28 @@ public class UnitManager : MonoBehaviour, PhaseListener
         HideTilesInRange();
     }
 
-    public void AddPath(OverlayTile tile)
-    {
+    public void AddPath(OverlayTile tile) {
         var delta = tile.gridLocation - parentTile.gridLocation;
 
-        Vector2Int step;
-        int steps;
-
-        if (delta.x != 0) {
-            step = Math.Sign(delta.x) * Vector2Int.right;
-            steps = Math.Abs(delta.x);
-
-        } else if (delta.y != 0) {
-            step = Math.Sign(delta.y) * Vector2Int.up;
-            steps = Math.Abs(delta.y);
-        } else {
-            return;
+        // filter moves
+        switch (this.MovementPattern) {
+            case MovementPattern.Single:
+                if (Math.Abs(delta.x) + Math.Abs(delta.y) != 1) {
+                    return;
+                } else {
+                    break;
+                }
+            case MovementPattern.Straight:
+                if (delta.x != 0 && delta.y != 0) {
+                    return;
+                } else {
+                    break;
+                }
+            default:
+                return;
         }
 
-        for (int i = 0; i < steps; ++i) {
-            path.Add(step);
-        }
+        path.Add((Vector2Int)delta);
     }
 
     public async UniTask Fight()
@@ -438,8 +416,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
     {
         if (IsEnemy) return;
 
-        Debug.Log("XXXXXXXXXXXXXXXX Showing tiles");
-
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
         {
@@ -456,8 +432,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
     public void HideTilesInRange()
     {
         if (IsEnemy) return;
-
-        Debug.Log("XXXXXXXXXXXXXXXXXXXX Hiding tiles");
 
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
@@ -684,19 +658,37 @@ public class UnitManager : MonoBehaviour, PhaseListener
         if (path.Count > 0) {
             OverlayTile tile;
             try {
+                var step = new Vector2Int(Math.Sign(path[0].x), Math.Sign(path[0].y));
+
                 tile = MapManager.Instance.GetTileAtPos(
-                    (Vector2Int)parentTile.gridLocation + path[0]
+                    (Vector2Int)parentTile.gridLocation + step
                 );
 
-                path.RemoveAt(0);
+                path[0] -= step;
+
+                await MoveAsync(tile, token);
+
+                if (path[0] == Vector2Int.zero) {
+                    path.RemoveAt(0);
+
+                    _movesAvailable--;
+
+                    if (!IsEnemy) {
+                        if (!GameManager.Instance.MovedPieces.Contains(this)) {
+                            GameManager.Instance.MovedPieces.Add(this);
+                            GameManager.Instance.PlayerPiecesMoved += 1;
+                        }
+
+                        if (_movesAvailable <= 0)
+                            GameManager.Instance.PlayerMoveRemaining--;
+                    }
+                }
             } catch (KeyNotFoundException) {
                 Debug.Log("Tile does not exist, stopping path");
                 path.Clear();
 
                 return;
             }
-
-            await MoveAsync(tile, token);
         }
 
         Debug.Log("Garfield Ending StepPath: " + transform.name);
