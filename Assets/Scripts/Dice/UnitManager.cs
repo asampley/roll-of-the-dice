@@ -432,8 +432,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
             }
             die.Kill();
         }
-        if (!toKill.Contains(this))
-            Select();
     }
 
     public void Kill()
