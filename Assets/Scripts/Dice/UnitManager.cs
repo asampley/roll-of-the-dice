@@ -190,8 +190,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 }
                 await UpdateTilePos(tile, token);
             } while (tiles.MoveNext());
-
-            EventManager.TriggerEvent("SelectUnit");
         }
     }
 
