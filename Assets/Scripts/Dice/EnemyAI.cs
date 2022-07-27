@@ -9,8 +9,6 @@ using Cysharp.Threading.Tasks;
 public class EnemyAI : MonoBehaviour, PhaseListener {
     public MonoBehaviour Self { get { return this; } }
 
-    private List<Vector2Int> path = new List<Vector2Int>();
-
     private UnitManager _unitManager;
 
     // Start is called before the first frame update
@@ -56,7 +54,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
 
             var next = adjacent[(int)(UnityEngine.Random.value * adjacent.Count) % adjacent.Count];
 
-            path.Add(next - pos);
+            _unitManager.path.Add(next - pos);
             EnemyPathManager.Instance.Reserve(this, next);
 
             deltas.Add(next - pos);
@@ -81,46 +79,17 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
             pos = next;
         }
         Debug.Log("Garfield Ending CreatePath: " + transform.name);
-        Debug.Log("Created Path: " + PathStr());
-    }
-
-    public async UniTask StepPath(CancellationToken token) {
-        Debug.Log("Garfield Starting StepPath: " + transform.name);
-        Debug.Log("Following Path: " + PathStr());
-
-        GhostManager.Instance.RemoveGhosts(gameObject);
-
-        if (path.Count > 0) {
-            OverlayTile tile;
-            try {
-                tile = MapManager.Instance.GetTileAtPos(
-                    (Vector2Int)_unitManager.parentTile.gridLocation + path[0]
-                );
-
-                path.RemoveAt(0);
-            } catch (KeyNotFoundException) {
-                Debug.Log("Tile does not exist, stopping path");
-                ClearPath();
-
-                return;
-            }
-
-            await _unitManager.MoveAsync(tile, token);
-        }
-
-        Debug.Log("Garfield Ending StepPath: " + transform.name);
-    }
-
-    private string PathStr() {
-        return (Vector2Int)_unitManager.parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
+        Debug.Log("Created Path: " + _unitManager.PathStr());
     }
 
     public PhaseStepResult OnPhaseEnter(Phase phase) {
         switch(phase) {
             case Phase.Enemy:
-                return PhaseStepResult.Blocking;
+                GhostManager.Instance.RemoveGhosts(gameObject);
+                UnreservePath();
+                return PhaseStepResult.Unchanged;
             case Phase.Player:
-                return PhaseStepResult.Blocking;
+                return PhaseStepResult.Unchanged;
             default:
                 return PhaseStepResult.Done;
         }
@@ -129,14 +98,6 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
     public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
         Debug.Log("Phase update: " + name);
         switch(phase) {
-            case Phase.Enemy:
-                if (path.Count == 0) {
-                    ClearPath();
-                    return PhaseStepResult.Done;
-                } else {
-                    await StepPath(token);
-                    return PhaseStepResult.Blocking;
-                }
             case Phase.Player:
                 CreatePath();
                 return PhaseStepResult.Done;
@@ -147,12 +108,6 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
 
     void UnreservePath() {
         EnemyPathManager.Instance.ClearReserved(this);
-    }
-
-    void ClearPath() {
-        UnreservePath();
-
-        path.Clear();
     }
 
     void OnDestroy() {

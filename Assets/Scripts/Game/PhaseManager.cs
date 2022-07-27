@@ -21,7 +21,11 @@ public enum PhaseStepResult {
     // you can transition or push states, but if there is no transition it will run again
     Passive,
     // you can push new states, but you shouldn't transition
-    Blocking,
+    // this suggests you don't need to push a new state, as nothing's changed
+    Unchanged,
+    // you can push new states, but you shouldn't transition
+    // you should push new states as something has changed
+    Changed,
 }
 
 public interface PhaseListener {

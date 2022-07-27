@@ -55,12 +55,11 @@ public class MouseController : MonoBehaviour
                     {
                         if (Globals.SELECTED_UNIT.MovementPattern == MovementPattern.Straight)
                         {
-                            var path = Globals.SELECTED_UNIT.GetComponent<UnitManager>().PathGenerator(overlayTileManager);
-                            Globals.SELECTED_UNIT.GetComponent<UnitManager>().Move(path);
+                            Globals.SELECTED_UNIT.GetComponent<UnitManager>().AddPath(overlayTileManager);
                         }
                         else
                         {
-                            Globals.SELECTED_UNIT.GetComponent<UnitManager>().Move(overlayTileManager);
+                            Globals.SELECTED_UNIT.GetComponent<UnitManager>().AddPath(overlayTileManager);
                         }
                     }
                 }

@@ -108,7 +108,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
     public static event Action<UnitManager, UnitManager> ABeatsB;
     public static event Action<UnitManager, UnitManager> Draw;
 
-
+    public List<Vector2Int> path = new List<Vector2Int>();
 
     private void Awake()
     {
@@ -206,8 +206,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
             EventManager.TriggerEvent("SelectUnit");
             if (!IsEnemy)
             {
-                GameManager.Instance.PlayerSteps++;
-
                 if (!GameManager.Instance.MovedPieces.Contains(this))
                     {
                     GameManager.Instance.MovedPieces.Add(this);
@@ -264,31 +262,26 @@ public class UnitManager : MonoBehaviour, PhaseListener
         HideTilesInRange();
     }
 
-    public IEnumerator<OverlayTile> PathGenerator(OverlayTile tile)
+    public void AddPath(OverlayTile tile)
     {
-        if (parentTile.gridLocation.x < tile.gridLocation.x)
-        {
-            for (int x = parentTile.gridLocation.x + 1; x <= tile.gridLocation.x; ++x) {
-                yield return MapManager.Instance.GetTileAtPos(new Vector2Int(x, parentTile.gridLocation.y));
-            }
+        var delta = tile.gridLocation - parentTile.gridLocation;
+
+        Vector2Int step;
+        int steps;
+
+        if (delta.x != 0) {
+            step = Math.Sign(delta.x) * Vector2Int.right;
+            steps = Math.Abs(delta.x);
+
+        } else if (delta.y != 0) {
+            step = Math.Sign(delta.y) * Vector2Int.up;
+            steps = Math.Abs(delta.y);
+        } else {
+            return;
         }
-        else if (parentTile.gridLocation.x > tile.gridLocation.x)
-        {
-            for (int x = parentTile.gridLocation.x - 1; x >= tile.gridLocation.x; --x) {
-                yield return MapManager.Instance.GetTileAtPos(new Vector2Int(x, parentTile.gridLocation.y));
-            }
-        }
-        else if (parentTile.gridLocation.y < tile.gridLocation.y)
-        {
-            for (int y = parentTile.gridLocation.y + 1; y <= tile.gridLocation.y; ++y) {
-                yield return MapManager.Instance.GetTileAtPos(new Vector2Int(parentTile.gridLocation.x, y));
-            }
-        }
-        else if (parentTile.gridLocation.y > tile.gridLocation.y)
-        {
-            for (int y = parentTile.gridLocation.y - 1; y >= tile.gridLocation.y; --y) {
-                yield return MapManager.Instance.GetTileAtPos(new Vector2Int(parentTile.gridLocation.x, y));
-            }
+
+        for (int i = 0; i < steps; ++i) {
+            path.Add(step);
         }
     }
 
@@ -596,16 +589,19 @@ public class UnitManager : MonoBehaviour, PhaseListener
             case Phase.Enemy:
                 if (IsEnemy) {
                     ResetRange();
+                    return PhaseStepResult.Unchanged;
                 }
                 return PhaseStepResult.Done;
             case Phase.Player:
                 if (!IsEnemy) {
                     ResetRange();
+                    return PhaseStepResult.Passive;
+                } else {
+                    return PhaseStepResult.Done;
                 }
-                return PhaseStepResult.Done;
             case Phase.TileEffects:
             case Phase.Fight:
-                return PhaseStepResult.Blocking;
+                return PhaseStepResult.Unchanged;
             default:
                 return PhaseStepResult.Done;
         }
@@ -614,12 +610,30 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
         switch (phase) {
+            case Phase.Player:
+                if (IsEnemy) return PhaseStepResult.Done;
+
+                if (path.Count == 0) {
+                    return PhaseStepResult.Passive;
+                } else {
+                    await StepPath(token);
+                    return PhaseStepResult.Changed;
+                }
+            case Phase.Enemy:
+                if (!IsEnemy) return PhaseStepResult.Done;
+
+                if (path.Count == 0) {
+                    return PhaseStepResult.Done;
+                } else {
+                    await StepPath(token);
+                    return PhaseStepResult.Changed;
+                }
             case Phase.Fight:
                 await Fight();
                 return PhaseStepResult.Done;
             case Phase.TileEffects:
                 if (await GetTileEffects(token)) {
-                    return PhaseStepResult.Blocking;
+                    return PhaseStepResult.Changed;
                 } else {
                     return PhaseStepResult.Done;
                 }
@@ -648,5 +662,34 @@ public class UnitManager : MonoBehaviour, PhaseListener
             GameManager.Instance.PlayerMoveRemaining--;
             GameManager.Instance.PlayerCount--;
         }
+    }
+
+    public async UniTask StepPath(CancellationToken token) {
+        Debug.Log("Garfield Starting StepPath: " + transform.name);
+        Debug.Log("Following Path: " + PathStr());
+
+        if (path.Count > 0) {
+            OverlayTile tile;
+            try {
+                tile = MapManager.Instance.GetTileAtPos(
+                    (Vector2Int)parentTile.gridLocation + path[0]
+                );
+
+                path.RemoveAt(0);
+            } catch (KeyNotFoundException) {
+                Debug.Log("Tile does not exist, stopping path");
+                path.Clear();
+
+                return;
+            }
+
+            await MoveAsync(tile, token);
+        }
+
+        Debug.Log("Garfield Ending StepPath: " + transform.name);
+    }
+
+    public string PathStr() {
+        return (Vector2Int)parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
     }
 }

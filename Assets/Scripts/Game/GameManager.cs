@@ -50,8 +50,6 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public event Action<Win> WinEvent;
 
-    public int PlayerSteps;
-
     private int _maxPlayerMoves;
     public int MaxPlayerMoves
     {
@@ -226,30 +224,35 @@ public class GameManager : MonoBehaviour, PhaseListener
             }
 
             TryAdvancePhase();
+
+            await UniTask.DelayFrame(1, cancellationToken: token);
         }
     }
 
     private void TryAdvancePhase() {
         var results = phaseManager.CurrentPhaseResults();
 
-        Debug.Log("TryAdvancePhase: " + Utilities.EnumerableString(results));
         switch (phaseManager.CurrentPhase) {
             case null:
             case Phase.Setup:
                 phaseManager.Transition(Phase.Player);
                 break;
             case Phase.Enemy:
-                if (results.Any(r => r == PhaseStepResult.Blocking)) {
+                if (results.Any(r => r == PhaseStepResult.Changed)) {
                     phaseManager.Push(Phase.TileEffects);
                     phaseManager.Push(Phase.Fight);
+                } else if (results.Any(r => r == PhaseStepResult.Unchanged)) {
+                    // do not transition
                 } else {
                     phaseManager.Transition(Phase.Player);
                 }
                 break;
             case Phase.Player:
-                if (results.Any(r => r == PhaseStepResult.Blocking)) {
+                if (results.Any(r => r == PhaseStepResult.Changed)) {
                     phaseManager.Push(Phase.TileEffects);
                     phaseManager.Push(Phase.Fight);
+                } else if (results.Any(r => r == PhaseStepResult.Unchanged)) {
+                    // do not transition
                 } else {
                     phaseManager.Transition(Phase.Enemy);
                 }
@@ -258,7 +261,7 @@ public class GameManager : MonoBehaviour, PhaseListener
                 phaseManager.Pop();
                 break;
             case Phase.TileEffects:
-                if (results.Any(r => r == PhaseStepResult.Blocking)) {
+                if (results.Any(r => r == PhaseStepResult.Changed)) {
                     phaseManager.Push(Phase.Fight);
                 } else {
                     phaseManager.Pop();
@@ -273,13 +276,13 @@ public class GameManager : MonoBehaviour, PhaseListener
     public PhaseStepResult OnPhaseEnter(Phase phase) {
         switch (phase) {
             case Phase.Setup:
-                return PhaseStepResult.Blocking;
+                return PhaseStepResult.Unchanged;
             case Phase.Player:
                 CurrentRound++;
                 PlayerPiecesMoved = 0;
                 MovedPieces.Clear();
                 _playerMoveRemaining = _maxPlayerMoves;
-                return PhaseStepResult.Blocking;
+                return PhaseStepResult.Unchanged;
             default:
                 return PhaseStepResult.Done;
         }
@@ -294,8 +297,7 @@ public class GameManager : MonoBehaviour, PhaseListener
                 if (_playerMoveRemaining <= 0) {
                     return PhaseStepResult.Done;
                 } else {
-                    await UniTask.WaitUntilValueChanged(this, m => m.PlayerSteps);
-                    return PhaseStepResult.Blocking;
+                    return PhaseStepResult.Unchanged;
                 }
             default:
                 return PhaseStepResult.Done;
