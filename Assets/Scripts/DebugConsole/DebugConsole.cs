@@ -47,6 +47,10 @@ public class DebugConsole : MonoBehaviour
         {
             Globals.SELECTED_UNIT.Kill();
         });
+        new DebugCommand("win", "Win the game.", "win", () =>
+        {
+            GameManager.Instance.CheckWin(true);
+        });
     }
 
     private void Update()

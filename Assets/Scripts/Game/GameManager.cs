@@ -209,6 +209,14 @@ public class GameManager : MonoBehaviour, PhaseListener
             WinEvent?.Invoke(Win.Player);
     }
 
+    public void CheckWin(bool player)
+    {
+        if (player)
+            WinEvent?.Invoke(Win.Player);
+        else
+            WinEvent?.Invoke(Win.Enemy);
+    }
+
     private async UniTask RunPhaseUpdate(CancellationToken token) {
         Debug.Log("Start Run Phase Update: " + phaseManager.CurrentPhase);
 
