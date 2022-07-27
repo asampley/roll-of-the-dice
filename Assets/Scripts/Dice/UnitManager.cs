@@ -97,6 +97,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     private TextMeshProUGUI nameText;
 
+    public static event Action<UnitManager> SelectUnit;
     public static event Action<UnitManager, UnitManager> ABeatsB;
     public static event Action<UnitManager, UnitManager> Draw;
 
@@ -217,6 +218,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         GetTilesInRange();
         ShowTilesInRange();
 
+        SelectUnit?.Invoke(this);
         EventManager.TriggerEvent("SelectUnit");
     }
 
