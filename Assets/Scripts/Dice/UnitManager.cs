@@ -214,11 +214,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 if (_movesAvailable <= 0)
                     GameManager.Instance.PlayerMoveRemaining--;
             }
-
-            // hack to fix bug
-            if (_movesAvailable <= 0) {
-                HideTilesInRange();
-            }
         }
         IsMoving = false;
     }
@@ -246,6 +241,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
         GetTilesInRange();
         ShowTilesInRange();
+
         EventManager.TriggerEvent("SelectUnit");
     }
 
@@ -501,7 +497,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
     {
         MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
         State = _dieRotator.GetUpFace();
-        HideTilesInRange();
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
 
@@ -511,7 +506,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
     private async UniTask<bool> GetTileEffects(CancellationToken token)
     {
         TileType tileType = parentTile.data.TileType;
-        HideTilesInRange();
         var moved = false;
         switch (tileType)
         {
@@ -609,15 +603,16 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 if (IsEnemy) return PhaseStepResult.Done;
 
                 if (path.Count == 0) {
-                    if (Globals.SELECTED_UNIT == this) {
-                        ShowTilesInRange();
-                    }
                     return PhaseStepResult.Passive;
                 } else {
                     if (Globals.SELECTED_UNIT == this) {
                         HideTilesInRange();
                     }
                     await StepPath(token);
+                    if (Globals.SELECTED_UNIT == this && path.Count == 0) {
+                        GetTilesInRange();
+                        ShowTilesInRange();
+                    }
                     return PhaseStepResult.Changed;
                 }
             case Phase.Enemy:
