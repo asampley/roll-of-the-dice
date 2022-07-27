@@ -97,6 +97,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     private TextMeshProUGUI nameText;
 
+    public static event Action MoveTile;
     public static event Action<UnitManager> SelectUnit;
     public static event Action<UnitManager, UnitManager> ABeatsB;
     public static event Action<UnitManager, UnitManager> Draw;
@@ -119,7 +120,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         nameText.enabled = false;
         nameText.text = this.name;
 
-        GetComponentInChildren<DieTranslator>().ReachTarget += () => EventManager.TriggerEvent("Move");
+        GetComponentInChildren<DieTranslator>().ReachTarget += () => MoveTile?.Invoke();
     }
 
     void OnEnable() {
@@ -219,7 +220,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
         ShowTilesInRange();
 
         SelectUnit?.Invoke(this);
-        EventManager.TriggerEvent("SelectUnit");
     }
 
     public void Deselect()
