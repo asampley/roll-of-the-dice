@@ -18,13 +18,13 @@ public class DataHandler : MonoBehaviour
         string gameUid = CoreDataHandler.Instance.GameUID;
 
         // Load game scene data
-        GameData.gameUid = gameUid;
+        GameData.levelId = gameUid;
         GameData.Load();
     }
 
     public static void SaveGameData()
     {
-        GameData.gameUid = CoreDataHandler.Instance.GameUID;
+        GameData.levelId = CoreDataHandler.Instance.GameUID;
         GameData.Save(SerializeGameData());
     }
 
@@ -81,6 +81,7 @@ public class DataHandler : MonoBehaviour
         string rootPath = Path.Combine(Application.persistentDataPath, BinarySerializable.DATA_DIRECTORY, "Games");
         if (!Directory.Exists(rootPath))
             Directory.CreateDirectory(rootPath);
+
         string[] gameDirs = Directory.GetDirectories(rootPath);
 
         IEnumerable<string> validGameDirs = gameDirs.Where((string d) => File.Exists(Path.Combine(d, GameData.DATA_FILE_NAME)));

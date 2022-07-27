@@ -84,6 +84,7 @@ public class Unit
         for (int n = 0; n < _data.faces.Length; n++)
             _manager.DieTexturer.Faces[n] = _data.faces[n];
         _manager.DieTexturer.Initialize();
+        _faces = _manager.DieTexturer.Faces;
 
         _manager.Initialize(orientation);
 

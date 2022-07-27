@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 
 public enum Win
 {
+    None,
     Player,
     Enemy,
 }
@@ -98,6 +99,12 @@ public class GameManager : MonoBehaviour, PhaseListener
         set { _maxNumberOfTurns = value; }
     }
 
+    private Win _winState;
+    public Win WinState
+    {
+        get { return _winState; }
+    }
+
     private void Awake()
     {
         DataHandler.LoadGameData();
@@ -106,6 +113,7 @@ public class GameManager : MonoBehaviour, PhaseListener
             _instance = this;
 
         phaseManager.AllPhaseListeners.Add(this);
+        GameManager.Instance.WinEvent += w => _winState = w;
     }
 
     private void Start()
@@ -146,6 +154,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void StartGame()
     {
+        _winState = Win.None;
         phaseUpdateCancel?.Cancel();
         phaseUpdateCancel?.Dispose();
         phaseUpdateCancel = new CancellationTokenSource();

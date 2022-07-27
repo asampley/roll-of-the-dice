@@ -73,6 +73,8 @@ public class BinarySerializable : ISerializable
 
     public static void Save(string filePath, BinarySerializable instance)
     {
+        if (!Directory.Exists(GameData.GetFolderPath()))
+            Directory.CreateDirectory(GameData.GetFolderPath());
         IFormatter formatter = new BinaryFormatter();
         FileStream s = new FileStream(filePath, FileMode.Create);
         formatter.Serialize(s, instance);
