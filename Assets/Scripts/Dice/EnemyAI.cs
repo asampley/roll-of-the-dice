@@ -89,16 +89,6 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                 UnreservePath();
                 return PhaseStepResult.Unchanged;
             case Phase.Player:
-                return PhaseStepResult.Unchanged;
-            default:
-                return PhaseStepResult.Done;
-        }
-    }
-
-    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
-        Debug.Log("Phase update: " + name);
-        switch(phase) {
-            case Phase.Player:
                 CreatePath();
                 return PhaseStepResult.Done;
             default:

@@ -431,6 +431,8 @@ public class UnitManager : MonoBehaviour, PhaseListener
     {
         if (IsEnemy) return;
 
+        Debug.Log("XXXXXXXXXXXXXXXX Showing tiles");
+
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
         {
@@ -447,6 +449,8 @@ public class UnitManager : MonoBehaviour, PhaseListener
     public void HideTilesInRange()
     {
         if (IsEnemy) return;
+
+        Debug.Log("XXXXXXXXXXXXXXXXXXXX Hiding tiles");
 
         GhostManager.Instance.RemoveGhosts(gameObject);
         foreach (OverlayTile tile in _tilesInRange)
@@ -594,7 +598,17 @@ public class UnitManager : MonoBehaviour, PhaseListener
             default:
                 return PhaseStepResult.Done;
         }
+    }
 
+    public void OnPhaseResume(Phase phase) {
+        switch (phase) {
+            case Phase.Player:
+                if (Globals.SELECTED_UNIT == this && path.Count == 0) {
+                    GetTilesInRange();
+                    ShowTilesInRange();
+                }
+                break;
+        }
     }
 
     public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
@@ -609,10 +623,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
                         HideTilesInRange();
                     }
                     await StepPath(token);
-                    if (Globals.SELECTED_UNIT == this && path.Count == 0) {
-                        GetTilesInRange();
-                        ShowTilesInRange();
-                    }
                     return PhaseStepResult.Changed;
                 }
             case Phase.Enemy:

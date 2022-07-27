@@ -36,9 +36,16 @@ public interface PhaseListener {
     // returns a result identifying whether it is listening or not
     PhaseStepResult OnPhaseEnter(Phase phase);
 
+    // called when a phase is resumed after having things pushed onto the stack
+    void OnPhaseResume(Phase phase) {
+        return;
+    }
+
     // async function that is called again once all listeners have completed a step in the phase
     // only called if the item has been added to phase processing
-    UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token);
+    UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
+        return new UniTask<PhaseStepResult>(PhaseStepResult.Done);
+    }
 }
 
 public class PhaseData {
@@ -68,9 +75,7 @@ public class PhaseManager {
     }
 
     public void Clear() {
-        while (phaseStack.Count > 0) {
-            Pop();
-        }
+        phaseStack.Clear();
     }
 
     public void Transition(Phase phase) {
@@ -114,12 +119,20 @@ public class PhaseManager {
     public void Pop() {
         phaseStack.RemoveAt(phaseStack.Count - 1);
 
+        if (CurrentPhase == null) return;
+
+        CleanSet(Current.phaseStep);
+
+        foreach (var listener in Current.phaseStep) {
+            listener.OnPhaseResume(CurrentPhase.Value);
+        }
+
         Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
     }
 
     public async UniTask PhaseStep(CancellationToken token) {
         // clean up anyone destroyed
-        Current.phaseStep.RemoveWhere(l => l.Self == null);
+        CleanSet(Current.phaseStep);
 
         // copy list to protect from manipulation in the middle of processing
         List<PhaseListener> toStep = new List<PhaseListener>(Current.phaseStep);
@@ -158,6 +171,12 @@ public class PhaseManager {
             s.Dispose();
         }
     }
+
+    private static void CleanSet(HashSet<PhaseListener> set) {
+        // clean up anyone destroyed
+        set.RemoveWhere(l => l.Self == null);
+    }
+
 
     public PhaseStepResult[] CurrentPhaseResults() {
         return Current.results;
