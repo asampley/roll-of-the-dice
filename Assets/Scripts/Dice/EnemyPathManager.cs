@@ -39,11 +39,8 @@ public class EnemyPathManager : MonoBehaviour {
     }
 
     void Awake() {
-        if (_instance != null && _instance != this) {
-            Destroy(this.gameObject);
-        } else {
+        if (_instance == null)
             _instance = this;
-        }
     }
 
     public void ResetReserved() {

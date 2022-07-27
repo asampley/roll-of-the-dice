@@ -13,14 +13,8 @@ public class GhostManager : MonoBehaviour {
 
     private void Awake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
+        if (_instance == null)
             _instance = this;
-        }
     }
 
     public GameObject CreateGhost(GameObject toGhost, Vector3? translation, Vector2Int? tileDelta, int rotationCount = 1) {

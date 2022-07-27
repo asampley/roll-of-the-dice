@@ -17,14 +17,8 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
+        if (_instance == null)
             _instance = this;
-        }
 
         foreach (var data in Resources.LoadAll<TileData>("ScriptableObjects/TileData/"))
             foreach (var tile in data.tiles)

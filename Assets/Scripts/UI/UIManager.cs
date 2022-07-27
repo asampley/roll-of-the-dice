@@ -39,7 +39,6 @@ public class UIManager : MonoBehaviour
         menus.SetActive(true);
     }
 
-
     private void OnEnable()
     {
         UnitManager.ABeatsB += OnABeatsB;
@@ -78,7 +77,7 @@ public class UIManager : MonoBehaviour
 
     public void MainMenu()
     {
-        Loader.Load(Loader.Scene.MainMenu);
+        CoreBooter.Instance.LoadMenu();
     }
 
     public void Quit()
@@ -120,9 +119,9 @@ public class UIManager : MonoBehaviour
 
     public void NextLevel()
     {
-        LevelData level = CoreDataHandler.instance.LevelData.nextLevel;
-        CoreDataHandler.instance.SetGameUID(level);
-        CoreBooter.instance.LoadLevel(level);
+        LevelData level = CoreDataHandler.Instance.LevelData.nextLevel;
+        CoreDataHandler.Instance.SetGameUID(level);
+        CoreBooter.Instance.LoadLevel(level);
     }
 
     public void ShowVictoryScreen(bool victory) {
@@ -135,7 +134,6 @@ public class UIManager : MonoBehaviour
 
         OpenMenu();
     }
-
 
     private void OnABeatsB(UnitManager a, UnitManager b) {
         var spriteA = Resources.Load<Sprite>("Sprites/" + a.State);

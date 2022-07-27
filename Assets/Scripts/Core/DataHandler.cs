@@ -15,7 +15,7 @@ public class DataHandler : MonoBehaviour
         Globals.UNIT_DATA = Resources.LoadAll<UnitData>(Globals.DICE_CLASS_SO) as UnitData[];
         Debug.Log(Globals.UNIT_DATA);
 
-        string gameUid = CoreDataHandler.instance.GameUID;
+        string gameUid = CoreDataHandler.Instance.GameUID;
 
         // Load game scene data
         GameData.gameUid = gameUid;
@@ -24,7 +24,7 @@ public class DataHandler : MonoBehaviour
 
     public static void SaveGameData()
     {
-        GameData.gameUid = CoreDataHandler.instance.GameUID;
+        GameData.gameUid = CoreDataHandler.Instance.GameUID;
         GameData.Save(SerializeGameData());
     }
 

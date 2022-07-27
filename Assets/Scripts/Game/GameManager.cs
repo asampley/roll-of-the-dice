@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public enum Win
 {
@@ -22,10 +23,6 @@ public class GameManager : MonoBehaviour, PhaseListener
     public LevelData levelData;
     public GameRulesData gameRulesData;
     public GameObject diceParent;
-
-    //Dice Prefabs
-    private string _dicePrefabLocation = "Prefabs/DiceClasses/";
-    private Dictionary<DiceClass, GameObject> _dicePrefabs = new Dictionary<DiceClass, GameObject>();
 
     private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
     private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
@@ -105,20 +102,19 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     private void Awake()
     {
+        Debug.Log(CoreDataHandler.Instance.LevelData);
         DataHandler.LoadGameData();
 
-        if (_instance != null && _instance != this)
-            Destroy(this.gameObject);
-        else
+        if (_instance == null)
             _instance = this;
 
         phaseManager.AllPhaseListeners.Add(this);
-    }
 
+    }
 
     private void Start()
     {
-        levelData = CoreDataHandler.instance.LevelData;
+        levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
         RollPositions();
         StartGame();
@@ -202,6 +198,7 @@ public class GameManager : MonoBehaviour, PhaseListener
     }
 
     public void CheckWin() {
+        Debug.Log("Garfield");
         if (phaseManager.CurrentPhase == Phase.Setup) return;
 
         if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)

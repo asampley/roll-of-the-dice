@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CoreDataHandler : MonoBehaviour
 {
-    public static CoreDataHandler instance;
+    public static CoreDataHandler Instance;
     private LevelData _levelData;
     public LevelData LevelData
     {
@@ -18,8 +18,8 @@ public class CoreDataHandler : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
-            instance = this;
+        if (Instance == null)
+            Instance = this;
     }
 
     public void SetLevelData(LevelData d)

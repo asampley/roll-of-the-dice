@@ -5,14 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class CoreBooter : MonoBehaviour
 {
-    public static CoreBooter instance;
+    public static CoreBooter Instance;
     public UnityEngine.UI.Image sceneTransitioner;
+    private string _prevLevel;
     
 
     private void Awake()
     {
-        if (instance == null)
-            instance = this;
+        if (Instance == null)
+            Instance = this;
     }
 
     private void Start()
@@ -24,8 +25,10 @@ public class CoreBooter : MonoBehaviour
 
     public void LoadLevel(LevelData level)
     {
-        CoreDataHandler.instance.SetLevelData(level);
-        string s = level.levelName;
+        if (CoreDataHandler.Instance.LevelData != null)
+            _prevLevel = CoreDataHandler.Instance.LevelData.sceneName;
+        CoreDataHandler.Instance.SetLevelData(level);
+        string s = level.sceneName;
         StartCoroutine(_SwitchingScene("game", s));
     }
 
@@ -38,19 +41,22 @@ public class CoreBooter : MonoBehaviour
         {
             Scene s = SceneManager.GetSceneByName("GameScene");
             if (s != null && s.IsValid())
+            {
                 SceneManager.UnloadSceneAsync(s);
+                SceneManager.UnloadSceneAsync(CoreDataHandler.Instance.LevelData.sceneName);
+            }                
         };
         return op;
     }
 
-    private AsyncOperation _LoadLevel(string map)
+    private AsyncOperation _LoadLevel(string scene)
     {
-        AsyncOperation op = SceneManager.LoadSceneAsync(map, LoadSceneMode.Additive);
+        AsyncOperation op = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
         AudioListener prevListener = Object.FindObjectOfType<AudioListener>();
         op.completed += (_) =>
         {
             if (prevListener != null) prevListener.enabled = false;
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(map));
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(scene));
             Scene s = SceneManager.GetSceneByName("MainMenu");
             if (s != null && s.IsValid())
                 SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive).completed += (_) =>
@@ -58,12 +64,25 @@ public class CoreBooter : MonoBehaviour
                     SceneManager.UnloadSceneAsync(s);
                 };
             else
-                SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);                
+            {
+                s = SceneManager.GetSceneByName("GameScene");
+                if (s != null && s.IsValid())
+                    SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive).completed += (_) =>
+                    {
+                        SceneManager.UnloadSceneAsync(s);
+                        SceneManager.UnloadSceneAsync(_prevLevel);
+                    };
+                else
+                {
+                    SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
+                }
+            }
+                            
         };
         return op;
     }
 
-    private IEnumerator _SwitchingScene(string to, string map = "")
+    private IEnumerator _SwitchingScene(string to, string scene = "")
     {
         sceneTransitioner.color = Color.clear;
 
@@ -79,7 +98,7 @@ public class CoreBooter : MonoBehaviour
         if (to == "menu")
             op = _LoadMenu();
         else
-            op = _LoadLevel(map);
+            op = _LoadLevel(scene);
 
         yield return new WaitUntil(() => op.isDone);
 
