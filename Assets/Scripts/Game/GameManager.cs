@@ -102,14 +102,12 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     private void Awake()
     {
-        Debug.Log(CoreDataHandler.Instance.LevelData);
         DataHandler.LoadGameData();
 
         if (_instance == null)
             _instance = this;
 
         phaseManager.AllPhaseListeners.Add(this);
-
     }
 
     private void Start()
@@ -119,7 +117,6 @@ public class GameManager : MonoBehaviour, PhaseListener
         RollPositions();
         StartGame();
     }
-
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
     {
@@ -191,14 +188,15 @@ public class GameManager : MonoBehaviour, PhaseListener
         MapManager.Instance.ClearMap();
         MapManager.Instance.GenerateMap();
     }
+
     public void ClearDictionaries()
     {
         alliedSpawnPositions.Clear();
         enemySpawnPositions.Clear();
     }
 
-    public void CheckWin() {
-        Debug.Log("Garfield");
+    public void CheckWin()
+    {
         if (phaseManager.CurrentPhase == Phase.Setup) return;
 
         if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
