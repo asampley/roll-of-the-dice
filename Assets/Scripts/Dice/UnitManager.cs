@@ -104,7 +104,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     private TextMeshProUGUI nameText;
 
-    public event Action<OverlayTile> MoveFinished;
     public static event Action<UnitManager, UnitManager> ABeatsB;
     public static event Action<UnitManager, UnitManager> Draw;
 
@@ -216,14 +215,10 @@ public class UnitManager : MonoBehaviour, PhaseListener
                     GameManager.Instance.PlayerMoveRemaining--;
             }
 
-            MoveFinished?.Invoke(tile);
             // hack to fix bug
             if (_movesAvailable <= 0) {
                 HideTilesInRange();
             }
-        } else {
-            // important if no path exists to still pass event
-            MoveFinished?.Invoke(null);
         }
         IsMoving = false;
     }
