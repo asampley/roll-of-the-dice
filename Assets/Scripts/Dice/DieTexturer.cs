@@ -7,6 +7,11 @@ using UnityEngine;
 public class Face {
     public DiceState state;
     public Vector3 position;
+
+    public Face(Face original) {
+        this.state = original.state;
+        this.position = original.position;
+    }
 }
 
 [RequireComponent(typeof(MeshFilter))]

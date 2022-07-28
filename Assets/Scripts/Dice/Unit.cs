@@ -82,7 +82,7 @@ public class Unit
         // Setup faces
         _manager.DieTexturer.Faces = new Face[_data.faces.Length];
         for (int n = 0; n < _data.faces.Length; n++)
-            _manager.DieTexturer.Faces[n] = _data.faces[n];
+            _manager.DieTexturer.Faces[n] = new Face(_data.faces[n]);
         _manager.DieTexturer.Initialize();
         _faces = _manager.DieTexturer.Faces;
 
