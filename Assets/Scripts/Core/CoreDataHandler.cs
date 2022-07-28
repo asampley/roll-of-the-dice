@@ -29,7 +29,7 @@ public class CoreDataHandler : MonoBehaviour
 
     public void SetGameUID(LevelData d)
     {
-        _gameUID = $"{d.levelName}__{System.Guid.NewGuid().ToString()}";
+        _gameUID = $"{d.levelName}";
     }
 
     public void SetGameUID(string uid)

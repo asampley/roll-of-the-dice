@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 
 public enum Win
 {
+    None,
     Player,
     Enemy,
 }
@@ -98,6 +99,12 @@ public class GameManager : MonoBehaviour, PhaseListener
         set { _maxNumberOfTurns = value; }
     }
 
+    private Win _winState;
+    public Win WinState
+    {
+        get { return _winState; }
+    }
+
     private void Awake()
     {
         DataHandler.LoadGameData();
@@ -106,10 +113,12 @@ public class GameManager : MonoBehaviour, PhaseListener
             _instance = this;
 
         phaseManager.AllPhaseListeners.Add(this);
+        GameManager.Instance.WinEvent += w => _winState = w;
     }
 
     private void Start()
     {
+        Debug.Log("START NEW GAME");
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
         RollPositions();
@@ -118,7 +127,6 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
     {
-        Debug.Log("garfield " + diceClass);
         UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => (int)x.unitClass == (int)diceClass).First();
         Unit die = new Unit(unitData, isEnemy, orientation);
         die.SetPosition(startPos);
@@ -146,6 +154,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void StartGame()
     {
+        _winState = Win.None;
         phaseUpdateCancel?.Cancel();
         phaseUpdateCancel?.Dispose();
         phaseUpdateCancel = new CancellationTokenSource();
@@ -153,7 +162,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         phaseManager.Clear();
         phaseManager.Push(Phase.Setup);
 
-        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
+        
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
@@ -163,14 +172,11 @@ public class GameManager : MonoBehaviour, PhaseListener
 
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
         foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in alliedSpawnPositions)
-        {
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, false, die.Value);
-        }
         foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in enemySpawnPositions)
-        {
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
-        }
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
+        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
     }
 
     public void RerollGame()
@@ -185,6 +191,7 @@ public class GameManager : MonoBehaviour, PhaseListener
             GameObject.Destroy(child.gameObject);
         MapManager.Instance.ClearMap();
         MapManager.Instance.GenerateMap();
+        Debug.Log("Finished clearing map");
     }
 
     public void ClearDictionaries()
@@ -311,5 +318,12 @@ public class GameManager : MonoBehaviour, PhaseListener
             MaxPlayerMoves = PlayerCount;
         else
             MaxPlayerMoves = gameRulesData.playerUnitsToMove;
+    }
+
+    public void OnDestroy()
+    {
+        Debug.Log("Destroying Game Manager");
+        _instance = null;
+        phaseManager = null;
     }
 }

@@ -21,19 +21,27 @@ public class GameUnitData : BinarySerializable
 [System.Serializable]
 public class GameData : BinarySerializable
 {
+    
+    public static string levelId;
+    private static GameData _instance;
+    public static GameData Instance => _instance;
+
+    
+    public static string DATA_FILE_NAME = "GameData.data";
+
     public Vector3 camPosition;
     public GameUnitData[] dice;
 
-    public static string gameUid;
-    public static string DATA_FILE_NAME = "GameData.data";
-
-    private static string _GetFilePath()
+    public static string GetFolderPath()
         => System.IO.Path.Combine(
             Application.persistentDataPath,
             DATA_DIRECTORY,
             "Games",
-            gameUid,
-            DATA_FILE_NAME);
+            levelId);
+
+
+    private static string _GetFilePath()
+        => System.IO.Path.Combine(GetFolderPath(), DATA_FILE_NAME);
 
     public static void Save(GameData instance)
     {
@@ -47,8 +55,7 @@ public class GameData : BinarySerializable
         BinarySerializable.Deserialize(this, info, context);
     }
 
-    private static GameData _instance;
-    public static GameData Instance => _instance;
+    
 
     public static GameData Load()
     {

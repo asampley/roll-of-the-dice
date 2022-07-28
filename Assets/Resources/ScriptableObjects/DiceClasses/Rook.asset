@@ -19,7 +19,7 @@ MonoBehaviour:
   alliedGhostMaterial: {fileID: 2100000, guid: 75be35c8658b1c849b2255870d0a4f14, type: 2}
   enemyMaterial: {fileID: 2100000, guid: a9542602a0f2e894081f0a5aa5118174, type: 2}
   enemyGhostMaterial: {fileID: 2100000, guid: aeb5a54d1cc9e224daa4b6e9fd656360, type: 2}
-  maxMoves: 3
+  maxMoves: 1
   movementPattern: 1
   faces:
   - state: 0

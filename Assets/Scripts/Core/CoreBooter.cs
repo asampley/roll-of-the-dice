@@ -51,33 +51,29 @@ public class CoreBooter : MonoBehaviour
 
     private AsyncOperation _LoadLevel(string scene)
     {
-        AsyncOperation op = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+        AsyncOperation op;
         AudioListener prevListener = Object.FindObjectOfType<AudioListener>();
+
+        if (prevListener != null) prevListener.enabled = false;
+
+        if (SceneManager.GetSceneByName(_prevLevel) != null && SceneManager.GetSceneByName(_prevLevel).IsValid())
+            op = SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName(_prevLevel));
+        else
+            op = SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName("MainMenu"));
+
         op.completed += (_) =>
         {
-            if (prevListener != null) prevListener.enabled = false;
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(scene));
-            Scene s = SceneManager.GetSceneByName("MainMenu");
-            if (s != null && s.IsValid())
-                SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive).completed += (_) =>
-                {
-                    SceneManager.UnloadSceneAsync(s);
-                };
-            else
+            SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive).completed += (_) =>
             {
-                s = SceneManager.GetSceneByName("GameScene");
-                if (s != null && s.IsValid())
-                    SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive).completed += (_) =>
-                    {
-                        SceneManager.UnloadSceneAsync(s);
-                        SceneManager.UnloadSceneAsync(_prevLevel);
-                    };
+                if (SceneManager.GetSceneByName("GameScene") != null && SceneManager.GetSceneByName("GameScene").IsValid())
+                    SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName("GameScene")).completed += (_) =>
+                        SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
                 else
-                {
                     SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
-                }
-            }
-                            
+                    
+            };
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(scene));
+                  
         };
         return op;
     }

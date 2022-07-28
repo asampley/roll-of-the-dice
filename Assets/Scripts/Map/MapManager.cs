@@ -17,6 +17,7 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log(MapManager.Instance);
         if (_instance == null)
             _instance = this;
 
@@ -67,7 +68,8 @@ public class MapManager : MonoBehaviour
     {
         foreach (Transform child in tileParent.transform)
         {
-            GameObject.Destroy(child.gameObject);
+            if (child.gameObject != null)
+                GameObject.Destroy(child.gameObject);
         }
     }
 
@@ -200,5 +202,10 @@ public class MapManager : MonoBehaviour
         }
 
         return surroundingTiles;
+    }
+
+    public void OnDestroy()
+    {
+        _instance = null;
     }
 }

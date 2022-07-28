@@ -32,7 +32,6 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
     }
 
     public void CreatePath() {
-        Debug.Log("Garfield Starting CreatePath: " + transform.name);
         Debug.Log("Create Path: currently taken " + EnemyPathManager.Instance.TakenStr());
 
         Vector2Int start = (Vector2Int)_unitManager.parentTile.gridLocation;
@@ -78,7 +77,6 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
             currentMoves--;
             pos = next;
         }
-        Debug.Log("Garfield Ending CreatePath: " + transform.name);
         Debug.Log("Created Path: " + _unitManager.PathStr());
     }
 
