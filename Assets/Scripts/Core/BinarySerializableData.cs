@@ -12,6 +12,7 @@ public class BinarySerializableData
         typeof(float),
         typeof(bool),
         typeof(string),
+        typeof(GameData),
         typeof(GameUnitData),
     };
 
@@ -77,6 +78,16 @@ public class BinarySerializableData
             outValue = new float[] { v.x, v.y, v.z };
             return true;
         }
+        else if (_IsOfType(T, typeof(Face)))
+        {
+            Face f = (Face)inValue;
+            int si = (int)f.state;
+            float s = si;
+            Vector3 v = f.position;
+            outValue = new float[] { s, v.x, v.y, v.z };
+            return true;
+        }
+
 
         outValue = null;
         return false;

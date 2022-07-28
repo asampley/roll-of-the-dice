@@ -41,12 +41,18 @@ public class Unit
     protected int _maxMoves;
     protected MovementPattern _movementPattern;
 
+
     [Header("Rotation")]
     protected Face[] _faces;
     public Face[] Faces
     {
         get { return _faces; }
         set { _faces = value; }
+    }
+    protected DiceOrientation _orientation;
+    public DiceOrientation Orientation
+    {
+        get { return _orientation; }
     }
     protected Vector3 _rotationOffset;
 
@@ -118,5 +124,59 @@ public class Unit
         Vector2Int pos = (Vector2Int)_manager.parentTile.gridLocation;
 
         return pos;
+    }
+
+    public void UpdateOrientation(int x, int y, int z)
+    {
+        _orientation.xRolls += x;
+        _orientation.yRolls += y;
+        _orientation.zRolls += z;
+        if (_orientation.xRolls > 2)
+            while (_orientation.xRolls > 2)
+                _orientation.xRolls -= 4;
+        if (_orientation.yRolls > 2)
+            while (_orientation.yRolls > 2)
+                _orientation.yRolls -= 4;
+        if (_orientation.zRolls > 2)
+            while (_orientation.zRolls > 2)
+                _orientation.zRolls -= 4;
+        if (_orientation.xRolls < -1)
+            while (_orientation.xRolls < -1)
+                _orientation.xRolls += 4;
+        if (_orientation.yRolls < -1)
+            while (_orientation.yRolls < -1)
+                _orientation.yRolls += 4;
+        if (_orientation.zRolls < -1)
+            while (_orientation.zRolls < -1)
+                _orientation.zRolls += 4;
+        
+    }
+
+    public void UpdateOrientation(Vector2Int delta)
+    {
+        if (delta.x != 0)
+            _orientation.xRolls += delta.x;
+        if (delta.y != 0)
+            _orientation.yRolls += delta.y;
+
+        if (_orientation.xRolls > 2)
+            while (_orientation.xRolls > 2)
+                _orientation.xRolls -= 4;
+        if (_orientation.yRolls > 2)
+            while (_orientation.yRolls > 2)
+                _orientation.yRolls -= 4;
+        if (_orientation.zRolls > 2)
+            while (_orientation.zRolls > 2)
+                _orientation.zRolls -= 4;
+        if (_orientation.xRolls < -1)
+            while (_orientation.xRolls < -1)
+                _orientation.xRolls += 4;
+        if (_orientation.yRolls < -1)
+            while (_orientation.yRolls < -1)
+                _orientation.yRolls += 4;
+        if (_orientation.zRolls < -1)
+            while (_orientation.zRolls < -1)
+                _orientation.zRolls += 4;
+
     }
 }

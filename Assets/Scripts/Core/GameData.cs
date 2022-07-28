@@ -1,5 +1,6 @@
 using System.Runtime.Serialization;
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class GameUnitData : BinarySerializable
@@ -8,7 +9,8 @@ public class GameUnitData : BinarySerializable
     public DiceOrientation orientation;
     public bool isEnemy;
     public Vector2Int position;
-    public Face[] faces;
+    public Dictionary<int, DiceState> faceStates;
+    public Dictionary<int, Vector3> faceVectors;
 
     public GameUnitData() { }
 
@@ -40,12 +42,12 @@ public class GameData : BinarySerializable
             levelId);
 
 
-    private static string _GetFilePath()
+    public static string GetFilePath()
         => System.IO.Path.Combine(GetFolderPath(), DATA_FILE_NAME);
 
     public static void Save(GameData instance)
     {
-        BinarySerializable.Save(_GetFilePath(), instance);
+        BinarySerializable.Save(GetFilePath(), instance);
     }
 
     public GameData() { }
@@ -55,11 +57,9 @@ public class GameData : BinarySerializable
         BinarySerializable.Deserialize(this, info, context);
     }
 
-    
-
     public static GameData Load()
     {
-        _instance = (GameData)BinarySerializable.Load(_GetFilePath());
+        _instance = (GameData)BinarySerializable.Load(GetFilePath());
         return _instance;
     }
 }

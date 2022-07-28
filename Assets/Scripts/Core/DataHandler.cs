@@ -13,9 +13,8 @@ public class DataHandler : MonoBehaviour
     public static void LoadGameData()
     {
         Globals.UNIT_DATA = Resources.LoadAll<UnitData>(Globals.DICE_CLASS_SO) as UnitData[];
-        Debug.Log(Globals.UNIT_DATA);
 
-        string gameUid = CoreDataHandler.Instance.GameUID;
+        string gameUid = CoreDataHandler.Instance.LevelID;
 
         // Load game scene data
         GameData.levelId = gameUid;
@@ -24,7 +23,7 @@ public class DataHandler : MonoBehaviour
 
     public static void SaveGameData()
     {
-        GameData.levelId = CoreDataHandler.Instance.GameUID;
+        GameData.levelId = CoreDataHandler.Instance.LevelID;
         GameData.Save(SerializeGameData());
     }
 
@@ -36,17 +35,22 @@ public class DataHandler : MonoBehaviour
         {
             if (!die.Transform) continue;
 
-            Face[] saveFaces = new Face[die.Faces.Length];
 
+            Dictionary<int, DiceState> dicStates = new Dictionary<int, DiceState>();
             for (int n = 0; n < die.Faces.Length; n++)
-                saveFaces[n] = die.Faces[n];
+                dicStates.Add(n, die.Faces[n].state);
 
-
+            Dictionary<int, Vector3> dicVectors = new Dictionary<int, Vector3>();
+            for (int n = 0; n < die.Faces.Length; n++)
+                dicVectors.Add(n, die.Faces[n].position);
+  
             GameUnitData d = new GameUnitData()
             {
                 isEnemy = die.IsEnemy,
                 position = die.GetPosition(),
-                faces = saveFaces,
+                faceStates = dicStates,
+                faceVectors = dicVectors,
+                orientation = die.Orientation,
             };
 
             dice.Add(d);
@@ -69,7 +73,12 @@ public class DataHandler : MonoBehaviour
             Unit u = new Unit(unitData, die.isEnemy, die.orientation);
 
             u.SetPosition(die.position);
-            u.Faces = die.faces;
+            for (int n = 0; n < die.faceStates.Count; n++)
+            {
+                u.Faces[n].state = die.faceStates[n];
+                u.Faces[n].position = die.faceVectors[n];
+            }
+            GameManager.Instance.ImportUnit(u);
         }
 
         Camera.main.transform.position = data.camPosition;
