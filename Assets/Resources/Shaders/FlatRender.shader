@@ -7,9 +7,9 @@ Shader "Unlit/Tile"
  
     SubShader
     {
-        Tags{ "Queue" = "Opaque" "IgnoreProjector" = "True" "RenderType" = "Transparent" "DisableBatching" = "True" }
+        Tags{ "Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" "DisableBatching" = "True" }
  
- 		ZWrite On
+ 		ZWrite Off
         Blend SrcAlpha OneMinusSrcAlpha
  
         Pass
