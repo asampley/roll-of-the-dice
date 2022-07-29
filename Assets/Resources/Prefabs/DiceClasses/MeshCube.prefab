@@ -32,7 +32,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8304734700538434376}
   m_LocalRotation: {x: 0.19134171, y: -0.46193978, z: 0.8001032, w: 0.33141357}
-  m_LocalPosition: {x: 0, y: 0.225, z: -5}
+  m_LocalPosition: {x: 0, y: 0.225, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -102,19 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalMesh: {fileID: 0}
-  faces:
-  - state: 4
-    position: {x: 0.5, y: 0, z: 0}
-  - state: 4
-    position: {x: -0.5, y: 0, z: 0}
-  - state: 4
-    position: {x: 0, y: 0.5, z: 0}
-  - state: 4
-    position: {x: 0, y: -0.5, z: 0}
-  - state: 4
-    position: {x: 0, y: 0, z: 0.5}
-  - state: 4
-    position: {x: 0, y: 0, z: -0.5}
+  _faces: []
 --- !u!114 &1635569790649016206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,7 +151,7 @@ SortingGroup:
   m_Enabled: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 400
+  m_SortingOrder: 0
 --- !u!65 &5884028651448309479
 BoxCollider:
   m_ObjectHideFlags: 0
