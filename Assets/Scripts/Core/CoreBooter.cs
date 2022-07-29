@@ -65,14 +65,16 @@ public class CoreBooter : MonoBehaviour
         {
             SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive).completed += (_) =>
             {
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName(scene));
                 if (SceneManager.GetSceneByName("GameScene") != null && SceneManager.GetSceneByName("GameScene").IsValid())
                     SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName("GameScene")).completed += (_) =>
                         SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
                 else
                     SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
-                    
+                
+
             };
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(scene));
+            
                   
         };
         return op;

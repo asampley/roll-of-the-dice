@@ -29,8 +29,10 @@ public class BinarySerializable : ISerializable
         Type T = GetType();
         foreach (FieldInfo field in T.GetFields())
         {
+            Debug.Log(field.Name);
+            Debug.Log(field.IsStatic);
             if (field.IsStatic) continue;
-
+            Debug.Log(field.Name);
             object value;
             if (BinarySerializableData.Serialize(field, this, out value))
             {
@@ -67,6 +69,7 @@ public class BinarySerializable : ISerializable
         IFormatter formatter = new BinaryFormatter();
         FileStream s = new FileStream(filePath, FileMode.Open);
         BinarySerializable d = (BinarySerializable)formatter.Deserialize(s);
+
         s.Close();
         return d;
     }
@@ -104,6 +107,7 @@ public class BinarySerializable : ISerializable
             }
             else
             {
+                if (field.IsStatic) continue;
                 object deserializedValue = info.GetValue(field.Name, field.FieldType);
                 object value;
                 if (BinarySerializableData.Deserialize(field, deserializedValue, out value))

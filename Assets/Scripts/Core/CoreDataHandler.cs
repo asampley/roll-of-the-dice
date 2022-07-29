@@ -10,11 +10,11 @@ public class CoreDataHandler : MonoBehaviour
     {
         get { return _levelData; }
     }
-    private string _gameUID;
+    private string _levelID;
 
 
     public string Scene => _levelData != null ? _levelData.levelName : null;
-    public string GameUID => _gameUID;
+    public string LevelID => _levelID;
 
     private void Awake()
     {
@@ -27,13 +27,13 @@ public class CoreDataHandler : MonoBehaviour
         _levelData = d;
     }
 
-    public void SetGameUID(LevelData d)
+    public void SetLevelID(LevelData d)
     {
-        _gameUID = $"{d.levelName}";
+        _levelID = $"{d.levelName}";
     }
 
-    public void SetGameUID(string uid)
+    public void SetLevelID(string uid)
     {
-        _gameUID = uid;
+        _levelID = uid;
     }
 }

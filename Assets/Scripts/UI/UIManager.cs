@@ -120,7 +120,7 @@ public class UIManager : MonoBehaviour
     public void NextLevel()
     {
         LevelData level = CoreDataHandler.Instance.LevelData.nextLevel;
-        CoreDataHandler.Instance.SetGameUID(level);
+        CoreDataHandler.Instance.SetLevelID(level);
         CoreBooter.Instance.LoadLevel(level);
     }
 

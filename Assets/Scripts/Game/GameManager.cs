@@ -25,8 +25,11 @@ public class GameManager : MonoBehaviour, PhaseListener
     public GameRulesData gameRulesData;
     public GameObject diceParent;
 
-    private Dictionary<DiceSpawn, DiceOrientation> alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
-    private Dictionary<DiceSpawn, DiceOrientation> enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
+    private Dictionary<DiceSpawn, DiceOrientation> _alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
+    private Dictionary<DiceSpawn, DiceOrientation> _enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
+
+    private List<Unit> _loadPositions = new List<Unit>();
+
 
     private CancellationTokenSource phaseUpdateCancel = new CancellationTokenSource();
     public PhaseManager phaseManager = new PhaseManager();
@@ -107,8 +110,6 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     private void Awake()
     {
-        DataHandler.LoadGameData();
-
         if (_instance == null)
             _instance = this;
 
@@ -121,8 +122,19 @@ public class GameManager : MonoBehaviour, PhaseListener
         Debug.Log("START NEW GAME");
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
-        RollPositions();
-        StartGame();
+        DataHandler.LoadGameData();
+        if (System.IO.File.Exists(GameData.GetFilePath()))
+        {
+            
+            Debug.Log("Garfeel");
+            SetPositions();
+            LoadGame();
+        }
+        else
+        {
+            RollDefaultPositions();
+            StartGame();
+        }
     }
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
@@ -132,22 +144,38 @@ public class GameManager : MonoBehaviour, PhaseListener
         die.SetPosition(startPos);
     }
 
-    public void RollPositions()
+    public void LoadDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation, Face[] faces)
+    {
+        UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => (int)x.unitClass == (int)diceClass).First();
+        Unit die = new Unit(unitData, isEnemy, orientation);
+        die.SetPosition(startPos);
+    }
+
+    public void RollDefaultPositions()
     {
         ClearDictionaries();
         foreach (DiceSpawn spawn in levelData.alliedDice)
-            alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
+            _alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
         foreach (DiceSpawn spawn in levelData.enemyDice)
-            enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
+            _enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
     }
+    public void SetPositions()
+    {
+        ClearDictionaries();
+        foreach (DiceSpawn spawn in levelData.alliedDice)
+            _alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
+        foreach (DiceSpawn spawn in levelData.enemyDice)
+            _enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
+    }
+
 
     public DiceOrientation GenerateDiceOrientation()
     {
         DiceOrientation orientation = new DiceOrientation();
 
-        orientation.xRolls = UnityEngine.Random.Range(0, 4);
-        orientation.yRolls = UnityEngine.Random.Range(0, 4);
-        orientation.zRolls = UnityEngine.Random.Range(0, 4);
+        orientation.xRolls = UnityEngine.Random.Range(-1, 3);
+        orientation.yRolls = UnityEngine.Random.Range(-1, 3);
+        orientation.zRolls = UnityEngine.Random.Range(-1, 3);
 
         return orientation;
     }
@@ -160,9 +188,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         phaseUpdateCancel = new CancellationTokenSource();
 
         phaseManager.Clear();
-        phaseManager.Push(Phase.Setup);
-
-        
+        phaseManager.Push(Phase.Setup);        
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
@@ -171,17 +197,42 @@ public class GameManager : MonoBehaviour, PhaseListener
         ClearMap();
 
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
-        foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in alliedSpawnPositions)
+        foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in _alliedSpawnPositions)
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, false, die.Value);
-        foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in enemySpawnPositions)
+        foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in _enemySpawnPositions)
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
+
+        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
+    }
+
+    public void LoadGame()
+    {
+        _winState = Win.None;
+        phaseUpdateCancel?.Cancel();
+        phaseUpdateCancel?.Dispose();
+        phaseUpdateCancel = new CancellationTokenSource();
+
+        phaseManager.Clear();
+        phaseManager.Push(Phase.Setup);
+
+        PlayerKingDefeated = false;
+        MaxNumberOfTurns = gameRulesData.maxTurns;
+        CurrentRound = 1;
+
+        ClearMap();
+
+        Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
+        foreach (Unit die in _loadPositions)
+            LoadDie(die.GetPosition(), die.Data.unitClass, false, die.Orientation, die.Faces);
+        Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
+        
         RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
     }
 
     public void RerollGame()
     {
-        RollPositions();
+        RollDefaultPositions();
         StartGame();
     }
 
@@ -196,8 +247,8 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void ClearDictionaries()
     {
-        alliedSpawnPositions.Clear();
-        enemySpawnPositions.Clear();
+        _alliedSpawnPositions.Clear();
+        _enemySpawnPositions.Clear();
     }
 
     public void CheckWin()
@@ -325,5 +376,10 @@ public class GameManager : MonoBehaviour, PhaseListener
         Debug.Log("Destroying Game Manager");
         _instance = null;
         phaseManager = null;
+    }
+
+    public void ImportUnit(Unit unit)
+    {
+        _loadPositions.Add(unit);
     }
 }

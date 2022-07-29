@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DataHandler : MonoBehaviour
 {
-    private void Start()
+    private void Awake()
     {
         DeserializeGameData();
     }
@@ -13,18 +13,17 @@ public class DataHandler : MonoBehaviour
     public static void LoadGameData()
     {
         Globals.UNIT_DATA = Resources.LoadAll<UnitData>(Globals.DICE_CLASS_SO) as UnitData[];
-        Debug.Log(Globals.UNIT_DATA);
 
-        string gameUid = CoreDataHandler.Instance.GameUID;
+        string levelId = CoreDataHandler.Instance.LevelID;
 
         // Load game scene data
-        GameData.levelId = gameUid;
+        GameData.levelId = levelId;
         GameData.Load();
     }
 
     public static void SaveGameData()
     {
-        GameData.levelId = CoreDataHandler.Instance.GameUID;
+        GameData.levelId = CoreDataHandler.Instance.LevelID;
         GameData.Save(SerializeGameData());
     }
 
@@ -36,17 +35,27 @@ public class DataHandler : MonoBehaviour
         {
             if (!die.Transform) continue;
 
-            Face[] saveFaces = new Face[die.Faces.Length];
+            List<GameFaceData> faceData = new List<GameFaceData>();
+            foreach (Face face in die.Faces)
+            {
+                GameFaceData f = new GameFaceData()
+                {
+                    diceState = face.state,
+                    position = face.position,
+                };
+                faceData.Add(f);
+            }
+                
 
+            Dictionary<int, Vector3> dicVectors = new Dictionary<int, Vector3>();
             for (int n = 0; n < die.Faces.Length; n++)
-                saveFaces[n] = die.Faces[n];
-
-
+                dicVectors.Add(n, die.Faces[n].position);
+  
             GameUnitData d = new GameUnitData()
             {
                 isEnemy = die.IsEnemy,
                 position = die.GetPosition(),
-                faces = saveFaces,
+                faces = faceData.ToArray(),
             };
 
             dice.Add(d);
@@ -66,36 +75,17 @@ public class DataHandler : MonoBehaviour
         foreach (GameUnitData die in data.dice)
         {
             UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => x.unitClass == die.diceClass).First();
-            Unit u = new Unit(unitData, die.isEnemy, die.orientation);
+            Unit u = new Unit(unitData, die.isEnemy);
 
             u.SetPosition(die.position);
-            u.Faces = die.faces;
+            for (int n = 0; n < die.faces.Length; n++)
+            {
+                u.Faces[n].state = die.faces[n].diceState;
+                u.Faces[n].position = die.faces[n].position;
+            }
+            GameManager.Instance.ImportUnit(u);
         }
 
         Camera.main.transform.position = data.camPosition;
-        EventManager.TriggerEvent("UpdateResourceTexts");
-    }
-
-    public static List<(string, System.DateTime)> GetGamesList()
-    {
-        string rootPath = Path.Combine(Application.persistentDataPath, BinarySerializable.DATA_DIRECTORY, "Games");
-        if (!Directory.Exists(rootPath))
-            Directory.CreateDirectory(rootPath);
-
-        string[] gameDirs = Directory.GetDirectories(rootPath);
-
-        IEnumerable<string> validGameDirs = gameDirs.Where((string d) => File.Exists(Path.Combine(d, GameData.DATA_FILE_NAME)));
-
-        List<(string, System.DateTime)> games = new List<(string, System.DateTime)>();
-
-        foreach (string dir in validGameDirs)
-        {
-            games.Add((
-                dir,
-                File.GetLastWriteTime(Path.Combine(dir, GameData.DATA_FILE_NAME))
-                ));
-        }
-
-        return games.OrderByDescending(((string, System.DateTime) x) => x.Item2).ToList();
     }
 }

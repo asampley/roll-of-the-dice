@@ -1,14 +1,28 @@
 using System.Runtime.Serialization;
 using UnityEngine;
+using System.Collections.Generic;
+
+[System.Serializable]
+public class GameFaceData : BinarySerializable
+{
+    public DiceState diceState;
+    public Vector3 position;
+
+    public GameFaceData() { }
+
+    protected GameFaceData(SerializationInfo info, StreamingContext context)
+    {
+        BinarySerializable.Deserialize(this, info, context);
+    }
+}
 
 [System.Serializable]
 public class GameUnitData : BinarySerializable
 {
     public DiceClass diceClass;
-    public DiceOrientation orientation;
     public bool isEnemy;
     public Vector2Int position;
-    public Face[] faces;
+    public GameFaceData[] faces;
 
     public GameUnitData() { }
 
@@ -21,7 +35,6 @@ public class GameUnitData : BinarySerializable
 [System.Serializable]
 public class GameData : BinarySerializable
 {
-    
     public static string levelId;
     private static GameData _instance;
     public static GameData Instance => _instance;
@@ -40,13 +53,10 @@ public class GameData : BinarySerializable
             levelId);
 
 
-    private static string _GetFilePath()
+    public static string GetFilePath()
         => System.IO.Path.Combine(GetFolderPath(), DATA_FILE_NAME);
 
-    public static void Save(GameData instance)
-    {
-        BinarySerializable.Save(_GetFilePath(), instance);
-    }
+
 
     public GameData() { }
 
@@ -55,11 +65,14 @@ public class GameData : BinarySerializable
         BinarySerializable.Deserialize(this, info, context);
     }
 
-    
-
     public static GameData Load()
     {
-        _instance = (GameData)BinarySerializable.Load(_GetFilePath());
+        _instance = (GameData)BinarySerializable.Load(GetFilePath());
         return _instance;
+    }
+
+    public static void Save(GameData instance)
+    {
+        BinarySerializable.Save(GetFilePath(), instance);
     }
 }

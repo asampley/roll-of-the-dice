@@ -179,6 +179,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         _dieRotator.RotateTileDelta(Vector2Int.right, orientation.xRolls);
         _dieRotator.RotateTileDelta(Vector2Int.up, orientation.yRolls);
         _dieRotator.RotateZ(orientation.zRolls);
+        _unit.UpdateOrientation(orientation.xRolls, orientation.yRolls, orientation.zRolls);
         _dieRotator.RotateNow();
         State = _dieRotator.GetUpFace();
     }
@@ -471,6 +472,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
     {
         if (rotate) {
             GetComponentInChildren<DieRotator>().RotateTileDelta(delta);
+            _unit.UpdateOrientation(delta);
         }
 
         GetComponentInChildren<DieTranslator>().Translate(
@@ -503,11 +505,13 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 break;
             case TileType.RotateClockwise:
                 _dieRotator.RotateZ(1);
+                _unit.UpdateOrientation(0, 0, 1);
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 break;
             case TileType.RotateCounterClockwise:
                 _dieRotator.RotateZ(-1);
+                _unit.UpdateOrientation(0, 0, -1);
                 GetTilesInRange();
                 break;
             case TileType.ShovePosX:
@@ -531,9 +535,14 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 GetTilesInRange();
                 break;
             case TileType.Randomize:
-                _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
-                _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
-                _dieRotator.RotateZ(UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges));
+                int a = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
+                int b = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
+                int c = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
+
+                _dieRotator.RotateZ(a);
+                _dieRotator.RotateZ(b);
+                _dieRotator.RotateZ(c);
+                _unit.UpdateOrientation(0, 0, a + b + c);
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 break;
