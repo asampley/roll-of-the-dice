@@ -4,6 +4,7 @@ Shader "Unlit/TileMap"
     {
         _MainTex("Texture", 2D) = "white" {}
 		_AlphaCutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
+		_YSpread("Y Spread", Float) = 4.0
     }
  
     SubShader
@@ -36,13 +37,14 @@ Shader "Unlit/TileMap"
             sampler2D _MainTex;
             float4 _MainTex_ST;
 			float _AlphaCutoff;
+			float _YSpread;
  
             v2f vert(appdata v)
             {
                 v2f o;
 
 				o.pos = v.vertex;
-				o.pos.z = 4.0 * mul(UNITY_MATRIX_M, float4(0, 0, 0, 1)).y;
+				o.pos.z = _YSpread * mul(UNITY_MATRIX_M, float4(0, 0, 0, 1)).y;
 
 				o.pos = UnityObjectToClipPos(o.pos);
 
