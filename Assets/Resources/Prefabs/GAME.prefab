@@ -76,6 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ghostContainer: {fileID: 3221832865650697799, guid: 4cc9d1ed88c72c441a8db6b2717651ad, type: 3}
+  arrowPrefab: {fileID: 6225239161931993674, guid: 68f1ea93563e8564082ff55c70245d50, type: 3}
 --- !u!1 &5726423595066037711
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +132,6 @@ MonoBehaviour:
   levelData: {fileID: 0}
   gameRulesData: {fileID: 0}
   diceParent: {fileID: 584924817115488174}
-  PlayerSteps: 0
 --- !u!114 &7400787855664400776
 MonoBehaviour:
   m_ObjectHideFlags: 0

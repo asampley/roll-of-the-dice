@@ -8,8 +8,10 @@ public class GhostManager : MonoBehaviour {
     public static GhostManager Instance { get { return _instance; } }
 
     private Dictionary<GameObject, List<GameObject>> ghostsByContext = new Dictionary<GameObject, List<GameObject>>();
+    private Dictionary<GameObject, GameObject> arrowsByContext = new Dictionary<GameObject, GameObject>();
 
     public GameObject ghostContainer;
+    public GameObject arrowPrefab;
 
     private void Awake()
     {
@@ -47,6 +49,29 @@ public class GhostManager : MonoBehaviour {
         return ghost;
     }
 
+    public void PushArrow(GameObject context, Vector2Int next) {
+        if (!arrowsByContext.ContainsKey(context)) {
+            var a = Instantiate(arrowPrefab, this.transform);
+            arrowsByContext.Add(context, a);
+        }
+
+        // add position
+        var arrow = arrowsByContext[context].GetComponentInChildren<LineRenderer>();
+        ++arrow.positionCount;
+        var positions = new Vector3[arrow.positionCount];
+        arrow.GetPositions(positions);
+        positions[^1] = MapManager.Instance.TileToWorldSpace(next) + Globals.OVERLAY_LINE_Z_OFFSET * Vector3.forward;
+        Debug.Log(Utilities.EnumerableString(positions));
+        arrow.SetPositions(positions);
+
+        // add arrow head
+        //var anim = arrow.widthCurve;
+
+        //var frame = anim[1];
+        //frame.time = 1f - 0.25f / arrow.positionCount;
+        //anim.MoveKey(2, frame);
+    }
+
     public void RemoveGhosts(GameObject context) {
         if (!ghostsByContext.ContainsKey(context)) return;
 
@@ -57,6 +82,14 @@ public class GhostManager : MonoBehaviour {
         }
 
         ghostsByContext.Remove(context);
+    }
+
+    public void RemoveArrow(GameObject context) {
+        if (!arrowsByContext.ContainsKey(context)) return;
+
+        Destroy(arrowsByContext[context]);
+
+        arrowsByContext.Remove(context);
     }
 
     public void SetEnemyGhostsVisible(bool visible) {

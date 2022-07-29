@@ -42,6 +42,9 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         List<Vector2Int> deltas = new List<Vector2Int>();
         List<Vector3> trans = new List<Vector3>();
 
+        GhostManager.Instance.RemoveArrow(gameObject);
+        GhostManager.Instance.PushArrow(gameObject, pos);
+
         while (currentMoves > 0) {
             var adjacent = GetTilesBeside(pos)
                 .Where(a => !a.IsBlocked)
@@ -62,6 +65,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                 - MapManager.Instance.TileToWorldSpace(pos - next)
             );
 
+            GhostManager.Instance.PushArrow(gameObject, next);
             var ghost = GhostManager.Instance.CreateGhost(gameObject, null, null);
 
             var translator = ghost.GetComponentInChildren<DieTranslator>();
@@ -84,6 +88,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         switch(phase) {
             case Phase.Enemy:
                 GhostManager.Instance.RemoveGhosts(gameObject);
+                GhostManager.Instance.RemoveArrow(gameObject);
                 UnreservePath();
                 return PhaseStepResult.Unchanged;
             case Phase.Player:
@@ -99,6 +104,9 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
     }
 
     void OnDestroy() {
+        GhostManager.Instance.RemoveGhosts(gameObject);
+        GhostManager.Instance.RemoveArrow(gameObject);
+
         UnreservePath();
     }
 }
