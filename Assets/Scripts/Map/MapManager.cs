@@ -8,6 +8,7 @@ public class MapManager : MonoBehaviour
 {
     private static MapManager _instance;
     public static MapManager Instance {  get { return _instance; } }
+    private float ySpread;
     public OverlayTile overlayTilePrefab;
     public GameObject tileParent;
     public Tilemap tileMap;
@@ -27,6 +28,8 @@ public class MapManager : MonoBehaviour
 
     private void Start()
     {
+        ySpread = tileMap.GetComponent<TilemapRenderer>().sharedMaterial.GetFloat("_YSpread");
+
         GenerateMap();
     }
 
@@ -49,8 +52,7 @@ public class MapManager : MonoBehaviour
                         var overlayTile = Instantiate(overlayTilePrefab, tileParent.transform);
                         var cellWorldPos = TileToWorldSpace(tileLocation);
 
-                        overlayTile.transform.position = new Vector3(cellWorldPos.x, cellWorldPos.y, cellWorldPos.z);
-                        overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
+                        overlayTile.transform.position = new Vector3(cellWorldPos.x, cellWorldPos.y, cellWorldPos.z + Globals.OVERLAY_TILE_Z_OFFSET);
                         overlayTile.gridLocation = tileLocation;
                         overlayTile.GetComponent<OverlayTile>().HideTile();
 
@@ -109,7 +111,8 @@ public class MapManager : MonoBehaviour
     public Vector3 TileToWorldSpace(Vector3Int pos)
     {
         Vector3 vec = this.tileMap.GetCellCenterWorld(pos);
-        return vec + 4.0f * Vector3.forward * vec.y - 1.5f * Vector3.forward;
+        vec += (ySpread * (vec.y - 0.25f)) * Vector3.forward;
+        return vec;
     }
 
     public Vector3 TileDeltaToWorldDelta(Vector2Int delta) {
@@ -124,28 +127,28 @@ public class MapManager : MonoBehaviour
         Vector2Int TileToCheck = new Vector2Int(originTile.x + 1, originTile.y);
         if (map.ContainsKey(TileToCheck))
         {
-            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+            if (Mathf.Abs(map[TileToCheck].gridLocation.z - map[originTile].gridLocation.z) <= 1)
                 surroundingTiles.Add(map[TileToCheck]);
         }
 
         TileToCheck = new Vector2Int(originTile.x - 1, originTile.y);
         if (map.ContainsKey(TileToCheck))
         {
-            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+            if (Mathf.Abs(map[TileToCheck].gridLocation.z - map[originTile].gridLocation.z) <= 1)
                 surroundingTiles.Add(map[TileToCheck]);
         }
 
         TileToCheck = new Vector2Int(originTile.x, originTile.y + 1);
         if (map.ContainsKey(TileToCheck))
         {
-            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+            if (Mathf.Abs(map[TileToCheck].gridLocation.z - map[originTile].gridLocation.z) <= 1)
                 surroundingTiles.Add(map[TileToCheck]);
         }
 
         TileToCheck = new Vector2Int(originTile.x, originTile.y - 1);
         if (map.ContainsKey(TileToCheck))
         {
-            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+            if (Mathf.Abs(map[TileToCheck].gridLocation.z - map[originTile].gridLocation.z) <= 1)
                 surroundingTiles.Add(map[TileToCheck]);
         }
 
@@ -160,7 +163,7 @@ public class MapManager : MonoBehaviour
         Vector2Int TileToCheck = new Vector2Int(originTile.x + 1, originTile.y);
         while (map.ContainsKey(TileToCheck))
         {
-            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+            if (Mathf.Abs(map[TileToCheck].gridLocation.z - map[originTile].gridLocation.z) <= 1)
                 if (!map[TileToCheck].IsBlocked)
                     surroundingTiles.Add(map[TileToCheck]);
                 else
@@ -171,7 +174,7 @@ public class MapManager : MonoBehaviour
         TileToCheck = new Vector2Int(originTile.x - 1, originTile.y);
         while (map.ContainsKey(TileToCheck))
         {
-            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+            if (Mathf.Abs(map[TileToCheck].gridLocation.z - map[originTile].gridLocation.z) <= 1)
                 if (!map[TileToCheck].IsBlocked)
                     surroundingTiles.Add(map[TileToCheck]);
                 else
@@ -182,7 +185,7 @@ public class MapManager : MonoBehaviour
         TileToCheck = new Vector2Int(originTile.x, originTile.y + 1);
         while (map.ContainsKey(TileToCheck))
         {
-            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+            if (Mathf.Abs(map[TileToCheck].gridLocation.z - map[originTile].gridLocation.z) <= 1)
                 if (!map[TileToCheck].IsBlocked)
                     surroundingTiles.Add(map[TileToCheck]);
                 else
@@ -193,7 +196,7 @@ public class MapManager : MonoBehaviour
         TileToCheck = new Vector2Int(originTile.x, originTile.y - 1);
         while (map.ContainsKey(TileToCheck))
         {
-            if (Mathf.Abs(map[TileToCheck].transform.position.z - map[originTile].transform.position.z) <= 1)
+            if (Mathf.Abs(map[TileToCheck].gridLocation.z - map[originTile].gridLocation.z) <= 1)
                 if (!map[TileToCheck].IsBlocked)
                     surroundingTiles.Add(map[TileToCheck]);
                 else
