@@ -3,13 +3,14 @@ Shader "Unlit/TileMap"
     Properties
     {
         _MainTex("Texture", 2D) = "white" {}
+		_AlphaCutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
     }
  
     SubShader
     {
         Tags{ "Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" "DisableBatching" = "True" }
  
- 		ZWrite Off
+ 		ZWrite On
         Blend SrcAlpha OneMinusSrcAlpha
  
         Pass
@@ -34,6 +35,7 @@ Shader "Unlit/TileMap"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+			float _AlphaCutoff;
  
             v2f vert(appdata v)
             {
@@ -52,6 +54,9 @@ Shader "Unlit/TileMap"
             fixed4 frag(v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
+
+				// clip if the alpha is very low
+				clip(col.a - _AlphaCutoff);
  
                 return col;
             }
