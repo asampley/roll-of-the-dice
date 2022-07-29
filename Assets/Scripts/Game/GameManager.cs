@@ -123,11 +123,8 @@ public class GameManager : MonoBehaviour, PhaseListener
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
         DataHandler.LoadGameData();
-        if (System.IO.File.Exists(GameData.GetFilePath()))
+        if (GameData.Instance != null)
         {
-            
-            Debug.Log("Garfeel");
-            SetPositions();
             LoadGame();
         }
         else
@@ -159,15 +156,6 @@ public class GameManager : MonoBehaviour, PhaseListener
         foreach (DiceSpawn spawn in levelData.enemyDice)
             _enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
     }
-    public void SetPositions()
-    {
-        ClearDictionaries();
-        foreach (DiceSpawn spawn in levelData.alliedDice)
-            _alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
-        foreach (DiceSpawn spawn in levelData.enemyDice)
-            _enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
-    }
-
 
     public DiceOrientation GenerateDiceOrientation()
     {
@@ -224,7 +212,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
         foreach (Unit die in _loadPositions)
-            LoadDie(die.GetPosition(), die.Data.unitClass, false, die.Orientation, die.Faces);
+            LoadDie(die.GetPosition(), die.Data.unitClass, die.IsEnemy, die.Orientation, die.Faces);
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
         
         RunPhaseUpdate(phaseUpdateCancel.Token).Forget();

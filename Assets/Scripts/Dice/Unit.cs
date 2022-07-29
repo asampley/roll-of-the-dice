@@ -72,6 +72,8 @@ public class Unit
 
         _transform.rotation = Quaternion.identity;
 
+        _isEnemy = isEnemy;
+
         // Setup Manager
         _manager = g.GetComponent<UnitManager>();
 
