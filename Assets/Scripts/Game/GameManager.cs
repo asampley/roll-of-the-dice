@@ -126,6 +126,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         gameRulesData = levelData.gameRules;
         if (System.IO.File.Exists(GameData.GetFilePath()))
         {
+            Debug.Log("Garfeel");
             SetPositions();
             LoadGame();
         }
@@ -187,34 +188,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         phaseUpdateCancel = new CancellationTokenSource();
 
         phaseManager.Clear();
-        phaseManager.Push(Phase.Setup);
-
-        
-
-        PlayerKingDefeated = false;
-        MaxNumberOfTurns = gameRulesData.maxTurns;
-        CurrentRound = 1;
-
-        ClearMap();
-
-        Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
-        foreach (Unit die in _loadPositions)
-            LoadDie(die.GetPosition(), die.Data.unitClass, false, die.Orientation, die.Faces);
-        Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
-        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
-    }
-
-    public void LoadGame()
-    {
-        _winState = Win.None;
-        phaseUpdateCancel?.Cancel();
-        phaseUpdateCancel?.Dispose();
-        phaseUpdateCancel = new CancellationTokenSource();
-
-        phaseManager.Clear();
-        phaseManager.Push(Phase.Setup);
-
-
+        phaseManager.Push(Phase.Setup);        
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
@@ -228,6 +202,31 @@ public class GameManager : MonoBehaviour, PhaseListener
         foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in _enemySpawnPositions)
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
+
+        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
+    }
+
+    public void LoadGame()
+    {
+        _winState = Win.None;
+        phaseUpdateCancel?.Cancel();
+        phaseUpdateCancel?.Dispose();
+        phaseUpdateCancel = new CancellationTokenSource();
+
+        phaseManager.Clear();
+        phaseManager.Push(Phase.Setup);
+
+        PlayerKingDefeated = false;
+        MaxNumberOfTurns = gameRulesData.maxTurns;
+        CurrentRound = 1;
+
+        ClearMap();
+
+        Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
+        foreach (Unit die in _loadPositions)
+            LoadDie(die.GetPosition(), die.Data.unitClass, false, die.Orientation, die.Faces);
+        Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
+        
         RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
     }
 

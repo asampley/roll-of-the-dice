@@ -108,7 +108,7 @@ public class BinarySerializableData
         }
         else if (_IsOfType(T, typeof(Color)))
         {
-            float[] c = (float[]) data;
+            float[] c = (float[])data;
             value = new float[] { c[0], c[1], c[2], c[3] };
             return true;
         }
@@ -116,6 +116,17 @@ public class BinarySerializableData
         {
             float[] v = (float[])data;
             value = new Vector3(v[0], v[1], v[2]);
+            return true;
+        }
+        else if (_IsOfType(T, typeof(Face)))
+        {
+            float[] v = (float[])data;
+
+            Face f = new Face(null);
+            f.state = (DiceState)v[0];
+            f.position = new Vector3(v[1], v[2], v[3]);
+
+            value = f;
             return true;
         }
 

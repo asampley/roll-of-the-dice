@@ -49,7 +49,7 @@ public class Unit
         get { return _faces; }
         set { _faces = value; }
     }
-    protected DiceOrientation _orientation;
+    protected DiceOrientation _orientation = new DiceOrientation();
     public DiceOrientation Orientation
     {
         get { return _orientation; }
