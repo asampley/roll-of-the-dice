@@ -48,7 +48,7 @@ public class MapManager : MonoBehaviour
                     if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                     {
                         var overlayTile = Instantiate(overlayTilePrefab, tileParent.transform);
-                        var cellWorldPos = tileMap.GetCellCenterWorld(tileLocation);
+                        var cellWorldPos = TileToWorldSpace(tileLocation);
 
                         overlayTile.transform.position = new Vector3(cellWorldPos.x, cellWorldPos.y, cellWorldPos.z);
                         overlayTile.GetComponent<SpriteRenderer>().sortingOrder = tileMap.GetComponent<TilemapRenderer>().sortingOrder;
@@ -109,7 +109,8 @@ public class MapManager : MonoBehaviour
 
     public Vector3 TileToWorldSpace(Vector3Int pos)
     {
-        return this.tileMap.GetCellCenterWorld(pos) + Vector3.forward * 0.5f * (pos.y + pos.x);
+        Vector3 vec = this.tileMap.GetCellCenterWorld(pos);
+        return vec + 4.0f * Vector3.forward * vec.y - 1.5f * Vector3.forward;
     }
 
     public Vector3 TileDeltaToWorldDelta(Vector2Int delta) {

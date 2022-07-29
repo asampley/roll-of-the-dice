@@ -110,7 +110,7 @@ public class Unit
         OverlayTile overlayTileManager = placedOnTile.gameObject.GetComponent<OverlayTile>();
 
         overlayTileManager.MoveDiceToTile(_manager);
-        _transform.position = placedOnTile.transform.position;
+        _transform.position = MapManager.Instance.TileToWorldSpace(placedOnTile.gridLocation);
     }
 
     public Vector2Int GetPosition()
