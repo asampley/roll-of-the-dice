@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DataHandler : MonoBehaviour
 {
-    private void Awake()
+    private void Start()
     {
         DeserializeGameData();
     }
@@ -44,13 +44,12 @@ public class DataHandler : MonoBehaviour
                     position = face.position,
                 };
                 faceData.Add(f);
-            }
-                
+            }                
 
             Dictionary<int, Vector3> dicVectors = new Dictionary<int, Vector3>();
             for (int n = 0; n < die.Faces.Length; n++)
                 dicVectors.Add(n, die.Faces[n].position);
-  
+
             GameUnitData d = new GameUnitData()
             {
                 isEnemy = die.IsEnemy,
@@ -76,7 +75,6 @@ public class DataHandler : MonoBehaviour
         {
             UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => x.unitClass == die.diceClass).First();
             Unit u = new Unit(unitData, die.isEnemy);
-
             u.SetPosition(die.position);
             for (int n = 0; n < die.faces.Length; n++)
             {
@@ -87,5 +85,6 @@ public class DataHandler : MonoBehaviour
         }
 
         Camera.main.transform.position = data.camPosition;
+        data.hasData = true;
     }
 }

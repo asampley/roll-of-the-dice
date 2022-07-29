@@ -44,6 +44,7 @@ public class GameData : BinarySerializable
 
     public Vector3 camPosition;
     public GameUnitData[] dice;
+    public bool hasData;
 
     public static string GetFolderPath()
         => System.IO.Path.Combine(
