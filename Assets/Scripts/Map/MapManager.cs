@@ -49,7 +49,7 @@ public class MapManager : MonoBehaviour
                         var overlayTile = Instantiate(overlayTilePrefab, tileParent.transform);
                         var cellWorldPos = TileToWorldSpace(tileLocation);
 
-                        overlayTile.transform.position = new Vector3(cellWorldPos.x, cellWorldPos.y, cellWorldPos.z);
+                        overlayTile.transform.position = new Vector3(cellWorldPos.x, cellWorldPos.y, cellWorldPos.z + Globals.OVERLAY_TILE_Z_OFFSET);
                         overlayTile.gridLocation = tileLocation;
                         overlayTile.GetComponent<OverlayTile>().HideTile();
 
@@ -108,7 +108,7 @@ public class MapManager : MonoBehaviour
     public Vector3 TileToWorldSpace(Vector3Int pos)
     {
         Vector3 vec = this.tileMap.GetCellCenterWorld(pos);
-        return vec + 4.0f * Vector3.forward * vec.y - 1.5f * Vector3.forward;
+        return vec + 4.0f * Vector3.forward * vec.y - 1.0f * Vector3.forward;
     }
 
     public Vector3 TileDeltaToWorldDelta(Vector2Int delta) {
