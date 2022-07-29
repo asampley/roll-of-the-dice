@@ -1,4 +1,4 @@
-Shader "Unlit/Tile"
+Shader "Unlit/TileMap"
 {
     Properties
     {

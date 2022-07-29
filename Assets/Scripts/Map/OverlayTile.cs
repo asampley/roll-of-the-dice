@@ -45,12 +45,12 @@ public class OverlayTile : MonoBehaviour
 
     public void ShowTile()
     {
-        gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        gameObject.GetComponent<Renderer>().enabled = true;
     }
 
     public void HideTile()
     {
-        gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        gameObject.GetComponent<Renderer>().enabled = false;
     }
 
     public void MoveDiceToTile(UnitManager die)
