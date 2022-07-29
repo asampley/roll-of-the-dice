@@ -231,9 +231,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     public void Deselect()
     {
-        if (!IsEnemy)
-            GhostManager.Instance.SetEnemyGhostsVisible(true);
-
         HideTilesInRange();
     }
 
