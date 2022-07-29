@@ -110,8 +110,6 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     private void Awake()
     {
-        DataHandler.LoadGameData();
-
         if (_instance == null)
             _instance = this;
 
@@ -124,8 +122,10 @@ public class GameManager : MonoBehaviour, PhaseListener
         Debug.Log("START NEW GAME");
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
+        DataHandler.LoadGameData();
         if (System.IO.File.Exists(GameData.GetFilePath()))
         {
+            
             Debug.Log("Garfeel");
             SetPositions();
             LoadGame();

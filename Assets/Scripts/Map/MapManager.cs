@@ -17,7 +17,6 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log(MapManager.Instance);
         if (_instance == null)
             _instance = this;
 

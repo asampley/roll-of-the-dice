@@ -17,7 +17,6 @@ public class BinarySerializableData
         typeof(GameFaceData),
         typeof(DiceState),
         typeof(DiceClass),
-        typeof(DiceOrientation),
     };
 
     public Dictionary<string, object> properties;
@@ -82,7 +81,12 @@ public class BinarySerializableData
             outValue = new float[] { v.x, v.y, v.z };
             return true;
         }
-
+        else if (_IsOfType(T, typeof(Vector2Int)))
+        {
+            Vector2Int v = (Vector2Int)inValue;
+            outValue = new int[] { v.x, v.y };
+            return true;
+        }
 
 
         outValue = null;
@@ -112,6 +116,12 @@ public class BinarySerializableData
         {
             float[] v = (float[])data;
             value = new Vector3(v[0], v[1], v[2]);
+            return true;
+        }
+        else if (_IsOfType(T, typeof(Vector2Int)))
+        {
+            int[] v = (int[])data;
+            value = new Vector2Int(v[0], v[1]);
             return true;
         }
 

@@ -20,7 +20,6 @@ public class GameFaceData : BinarySerializable
 public class GameUnitData : BinarySerializable
 {
     public DiceClass diceClass;
-    public DiceOrientation orientation;
     public bool isEnemy;
     public Vector2Int position;
     public GameFaceData[] faces;
@@ -36,7 +35,6 @@ public class GameUnitData : BinarySerializable
 [System.Serializable]
 public class GameData : BinarySerializable
 {
-    
     public static string levelId;
     private static GameData _instance;
     public static GameData Instance => _instance;
@@ -58,10 +56,7 @@ public class GameData : BinarySerializable
     public static string GetFilePath()
         => System.IO.Path.Combine(GetFolderPath(), DATA_FILE_NAME);
 
-    public static void Save(GameData instance)
-    {
-        BinarySerializable.Save(GetFilePath(), instance);
-    }
+
 
     public GameData() { }
 
@@ -74,5 +69,10 @@ public class GameData : BinarySerializable
     {
         _instance = (GameData)BinarySerializable.Load(GetFilePath());
         return _instance;
+    }
+
+    public static void Save(GameData instance)
+    {
+        BinarySerializable.Save(GetFilePath(), instance);
     }
 }

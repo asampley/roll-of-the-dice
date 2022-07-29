@@ -58,6 +58,8 @@ public class Unit
 
     public static List<Unit> DICE_LIST;
 
+
+    public Unit(UnitData data, bool isEnemy) : this(data, isEnemy, new DiceOrientation() { }) { }
     public Unit(UnitData data, bool isEnemy, DiceOrientation orientation)
     {
         _data = data;

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DataHandler : MonoBehaviour
 {
-    private void Start()
+    private void Awake()
     {
         DeserializeGameData();
     }
@@ -14,10 +14,10 @@ public class DataHandler : MonoBehaviour
     {
         Globals.UNIT_DATA = Resources.LoadAll<UnitData>(Globals.DICE_CLASS_SO) as UnitData[];
 
-        string gameUid = CoreDataHandler.Instance.LevelID;
+        string levelId = CoreDataHandler.Instance.LevelID;
 
         // Load game scene data
-        GameData.levelId = gameUid;
+        GameData.levelId = levelId;
         GameData.Load();
     }
 
@@ -56,7 +56,6 @@ public class DataHandler : MonoBehaviour
                 isEnemy = die.IsEnemy,
                 position = die.GetPosition(),
                 faces = faceData.ToArray(),
-                orientation = die.Orientation,
             };
 
             dice.Add(d);
@@ -76,7 +75,7 @@ public class DataHandler : MonoBehaviour
         foreach (GameUnitData die in data.dice)
         {
             UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => x.unitClass == die.diceClass).First();
-            Unit u = new Unit(unitData, die.isEnemy, die.orientation);
+            Unit u = new Unit(unitData, die.isEnemy);
 
             u.SetPosition(die.position);
             for (int n = 0; n < die.faces.Length; n++)
