@@ -35,10 +35,17 @@ public class DataHandler : MonoBehaviour
         {
             if (!die.Transform) continue;
 
-
-            Dictionary<int, DiceState> dicStates = new Dictionary<int, DiceState>();
-            for (int n = 0; n < die.Faces.Length; n++)
-                dicStates.Add(n, die.Faces[n].state);
+            List<GameFaceData> faceData = new List<GameFaceData>();
+            foreach (Face face in die.Faces)
+            {
+                GameFaceData f = new GameFaceData()
+                {
+                    diceState = face.state,
+                    position = face.position,
+                };
+                faceData.Add(f);
+            }
+                
 
             Dictionary<int, Vector3> dicVectors = new Dictionary<int, Vector3>();
             for (int n = 0; n < die.Faces.Length; n++)
@@ -48,8 +55,7 @@ public class DataHandler : MonoBehaviour
             {
                 isEnemy = die.IsEnemy,
                 position = die.GetPosition(),
-                faceStates = dicStates,
-                faceVectors = dicVectors,
+                faces = faceData.ToArray(),
                 orientation = die.Orientation,
             };
 
@@ -73,38 +79,14 @@ public class DataHandler : MonoBehaviour
             Unit u = new Unit(unitData, die.isEnemy, die.orientation);
 
             u.SetPosition(die.position);
-            for (int n = 0; n < die.faceStates.Count; n++)
+            for (int n = 0; n < die.faces.Length; n++)
             {
-                u.Faces[n].state = die.faceStates[n];
-                u.Faces[n].position = die.faceVectors[n];
+                u.Faces[n].state = die.faces[n].diceState;
+                u.Faces[n].position = die.faces[n].position;
             }
             GameManager.Instance.ImportUnit(u);
         }
 
         Camera.main.transform.position = data.camPosition;
-        EventManager.TriggerEvent("UpdateResourceTexts");
-    }
-
-    public static List<(string, System.DateTime)> GetGamesList()
-    {
-        string rootPath = Path.Combine(Application.persistentDataPath, BinarySerializable.DATA_DIRECTORY, "Games");
-        if (!Directory.Exists(rootPath))
-            Directory.CreateDirectory(rootPath);
-
-        string[] gameDirs = Directory.GetDirectories(rootPath);
-
-        IEnumerable<string> validGameDirs = gameDirs.Where((string d) => File.Exists(Path.Combine(d, GameData.DATA_FILE_NAME)));
-
-        List<(string, System.DateTime)> games = new List<(string, System.DateTime)>();
-
-        foreach (string dir in validGameDirs)
-        {
-            games.Add((
-                dir,
-                File.GetLastWriteTime(Path.Combine(dir, GameData.DATA_FILE_NAME))
-                ));
-        }
-
-        return games.OrderByDescending(((string, System.DateTime) x) => x.Item2).ToList();
     }
 }
