@@ -7,7 +7,7 @@ Shader "Unlit/SpriteIn3D"
  
     SubShader
     {
-        Tags{ "Queue" = "Geometry" "IgnoreProjector" = "True" "RenderType" = "Transparent" "DisableBatching" = "True" }
+        Tags{ "Queue" = "Geometry" "IgnoreProjector" = "True" "RenderType" = "Geometry" "DisableBatching" = "True" }
  
  		ZWrite On
         Blend SrcAlpha OneMinusSrcAlpha
