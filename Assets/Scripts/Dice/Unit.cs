@@ -49,18 +49,23 @@ public class Unit
         get { return _faces; }
         set { _faces = value; }
     }
-    protected DiceOrientation _orientation = new DiceOrientation();
-    public DiceOrientation Orientation
+    protected Vector3 _orientation;
+    public Vector3 orientation
     {
         get { return _orientation; }
+        set { _orientation = value; }
     }
     protected Vector3 _rotationOffset;
 
     public static List<Unit> DICE_LIST;
 
 
-    public Unit(UnitData data, bool isEnemy) : this(data, isEnemy, new DiceOrientation() { }) { }
-    public Unit(UnitData data, bool isEnemy, DiceOrientation orientation)
+    public Unit(UnitData data, bool isEnemy, Vector3 diceOrientation, Vector2Int position) : this(data, isEnemy, new DiceOrientation() { })
+    {
+        SetOrientation(diceOrientation);
+        SetPosition(position);
+    }
+    public Unit(UnitData data, bool isEnemy, DiceOrientation startOrientation)
     {
         _data = data;
         GameObject g = GameObject.Instantiate(data.prefab) as GameObject;
@@ -69,7 +74,7 @@ public class Unit
         _uid = System.Guid.NewGuid().ToString();
         _transform.name = data.unitClass + (isEnemy ? " Enemy " : " Player ") + _uid;
         _transform.parent = GameManager.Instance.diceParent.transform;
-
+        Debug.Log("Garfeel " + _transform.name);
         _transform.rotation = Quaternion.identity;
 
         _isEnemy = isEnemy;
@@ -94,12 +99,9 @@ public class Unit
         for (int n = 0; n < _data.faces.Length; n++)
             _manager.DieTexturer.Faces[n] = new Face(_data.faces[n]);
         _manager.DieTexturer.Initialize();
-        _faces = _manager.DieTexturer.Faces;
-
-        _manager.Initialize(orientation);
-
-
+        _faces = _manager.DieTexturer.Faces;    
         _manager.DieRotator.OffsetRotation = _data.offsetRotation;
+        _manager.Initialize(startOrientation);
 
         // Add to dice list for save data
         if (DICE_LIST == null)
@@ -130,57 +132,9 @@ public class Unit
         return pos;
     }
 
-    public void UpdateOrientation(int x, int y, int z)
+    public void SetOrientation(Vector3 newOrientation)
     {
-        _orientation.xRolls += x;
-        _orientation.yRolls += y;
-        _orientation.zRolls += z;
-        if (_orientation.xRolls > 2)
-            while (_orientation.xRolls > 2)
-                _orientation.xRolls -= 4;
-        if (_orientation.yRolls > 2)
-            while (_orientation.yRolls > 2)
-                _orientation.yRolls -= 4;
-        if (_orientation.zRolls > 2)
-            while (_orientation.zRolls > 2)
-                _orientation.zRolls -= 4;
-        if (_orientation.xRolls < -1)
-            while (_orientation.xRolls < -1)
-                _orientation.xRolls += 4;
-        if (_orientation.yRolls < -1)
-            while (_orientation.yRolls < -1)
-                _orientation.yRolls += 4;
-        if (_orientation.zRolls < -1)
-            while (_orientation.zRolls < -1)
-                _orientation.zRolls += 4;
-        
-    }
-
-    public void UpdateOrientation(Vector2Int delta)
-    {
-        if (delta.x != 0)
-            _orientation.xRolls += delta.x;
-        if (delta.y != 0)
-            _orientation.yRolls += delta.y;
-
-        if (_orientation.xRolls > 2)
-            while (_orientation.xRolls > 2)
-                _orientation.xRolls -= 4;
-        if (_orientation.yRolls > 2)
-            while (_orientation.yRolls > 2)
-                _orientation.yRolls -= 4;
-        if (_orientation.zRolls > 2)
-            while (_orientation.zRolls > 2)
-                _orientation.zRolls -= 4;
-        if (_orientation.xRolls < -1)
-            while (_orientation.xRolls < -1)
-                _orientation.xRolls += 4;
-        if (_orientation.yRolls < -1)
-            while (_orientation.yRolls < -1)
-                _orientation.yRolls += 4;
-        if (_orientation.zRolls < -1)
-            while (_orientation.zRolls < -1)
-                _orientation.zRolls += 4;
-
+        _manager.SetOrientation(newOrientation);
+        orientation = newOrientation;
     }
 }

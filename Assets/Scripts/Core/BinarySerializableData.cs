@@ -75,16 +75,22 @@ public class BinarySerializableData
             outValue = new float[] { c.r, c.g, c.b, c.a };
             return true;
         }
+        else if (_IsOfType(T, typeof(Vector2Int)))
+        {
+            Vector2Int v = (Vector2Int)inValue;
+            outValue = new int[] { v.x, v.y };
+            return true;
+        }
         else if (_IsOfType(T, typeof(Vector3)))
         {
             Vector3 v = (Vector3)inValue;
             outValue = new float[] { v.x, v.y, v.z };
             return true;
         }
-        else if (_IsOfType(T, typeof(Vector2Int)))
+        else if (_IsOfType(T, typeof(Quaternion)))
         {
-            Vector2Int v = (Vector2Int)inValue;
-            outValue = new int[] { v.x, v.y };
+            Quaternion v = (Quaternion)inValue;
+            outValue = new float[] { v.w, v.x, v.y, v.z };
             return true;
         }
 
@@ -112,16 +118,22 @@ public class BinarySerializableData
             value = new float[] { c[0], c[1], c[2], c[3] };
             return true;
         }
+        else if (_IsOfType(T, typeof(Vector2Int)))
+        {
+            int[] v = (int[])data;
+            value = new Vector2Int(v[0], v[1]);
+            return true;
+        }
         else if (_IsOfType(T, typeof(Vector3)))
         {
             float[] v = (float[])data;
             value = new Vector3(v[0], v[1], v[2]);
             return true;
         }
-        else if (_IsOfType(T, typeof(Vector2Int)))
+        else if (_IsOfType(T, typeof(Quaternion)))
         {
-            int[] v = (int[])data;
-            value = new Vector2Int(v[0], v[1]);
+            float[] v = (float[])data;
+            value = new Quaternion(v[0], v[1], v[2], v[3]);
             return true;
         }
 

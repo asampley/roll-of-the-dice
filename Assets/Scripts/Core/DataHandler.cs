@@ -40,7 +40,7 @@ public class DataHandler : MonoBehaviour
             {
                 GameFaceData f = new GameFaceData()
                 {
-                    diceState = face.state,
+                    state = face.state,
                     position = face.position,
                 };
                 faceData.Add(f);
@@ -55,8 +55,8 @@ public class DataHandler : MonoBehaviour
                 isEnemy = die.IsEnemy,
                 position = die.GetPosition(),
                 faces = faceData.ToArray(),
+                orientation = die.orientation,
             };
-
             dice.Add(d);
         }
 
@@ -74,16 +74,18 @@ public class DataHandler : MonoBehaviour
         foreach (GameUnitData die in data.dice)
         {
             UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => x.unitClass == die.diceClass).First();
-            Unit u = new Unit(unitData, die.isEnemy);
+            Unit u = new Unit(unitData, die.isEnemy, die.orientation, die.position);
             u.SetPosition(die.position);
             for (int n = 0; n < die.faces.Length; n++)
             {
-                u.Faces[n].state = die.faces[n].diceState;
+                u.Faces[n].state = die.faces[n].state;
                 u.Faces[n].position = die.faces[n].position;
             }
+                       
             GameManager.Instance.ImportUnit(u);
         }
 
+        Debug.Log(data.camPosition);
         Camera.main.transform.position = data.camPosition;
         data.hasData = true;
     }

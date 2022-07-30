@@ -141,10 +141,10 @@ public class GameManager : MonoBehaviour, PhaseListener
         die.SetPosition(startPos);
     }
 
-    public void LoadDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation, Face[] faces)
+    public void LoadDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, Vector3 orientation, Face[] faces)
     {
         UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => (int)x.unitClass == (int)diceClass).First();
-        Unit die = new Unit(unitData, isEnemy, orientation);
+        Unit die = new Unit(unitData, isEnemy, orientation, startPos);
         die.SetPosition(startPos);
     }
 
@@ -212,7 +212,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
         foreach (Unit die in _loadPositions)
-            LoadDie(die.GetPosition(), die.Data.unitClass, die.IsEnemy, die.Orientation, die.Faces);
+            //LoadDie(die.GetPosition(), die.Data.unitClass, die.IsEnemy, die.orientation, die.Faces);
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
         
         RunPhaseUpdate(phaseUpdateCancel.Token).Forget();

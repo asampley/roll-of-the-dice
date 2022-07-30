@@ -30,7 +30,7 @@ public class DieRotator : MonoBehaviour {
         this.startRot = this.transform.localRotation;
     }
 
-    Quaternion FinalTarget() {
+    public Quaternion FinalTarget() {
         return targets.Count > 0 ? targets[targets.Count - 1] : startRot;
     }
 
@@ -48,7 +48,8 @@ public class DieRotator : MonoBehaviour {
         }
     }
 
-    void Rotate(Quaternion rotation, int count) {
+    void Rotate(Quaternion rotation, int count)
+    {
         if (count < 0) {
             rotation = Quaternion.Inverse(rotation);
         }
@@ -80,7 +81,17 @@ public class DieRotator : MonoBehaviour {
         RotateAngleAxis(360f / axes.FaceEdges, axes.ZAxis, count);
     }
 
-    public void RotateNow() {
+    public Quaternion RotateNow()
+    {
+        this.startRot = FinalTarget();
+        this.targets.Clear();
+        this.transform.localRotation = this.startRot;
+        return this.transform.localRotation;
+    }
+
+    public void SetRotation(Quaternion target)
+    {
+        targets.Add(target);
         this.startRot = FinalTarget();
         this.targets.Clear();
         this.transform.localRotation = this.startRot;
