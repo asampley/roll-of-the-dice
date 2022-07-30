@@ -2,18 +2,6 @@ using System.Runtime.Serialization;
 using UnityEngine;
 using System.Collections.Generic;
 
-[System.Serializable]
-public class GameFaceData : BinarySerializable
-{
-    public DiceState diceState;
-
-    public GameFaceData() { }
-
-    protected GameFaceData(SerializationInfo info, StreamingContext context)
-    {
-        BinarySerializable.Deserialize(this, info, context);
-    }
-}
 
 [System.Serializable]
 public class GameUnitData : BinarySerializable
@@ -21,7 +9,7 @@ public class GameUnitData : BinarySerializable
     public DiceClass diceClass;
     public bool isEnemy;
     public Vector2Int position;
-    public GameFaceData[] faces;
+    public DiceState[] faces;
     public Vector3 orientation;
     public int movesRemaining;
 

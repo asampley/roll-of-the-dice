@@ -14,7 +14,6 @@ public class BinarySerializableData
         typeof(string),
         typeof(GameLevelData),
         typeof(GameUnitData),
-        typeof(GameFaceData),
         typeof(DiceState),
         typeof(DiceClass),
         typeof(Phase),
