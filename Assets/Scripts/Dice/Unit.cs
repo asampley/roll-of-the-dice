@@ -45,8 +45,14 @@ public class Unit
     public int movesRemainging { get => _manager.movesAvailable; }
 
     [Header("Rotation")]
-    protected Face[] _faces;
-    public Face[] Faces
+    protected Axes _axes;
+    public Axes Axes {
+        get { return _axes; }
+        set { _axes = value; }
+    }
+
+    protected DiceState[] _faces;
+    public DiceState[] Faces
     {
         get { return _faces; }
         set { _faces = value; }
@@ -98,11 +104,11 @@ public class Unit
         _manager.MovementPattern = _data.movementPattern;
 
         // Setup faces
-        _manager.DieTexturer.Faces = new Face[_data.faces.Length];
+        _manager.DieTexturer.Faces = new DiceState[_data.faces.Length];
         for (int n = 0; n < _data.faces.Length; n++)
-            _manager.DieTexturer.Faces[n] = new Face(_data.faces[n]);
+            _manager.DieTexturer.Faces[n] = _data.faces[n].state;
         _manager.DieTexturer.Initialize();
-        _faces = _manager.DieTexturer.Faces;    
+        _faces = _manager.DieTexturer.Faces;
         _manager.DieRotator.OffsetRotation = _data.offsetRotation;
         _manager.Initialize(startOrientation);
 

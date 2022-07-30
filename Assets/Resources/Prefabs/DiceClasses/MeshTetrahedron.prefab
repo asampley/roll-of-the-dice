@@ -102,15 +102,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   originalMesh: {fileID: 0}
-  faces:
-  - state: 0
-    position: {x: 0, y: 0, z: 0.612372}
-  - state: 0
-    position: {x: 0, y: 0.57735, z: -0.204124}
-  - state: 0
-    position: {x: -0.5, y: -0.288675, z: -0.204124}
-  - state: 0
-    position: {x: 0.5, y: -0.288675, z: -0.204124}
+  _faces: 04000000040000000400000004000000
+  axes: {fileID: 11400000, guid: 910bf145790bc2a4ca572444effb6882, type: 2}
 --- !u!114 &1635569790649016206
 MonoBehaviour:
   m_ObjectHideFlags: 0

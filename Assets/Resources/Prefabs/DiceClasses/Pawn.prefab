@@ -165,6 +165,30 @@ PrefabInstance:
     m_TransformParent: {fileID: 7103340230149900096}
     m_Modifications:
     - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[1]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[2]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[3]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[4]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[5]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
       propertyPath: faces.Array.data[0].state
       value: 0
       objectReference: {fileID: 0}

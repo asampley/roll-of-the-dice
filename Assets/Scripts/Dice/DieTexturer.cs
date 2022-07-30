@@ -24,11 +24,18 @@ public class DieTexturer : MonoBehaviour {
     private Mesh originalMesh;
 
     [SerializeField]
-    private Face[] _faces;
-    public Face[] Faces
+    private DiceState[] _faces;
+    public DiceState[] Faces
     {
         get { return _faces; }
         set { _faces = value; }
+    }
+
+    [SerializeField]
+    private Axes axes;
+    public Axes Axes {
+        get { return axes; }
+        set { axes = value; }
     }
 
     public void Initialize()
@@ -77,7 +84,7 @@ public class DieTexturer : MonoBehaviour {
                 var n = meshNormals[t[j]];
                 var uv = originalUvs[t[j]];
 
-                uvs[t[j]] = Vector2.Scale(uv, uvScale) + Offset(face.state);
+                uvs[t[j]] = Vector2.Scale(uv, uvScale) + Offset(face);
             }
         }
 
@@ -86,25 +93,29 @@ public class DieTexturer : MonoBehaviour {
         mesh.SetUVs(0, uvs);
     }
 
-    public Face ClosestFace(Vector3 position) {
-        Face face = null;
+    public int ClosestFaceIndex(Vector3 position) {
+        int face_index = -1;
         float dist = float.PositiveInfinity;
 
-        foreach (var f in this._faces) {
-            var d = Vector3.Distance(f.position, position);
+        for (int i = 0; i < axes.Faces.Length; ++i) {
+            var d = Vector3.Distance(axes.Faces[i], position);
 
             if (d < dist) {
-                face = f;
+                face_index = i;
                 dist = d;
             }
         }
 
-        if (face == null) {
+        if (face_index == -1) {
             Debug.LogError("No face found for texturing, make sure faces is not empty");
             throw new System.IndexOutOfRangeException();
         } else {
-            return face;
+            return face_index;
         }
+    }
+
+    public DiceState ClosestFace(Vector3 position) {
+        return Faces[ClosestFaceIndex(position)];
     }
 
     static Vector2 Offset(DiceState index) {

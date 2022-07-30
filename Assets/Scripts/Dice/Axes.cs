@@ -10,4 +10,8 @@ public class Axes : ScriptableObject {
 
     public float FaceRotationAngle;
     public int FaceEdges;
+
+    public bool opposingFaces = true;
+
+    public Vector3[] Faces;
 }

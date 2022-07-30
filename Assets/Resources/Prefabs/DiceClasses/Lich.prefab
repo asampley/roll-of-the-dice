@@ -48,21 +48,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04230cbb42d756645a5ee319901621e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  diceName: Lich
-  _maxRange: 3
-  movesInStraightLine: 0
-  isEnemy: 0
-  state: 0
+  _maxMoves: 0
   parentTile: {fileID: 0}
   _meshRenderer: {fileID: 2647583859890580847}
   _moveIndicator: {fileID: 0}
-  enemyAI: {fileID: 255127251107806683}
+  _enemyAI: {fileID: 0}
   ghostMaterial: {fileID: 2100000, guid: 3a44730b7b62eaf4ab1c4fb986cb9077, type: 2}
   alliedMaterial: {fileID: 2100000, guid: 5896dd23fe6785549853eb576976911c, type: 2}
   enemyMaterial: {fileID: 2100000, guid: 5896dd23fe6785549853eb576976911c, type: 2}
   alliedGhostMaterial: {fileID: 2100000, guid: 9cd7da0180ff26e41a58752a84158e7b, type: 2}
   enemyGhostMaterial: {fileID: 2100000, guid: 9cd7da0180ff26e41a58752a84158e7b, type: 2}
   ghostComponents: {fileID: 5768021518478135808}
+  path: []
 --- !u!114 &255127251107806683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,6 +79,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7103340230149900096}
     m_Modifications:
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[1]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[2]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[3]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[4]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+      propertyPath: _faces.Array.data[5]
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
       propertyPath: faces.Array.data[0].state
       value: 3

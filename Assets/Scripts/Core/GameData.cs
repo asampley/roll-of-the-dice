@@ -5,8 +5,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class GameFaceData : BinarySerializable
 {
-    public DiceState state;
-    public Vector3 position;
+    public DiceState diceState;
 
     public GameFaceData() { }
 
@@ -23,6 +22,7 @@ public class GameUnitData : BinarySerializable
     public bool isEnemy;
     public Vector2Int position;
     public GameFaceData[] faces;
+    public Axes axes;
     public Vector3 orientation;
     public int movesRemaining;
 
@@ -41,7 +41,7 @@ public class GameLevelData : BinarySerializable
     private static GameLevelData _instance;
     public static GameLevelData Instance => _instance;
 
-    
+
     public static string DATA_FILE_NAME = "GameData.data";
 
     public Vector3 camPosition;

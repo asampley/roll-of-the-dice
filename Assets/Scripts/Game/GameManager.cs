@@ -169,7 +169,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         phaseUpdateCancel = new CancellationTokenSource();
 
         phaseManager.Clear();
-        phaseManager.Push(Phase.Setup);        
+        phaseManager.Push(Phase.Setup);
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;

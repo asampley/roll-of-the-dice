@@ -17,3 +17,8 @@ MonoBehaviour:
   ZAxis: {x: 0, y: 1, z: 0}
   FaceRotationAngle: 109.47122
   FaceEdges: 3
+  Faces:
+  - {x: 0, y: 0, z: 0.612372}
+  - {x: 0, y: 0.57735, z: -0.204124}
+  - {x: -0.5, y: -0.288675, z: -0.204124}
+  - {x: 0.5, y: -0.288675, z: -0.204124}

@@ -115,14 +115,14 @@ public class DieRotator : MonoBehaviour {
     public DiceState GetUpFace() {
         var topFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(FinalTarget()) * Vector3.up);
 
-        return GetComponent<DieTexturer>().ClosestFace(topFaceDir).state;
+        return GetComponent<DieTexturer>().ClosestFace(topFaceDir);
     }
 
     public DiceState GetDownFace()
     {
         var bottomFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(FinalTarget()) * -Vector3.up);
 
-        return GetComponent<DieTexturer>().ClosestFace(bottomFaceDir).state;
+        return GetComponent<DieTexturer>().ClosestFace(bottomFaceDir);
     }
 
     public void SetDownFace(DiceState newDiceState)
@@ -130,8 +130,8 @@ public class DieRotator : MonoBehaviour {
         var bottomFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(FinalTarget()) * -Vector3.up);
 
         var texturer = GetComponent<DieTexturer>();
-        var face = texturer.ClosestFace(bottomFaceDir);
-        face.state = newDiceState;
+        var face = texturer.ClosestFaceIndex(bottomFaceDir);
+        texturer.Faces[face] = newDiceState;
         texturer.UpdateMesh();
     }
 }
