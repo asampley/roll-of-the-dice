@@ -18,6 +18,9 @@ public class Unit
         set { _uid = value; }
     }
 
+    private bool _loadFromSave = false;
+    public bool loadFromSave { get => _loadFromSave; }
+
     [Header("General")]
     protected string _unitName;
     public string UnitName
@@ -25,9 +28,8 @@ public class Unit
     protected DiceClass _unitClass;
     public DiceClass UnitClass
     { get => _unitClass; }
-    protected bool _isEnemy;
     public bool IsEnemy
-    { get => _isEnemy; }
+    { get => _manager.IsEnemy; }
 
 
     [Header("References")]
@@ -40,7 +42,7 @@ public class Unit
     [Header("Movement")]
     protected int _maxMoves;
     protected MovementPattern _movementPattern;
-
+    public int movesRemainging { get => _manager.movesAvailable; }
 
     [Header("Rotation")]
     protected Face[] _faces;
@@ -60,13 +62,16 @@ public class Unit
     public static List<Unit> DICE_LIST;
 
 
-    public Unit(UnitData data, bool isEnemy, Vector3 diceOrientation, Vector2Int position) : this(data, isEnemy, new DiceOrientation() { })
+    public Unit(UnitData data, bool isEnemy, Vector3 diceOrientation, Vector2Int position, int moves, bool fromSave = false) : this(data, isEnemy, new DiceOrientation(), fromSave)
     {
         SetOrientation(diceOrientation);
         SetPosition(position);
+        _manager.movesAvailable = moves;
+        Debug.Log("Garfeel " + moves);
     }
-    public Unit(UnitData data, bool isEnemy, DiceOrientation startOrientation)
+    public Unit(UnitData data, bool isEnemy, DiceOrientation startOrientation, bool fromSave = false)
     {
+        _loadFromSave = fromSave;
         _data = data;
         GameObject g = GameObject.Instantiate(data.prefab) as GameObject;
         _transform = g.transform;
@@ -74,10 +79,8 @@ public class Unit
         _uid = System.Guid.NewGuid().ToString();
         _transform.name = data.unitClass + (isEnemy ? " Enemy " : " Player ") + _uid;
         _transform.parent = GameManager.Instance.diceParent.transform;
-        Debug.Log("Garfeel " + _transform.name);
         _transform.rotation = Quaternion.identity;
 
-        _isEnemy = isEnemy;
 
         // Setup Manager
         _manager = g.GetComponent<UnitManager>();

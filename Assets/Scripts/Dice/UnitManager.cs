@@ -50,9 +50,10 @@ public class UnitManager : MonoBehaviour, PhaseListener
         set { _maxMoves = value; }
     }
     private int _movesAvailable;
-    public int MovesAvailable
+    public int movesAvailable
     {
         get { return _movesAvailable; }
+        set { _movesAvailable = value; }
     }
 
     private MovementPattern _movementPattern;
@@ -175,7 +176,10 @@ public class UnitManager : MonoBehaviour, PhaseListener
             GetComponentInChildren<MeshRenderer>().sharedMaterial = alliedMaterial; ;
         }
 
-        ResetRange();
+        Debug.Log("Garfeel " + _unit.loadFromSave);
+        if (!_unit.loadFromSave)
+            ResetRange();
+        Debug.Log("Garfeel " + _movesAvailable);
         SetOrientation(orientation);
     }
 
@@ -454,10 +458,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
     public void ResetRange()
     {
         _movesAvailable = MaxMoves;
-    }
-
-    public int MaxRange() {
-        return MaxMoves;
     }
 
     public void SetOrientation(DiceOrientation orientation)

@@ -24,6 +24,7 @@ public class GameUnitData : BinarySerializable
     public Vector2Int position;
     public GameFaceData[] faces;
     public Vector3 orientation;
+    public int movesRemaining;
 
     public GameUnitData() { }
 
