@@ -17,6 +17,7 @@ public class BinarySerializableData
         typeof(GameFaceData),
         typeof(DiceState),
         typeof(DiceClass),
+        typeof(Phase),
     };
 
     public Dictionary<string, object> properties;

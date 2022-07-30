@@ -22,7 +22,6 @@ public class GameUnitData : BinarySerializable
     public bool isEnemy;
     public Vector2Int position;
     public GameFaceData[] faces;
-    public Axes axes;
     public Vector3 orientation;
     public int movesRemaining;
 
@@ -44,9 +43,12 @@ public class GameLevelData : BinarySerializable
 
     public static string DATA_FILE_NAME = "GameData.data";
 
-    public Vector3 camPosition;
+    
     public GameUnitData[] dice;
-    public bool hasData;
+    public Vector3 camPosition;
+    public float camDistance;
+    public int currentRound;
+    public Phase currentPhase;
 
     public static string GetFolderPath()
         => System.IO.Path.Combine(

@@ -20,21 +20,25 @@ public class DieRotator : MonoBehaviour {
     public Axes axes;
 
     private bool _collapse;
-    public bool Collapse {
+    public bool Collapse
+    {
         get { return _collapse; }
         set { _collapse = value; if (_collapse) CollapseTargets(); }
     }
 
-    void Awake() {
+    void Awake()
+    {
         this._qOffsetRotation = Quaternion.Euler(_offsetRotation);
         this.startRot = this.transform.localRotation;
     }
 
-    public Quaternion FinalTarget() {
+    public Quaternion FinalTarget()
+    {
         return targets.Count > 0 ? targets[targets.Count - 1] : startRot;
     }
 
-    void AddTarget(Quaternion target) {
+    void AddTarget(Quaternion target)
+    {
         if (Collapse && targets.Count == 1) {
             targets[0] = target;
         } else {
@@ -42,7 +46,8 @@ public class DieRotator : MonoBehaviour {
         }
     }
 
-    void CollapseTargets() {
+    void CollapseTargets()
+    {
         if (this.targets.Count > 0) {
             this.targets.RemoveRange(0, this.targets.Count - 1);
         }
@@ -65,19 +70,22 @@ public class DieRotator : MonoBehaviour {
     }
 
     // rotate around an axis that is relative to the mesh original orientation
-    void RotateAngleAxis(float angle, Vector3 axis, int count) {
+    void RotateAngleAxis(float angle, Vector3 axis, int count)
+    {
         Rotate(Quaternion.AngleAxis(angle, _qOffsetRotation * axis), count);
     }
 
     // Computes an axis based on the tile delta.
     // This should only be called for single space moves.
-    public void RotateTileDelta(Vector2Int delta, int count = 1) {
+    public void RotateTileDelta(Vector2Int delta, int count = 1)
+    {
         var axis = delta.x * axes.XAxis + delta.y * axes.YAxis;
 
         RotateAngleAxis(axes.FaceRotationAngle, axis, count);
     }
 
-    public void RotateZ(int count) {
+    public void RotateZ(int count)
+    {
         RotateAngleAxis(360f / axes.FaceEdges, axes.ZAxis, count);
     }
 
@@ -97,7 +105,8 @@ public class DieRotator : MonoBehaviour {
         this.transform.localRotation = this.startRot;
     }
 
-    public void Update() {
+    public void Update()
+    {
         if (targets.Count > 0) {
             if (Time.fixedTime < startTime + Globals.MOVEMENT_TIME) {
                 this.transform.localRotation = Quaternion.Slerp(startRot, targets[0], (Time.fixedTime - startTime) / Globals.MOVEMENT_TIME);
@@ -112,7 +121,8 @@ public class DieRotator : MonoBehaviour {
         }
     }
 
-    public DiceState GetUpFace() {
+    public DiceState GetUpFace()
+    {
         var topFaceDir = Vector3Int.RoundToInt(Quaternion.Inverse(FinalTarget()) * Vector3.up);
 
         return GetComponent<DieTexturer>().ClosestFace(topFaceDir);

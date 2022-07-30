@@ -93,7 +93,8 @@ public class DieTexturer : MonoBehaviour {
         mesh.SetUVs(0, uvs);
     }
 
-    public int ClosestFaceIndex(Vector3 position) {
+    public int ClosestFaceIndex(Vector3 position)
+    {
         int face_index = -1;
         float dist = float.PositiveInfinity;
 
@@ -106,7 +107,8 @@ public class DieTexturer : MonoBehaviour {
             }
         }
 
-        if (face_index == -1) {
+        if (face_index == -1)
+        {
             Debug.LogError("No face found for texturing, make sure faces is not empty");
             throw new System.IndexOutOfRangeException();
         } else {
@@ -114,11 +116,13 @@ public class DieTexturer : MonoBehaviour {
         }
     }
 
-    public DiceState ClosestFace(Vector3 position) {
+    public DiceState ClosestFace(Vector3 position)
+    {
         return Faces[ClosestFaceIndex(position)];
     }
 
-    static Vector2 Offset(DiceState index) {
+    static Vector2 Offset(DiceState index)
+    {
         return new Vector2((float)((uint)index) / Globals.DICE_STATES, 0);
     }
 }

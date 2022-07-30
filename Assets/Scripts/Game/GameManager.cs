@@ -88,7 +88,7 @@ public class GameManager : MonoBehaviour, PhaseListener
     }
 
     private int _currentRound;
-    public int CurrentRound
+    public int currentRound
     {
         get { return _currentRound; }
         set { _currentRound = value; CheckWin(); }
@@ -173,7 +173,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
-        CurrentRound = 1;
+        currentRound = 1;
 
         ClearMap();
 
@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
-        CurrentRound = 1;
+        currentRound = 1;
 
         ClearMap();
 
@@ -231,7 +231,7 @@ public class GameManager : MonoBehaviour, PhaseListener
     {
         if (phaseManager.CurrentPhase == Phase.Setup) return;
 
-        if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
+        if (currentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
             WinEvent?.Invoke(Win.Enemy);
         else if (PlayerCount == 0 || PlayerKingDefeated)
             WinEvent?.Invoke(Win.Enemy);
@@ -313,7 +313,7 @@ public class GameManager : MonoBehaviour, PhaseListener
                 return PhaseStepResult.Unchanged;
             case Phase.Player:
                 SetMaxMoves();
-                CurrentRound++;
+                currentRound++;
                 PlayerPiecesMoved = 0;
                 MovedPieces.Clear();
                 _playerMoveRemaining = _maxPlayerMoves;

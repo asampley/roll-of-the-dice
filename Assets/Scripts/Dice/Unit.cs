@@ -19,7 +19,11 @@ public class Unit
     }
 
     private bool _loadFromSave = false;
-    public bool loadFromSave { get => _loadFromSave; }
+    public bool loadFromSave
+    {
+        get { return _loadFromSave; }
+        set { _loadFromSave = value; }
+    }
 
     [Header("General")]
     protected string _unitName;

@@ -49,7 +49,6 @@ public class DataHandler : MonoBehaviour
             {
                 isEnemy = die.IsEnemy,
                 position = die.GetPosition(),
-                axes = die.Axes,
                 faces = faceData.ToArray(),
                 orientation = die.orientation,
                 movesRemaining = die.movesRemainging,
@@ -59,6 +58,9 @@ public class DataHandler : MonoBehaviour
 
         data.dice = dice.ToArray();
         data.camPosition = Camera.main.transform.position;
+        data.camDistance = Camera.main.orthographicSize;
+        data.currentPhase = GameManager.Instance.phaseManager.CurrentPhase.Value;
+        data.currentRound = GameManager.Instance.currentRound;
 
         return data;
     }
@@ -73,7 +75,6 @@ public class DataHandler : MonoBehaviour
             UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => x.unitClass == die.diceClass).First();
             Unit u = new Unit(unitData, die.isEnemy, die.orientation, die.position, die.movesRemaining, true);
             u.SetPosition(die.position);
-            u.Axes = die.axes;
             for (int n = 0; n < die.faces.Length; n++)
             {
                 u.Faces[n] = die.faces[n].diceState;
@@ -83,6 +84,6 @@ public class DataHandler : MonoBehaviour
 
         Debug.Log(data.camPosition);
         Camera.main.transform.position = data.camPosition;
-        data.hasData = true;
+        Camera.main.orthographicSize = data.camDistance;
     }
 }

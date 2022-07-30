@@ -585,6 +585,11 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 }
                 return PhaseStepResult.Done;
             case Phase.Player:
+                if (!IsEnemy && _unit.loadFromSave)
+                {
+                    _unit.loadFromSave = false;
+                    return PhaseStepResult.Passive;
+                }
                 if (!IsEnemy) {
                     ResetRange();
                     return PhaseStepResult.Passive;
