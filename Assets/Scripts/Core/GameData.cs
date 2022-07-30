@@ -34,11 +34,11 @@ public class GameUnitData : BinarySerializable
 }
 
 [System.Serializable]
-public class GameData : BinarySerializable
+public class GameLevelData : BinarySerializable
 {
     public static string levelId;
-    private static GameData _instance;
-    public static GameData Instance => _instance;
+    private static GameLevelData _instance;
+    public static GameLevelData Instance => _instance;
 
     
     public static string DATA_FILE_NAME = "GameData.data";
@@ -60,20 +60,20 @@ public class GameData : BinarySerializable
 
 
 
-    public GameData() { }
+    public GameLevelData() { }
 
-    protected GameData(SerializationInfo info, StreamingContext context)
+    protected GameLevelData(SerializationInfo info, StreamingContext context)
     {
         BinarySerializable.Deserialize(this, info, context);
     }
 
-    public static GameData Load()
+    public static GameLevelData Load()
     {
-        _instance = (GameData)BinarySerializable.Load(GetFilePath());
+        _instance = (GameLevelData)BinarySerializable.Load(GetFilePath());
         return _instance;
     }
 
-    public static void Save(GameData instance)
+    public static void Save(GameLevelData instance)
     {
         BinarySerializable.Save(GetFilePath(), instance);
     }

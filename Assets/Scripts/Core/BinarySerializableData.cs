@@ -12,7 +12,7 @@ public class BinarySerializableData
         typeof(float),
         typeof(bool),
         typeof(string),
-        typeof(GameData),
+        typeof(GameLevelData),
         typeof(GameUnitData),
         typeof(GameFaceData),
         typeof(DiceState),

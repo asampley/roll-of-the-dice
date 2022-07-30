@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
         DataHandler.LoadGameData();
-        if (GameData.Instance != null)
+        if (GameLevelData.Instance != null)
         {
             LoadGame();
         }

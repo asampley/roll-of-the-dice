@@ -17,19 +17,19 @@ public class DataHandler : MonoBehaviour
         string levelId = CoreDataHandler.Instance.LevelID;
 
         // Load game scene data
-        GameData.levelId = levelId;
-        GameData.Load();
+        GameLevelData.levelId = levelId;
+        GameLevelData.Load();
     }
 
     public static void SaveGameData()
     {
-        GameData.levelId = CoreDataHandler.Instance.LevelID;
-        GameData.Save(SerializeGameData());
+        GameLevelData.levelId = CoreDataHandler.Instance.LevelID;
+        GameLevelData.Save(SerializeGameData());
     }
 
-    public static GameData SerializeGameData()
+    public static GameLevelData SerializeGameData()
     {
-        GameData data = new GameData();
+        GameLevelData data = new GameLevelData();
         List<GameUnitData> dice = new List<GameUnitData>();
         foreach (Unit die in Unit.DICE_LIST)
         {
@@ -68,7 +68,7 @@ public class DataHandler : MonoBehaviour
 
     public static void DeserializeGameData()
     {
-        GameData data = GameData.Instance;
+        GameLevelData data = GameLevelData.Instance;
         if (data == null) return;
 
         foreach (GameUnitData die in data.dice)
