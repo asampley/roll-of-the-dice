@@ -19,6 +19,5 @@ public class UnitData : ScriptableObject
     public MovementPattern movementPattern;
 
     [Header("Rotation")]
-    public Face[] faces;
-    public Vector3 offsetRotation;
+    public DiceState[] faces;
 }

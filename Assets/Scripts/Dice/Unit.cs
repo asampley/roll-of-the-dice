@@ -110,10 +110,9 @@ public class Unit
         // Setup faces
         _manager.DieTexturer.Faces = new DiceState[_data.faces.Length];
         for (int n = 0; n < _data.faces.Length; n++)
-            _manager.DieTexturer.Faces[n] = _data.faces[n].state;
+            _manager.DieTexturer.Faces[n] = _data.faces[n];
         _manager.DieTexturer.Initialize();
         _faces = _manager.DieTexturer.Faces;
-        _manager.DieRotator.OffsetRotation = _data.offsetRotation;
         _manager.Initialize(startOrientation);
 
         // Add to dice list for save data

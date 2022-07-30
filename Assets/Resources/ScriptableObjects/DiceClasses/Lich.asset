@@ -21,17 +21,4 @@ MonoBehaviour:
   enemyGhostMaterial: {fileID: 2100000, guid: 9cd7da0180ff26e41a58752a84158e7b, type: 2}
   maxMoves: 3
   movementPattern: 0
-  faces:
-  - state: 3
-    position: {x: 0.5, y: 0, z: 0}
-  - state: 3
-    position: {x: -0.5, y: 0, z: 0}
-  - state: 3
-    position: {x: 0, y: 0.5, z: 0}
-  - state: 4
-    position: {x: 0, y: -0.5, z: 0}
-  - state: 3
-    position: {x: 0, y: 0, z: 0.5}
-  - state: 3
-    position: {x: 0, y: 0, z: -0.5}
-  offsetRotation: {x: 60, y: 0, z: 135}
+  faces: 030000000300000003000000030000000300000004000000
