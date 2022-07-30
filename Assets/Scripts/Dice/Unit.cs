@@ -72,14 +72,13 @@ public class Unit
     public static List<Unit> DICE_LIST;
 
 
-    public Unit(UnitData data, bool isEnemy, Vector3 diceOrientation, Vector2Int position, int moves, bool fromSave = false) : this(data, isEnemy, new DiceOrientation(), fromSave)
+    public Unit(UnitData data, bool isEnemy, Vector3 diceOrientation, Vector2Int position, int moves, bool fromSave = false) : this(data, isEnemy, new DiceOrientationData(), fromSave)
     {
         SetOrientation(diceOrientation);
         SetPosition(position);
         _manager.movesAvailable = moves;
-        Debug.Log("Garfeel " + moves);
     }
-    public Unit(UnitData data, bool isEnemy, DiceOrientation startOrientation, bool fromSave = false)
+    public Unit(UnitData data, bool isEnemy, DiceOrientationData startOrientation, bool fromSave = false)
     {
         _loadFromSave = fromSave;
         _data = data;

@@ -27,7 +27,7 @@ public class LevelData : ScriptableObject
 
     private void OnValidate()
     {
-        List<Vector2Int> positions = new List<Vector2Int>();
+        List<Vector2Int> positions = new();
         foreach (DiceSpawn dice in alliedDice)
         {
             dice.isEnemy = false;

@@ -1,13 +1,18 @@
-using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
+
 
 public class DataHandler : MonoBehaviour
 {
+    public event Action<Win> WinEvent;
+
     private void Start()
     {
         DeserializeGameData();
+        WinEvent += (_) => ClearData();
     }
 
     public static void LoadGameData()
@@ -35,6 +40,8 @@ public class DataHandler : MonoBehaviour
         {
             if (!die.Transform) continue;
 
+            
+
             GameUnitData d = new GameUnitData()
             {
                 isEnemy = die.IsEnemy,
@@ -51,6 +58,13 @@ public class DataHandler : MonoBehaviour
         data.camDistance = Camera.main.orthographicSize;
         data.currentPhase = GameManager.Instance.phaseManager.CurrentPhase.Value;
         data.currentRound = GameManager.Instance.currentRound;
+
+        data.alliedOrientations = new DiceOrientationData[GameManager.Instance.AlliedSpawnPositions.Count];
+        data.enemyOrientations = new DiceOrientationData[GameManager.Instance.EnemySpawnPositions.Count];
+        for (int i = 0; i < GameManager.Instance.AlliedSpawnPositions.Count; i++)
+            data.alliedOrientations[i] = GameManager.Instance.AlliedSpawnPositions.ElementAt(i).Value;
+        for (int i = 0; i < GameManager.Instance.EnemySpawnPositions.Count; i++)
+            data.enemyOrientations[i] = GameManager.Instance.EnemySpawnPositions.ElementAt(i).Value;
 
         return data;
     }
@@ -69,8 +83,15 @@ public class DataHandler : MonoBehaviour
             GameManager.Instance.ImportUnit(u);
         }
 
-        Debug.Log(data.camPosition);
         Camera.main.transform.position = data.camPosition;
         Camera.main.orthographicSize = data.camDistance;
+    }
+
+    public static void ClearData()
+    {
+        if (File.Exists(GameLevelData.GetFilePath()))
+        {
+            File.Delete(GameLevelData.GetFilePath());
+        }
     }
 }

@@ -22,4 +22,10 @@ public static class Globals
     // FILE PATHS
     public static string DICE_CLASS_SO = "ScriptableObjects/DiceClasses";
     public static string LEVEL_DATA_SO = "ScriptableObjects/LevelData";
+#if UNITY_EDITOR
+    public static string DATA_DIRECTORY = "Data_Dev";
+#else
+    public static string DATA_DIRECTORY = "Data";
+#endif
+    public static string DATA_FILE_NAME = "GameData.data";
 }

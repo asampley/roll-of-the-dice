@@ -1,25 +1,6 @@
 using System.Runtime.Serialization;
 using UnityEngine;
-using System.Collections.Generic;
 
-
-[System.Serializable]
-public class GameUnitData : BinarySerializable
-{
-    public DiceClass diceClass;
-    public bool isEnemy;
-    public Vector2Int position;
-    public DiceState[] faces;
-    public Vector3 orientation;
-    public int movesRemaining;
-
-    public GameUnitData() { }
-
-    protected GameUnitData(SerializationInfo info, StreamingContext context)
-    {
-        BinarySerializable.Deserialize(this, info, context);
-    }
-}
 
 [System.Serializable]
 public class GameLevelData : BinarySerializable
@@ -28,26 +9,24 @@ public class GameLevelData : BinarySerializable
     private static GameLevelData _instance;
     public static GameLevelData Instance => _instance;
 
-
-    public static string DATA_FILE_NAME = "GameData.data";
-
-    
     public GameUnitData[] dice;
     public Vector3 camPosition;
     public float camDistance;
     public int currentRound;
     public Phase currentPhase;
+    public DiceOrientationData[] alliedOrientations;
+    public DiceOrientationData[] enemyOrientations;
 
     public static string GetFolderPath()
         => System.IO.Path.Combine(
             Application.persistentDataPath,
-            DATA_DIRECTORY,
+            Globals.DATA_DIRECTORY,
             "Games",
             levelId);
 
 
     public static string GetFilePath()
-        => System.IO.Path.Combine(GetFolderPath(), DATA_FILE_NAME);
+        => System.IO.Path.Combine(GetFolderPath(), Globals.DATA_FILE_NAME);
 
 
 
@@ -69,3 +48,39 @@ public class GameLevelData : BinarySerializable
         BinarySerializable.Save(GetFilePath(), instance);
     }
 }
+
+[System.Serializable]
+public class GameUnitData : BinarySerializable
+{
+    public DiceClass diceClass;
+    public bool isEnemy;
+    public Vector2Int position;
+    public DiceState[] faces;
+    public Vector3 orientation;
+    public int movesRemaining;
+
+    public GameUnitData() { }
+
+    protected GameUnitData(SerializationInfo info, StreamingContext context)
+    {
+        BinarySerializable.Deserialize(this, info, context);
+    }
+}
+
+
+
+[System.Serializable]
+public class DiceOrientationData : BinarySerializable
+{
+    public int xRolls;
+    public int yRolls;
+    public int zRolls;
+
+    public DiceOrientationData() { }
+
+    protected DiceOrientationData(SerializationInfo info, StreamingContext context)
+    {
+        BinarySerializable.Deserialize(this, info, context);
+    }
+}
+

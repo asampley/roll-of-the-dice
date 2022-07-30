@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Rendering;
 using TMPro;
@@ -29,7 +25,8 @@ public class UIManager : MonoBehaviour
     public Transform inspector;
     public GameObject inspectorObject;
 
-    public void Start() {
+    public void Start()
+    {
         GameManager.Instance.WinEvent += w => ShowVictoryScreen(w == Win.Player);
     }
 
@@ -57,12 +54,14 @@ public class UIManager : MonoBehaviour
     // MENU -------------------------------------------------
     public void RestartLevel()
     {
+        DataHandler.ClearData();
         Back();
         GameManager.Instance.StartGame();
     }
 
     public void RerollLevel()
     {
+        DataHandler.ClearData();
         Back();
         GameManager.Instance.RerollGame();
     }

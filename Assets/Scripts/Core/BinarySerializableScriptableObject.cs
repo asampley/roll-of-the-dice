@@ -34,7 +34,7 @@ public class BinarySerializableScriptableObject : ScriptableObject
     {
         string dirPath = Path.Combine(
             Application.persistentDataPath,
-            BinarySerializable.DATA_DIRECTORY
+            Globals.DATA_DIRECTORY
         );
         string filePath = Path.Combine(dirPath, $"{(fileName == null ? name : fileName)}.data");
 
@@ -64,7 +64,7 @@ public class BinarySerializableScriptableObject : ScriptableObject
     {
         string filePath = Path.Combine(
             Application.persistentDataPath,
-            BinarySerializable.DATA_DIRECTORY,
+            Globals.DATA_DIRECTORY,
             $"{(fileName == null ? name : fileName)}.json"
         );
 

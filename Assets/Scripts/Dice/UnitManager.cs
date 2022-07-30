@@ -158,7 +158,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         }
     }
 
-    public void Initialize(DiceOrientation orientation)
+    public void Initialize(DiceOrientationData orientation)
     {
         if (IsEnemy)
         {
@@ -176,10 +176,8 @@ public class UnitManager : MonoBehaviour, PhaseListener
             GetComponentInChildren<MeshRenderer>().sharedMaterial = alliedMaterial; ;
         }
 
-        Debug.Log("Garfeel " + _unit.loadFromSave);
         if (!_unit.loadFromSave)
             ResetRange();
-        Debug.Log("Garfeel " + _movesAvailable);
         SetOrientation(orientation);
     }
 
@@ -460,7 +458,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         _movesAvailable = MaxMoves;
     }
 
-    public void SetOrientation(DiceOrientation orientation)
+    public void SetOrientation(DiceOrientationData orientation)
     {
         _dieRotator.RotateTileDelta(Vector2Int.right, orientation.xRolls);
         _dieRotator.RotateTileDelta(Vector2Int.up, orientation.yRolls);

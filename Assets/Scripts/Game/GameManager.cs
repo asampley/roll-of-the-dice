@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using UnityEngine.SceneManagement;
 
 public enum Win
 {
@@ -25,14 +23,23 @@ public class GameManager : MonoBehaviour, PhaseListener
     public GameRulesData gameRulesData;
     public GameObject diceParent;
 
-    private Dictionary<DiceSpawn, DiceOrientation> _alliedSpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
-    private Dictionary<DiceSpawn, DiceOrientation> _enemySpawnPositions = new Dictionary<DiceSpawn, DiceOrientation>();
+    private readonly Dictionary<DiceSpawn, DiceOrientationData> _alliedSpawnPositions = new();
+    private readonly Dictionary<DiceSpawn, DiceOrientationData> _enemySpawnPositions = new();
 
-    private List<Unit> _loadPositions = new List<Unit>();
+    public Dictionary<DiceSpawn, DiceOrientationData> AlliedSpawnPositions
+    {
+        get { return _alliedSpawnPositions; }
+    }
+    public Dictionary<DiceSpawn, DiceOrientationData> EnemySpawnPositions
+    {
+        get { return _enemySpawnPositions; }
+    }
+
+    private readonly List<Unit> _loadPositions = new();
 
 
-    private CancellationTokenSource phaseUpdateCancel = new CancellationTokenSource();
-    public PhaseManager phaseManager = new PhaseManager();
+    private CancellationTokenSource phaseUpdateCancel = new();
+    public PhaseManager phaseManager = new();
 
     private int _enemies;
     public int EnemyCount {
@@ -73,7 +80,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         get { return _playerpiecesMoved; }
         set { _playerpiecesMoved = value; }
     }
-    private List<UnitManager> _movedPieces = new List<UnitManager>();
+    private List<UnitManager> _movedPieces = new();
     public List<UnitManager> MovedPieces
     {
         get { return _movedPieces; }
@@ -123,36 +130,43 @@ public class GameManager : MonoBehaviour, PhaseListener
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
         DataHandler.LoadGameData();
+        SetDefaultPositions();
         if (GameLevelData.Instance != null)
-        {
             LoadGame();
-        }
         else
-        {
-            RollDefaultPositions();
             StartGame();
-        }
     }
 
-    public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
+    public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientationData orientation)
     {
         UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => (int)x.unitClass == (int)diceClass).First();
         Unit die = new Unit(unitData, isEnemy, orientation);
         die.SetPosition(startPos);
     }
 
-    public void RollDefaultPositions()
+    public void SetDefaultPositions()
     {
         ClearDictionaries();
-        foreach (DiceSpawn spawn in levelData.alliedDice)
-            _alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
-        foreach (DiceSpawn spawn in levelData.enemyDice)
-            _enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
+        if (GameLevelData.Instance != null)
+        {
+            for (int i = 0; i < levelData.alliedDice.Length; i++)
+                _alliedSpawnPositions.Add(levelData.alliedDice[i], GameLevelData.Instance.alliedOrientations[i]);
+            for (int i = 0; i < levelData.enemyDice.Length; i++)
+                _enemySpawnPositions.Add(levelData.enemyDice[i], GameLevelData.Instance.enemyOrientations[i]);
+        }
+        else
+        {
+            foreach (DiceSpawn spawn in levelData.alliedDice)
+                _alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
+            foreach (DiceSpawn spawn in levelData.enemyDice)
+                _enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
+        }
+        
     }
 
-    public DiceOrientation GenerateDiceOrientation()
+    public DiceOrientationData GenerateDiceOrientation()
     {
-        DiceOrientation orientation = new DiceOrientation();
+        DiceOrientationData orientation = new DiceOrientationData();
 
         orientation.xRolls = UnityEngine.Random.Range(-1, 3);
         orientation.yRolls = UnityEngine.Random.Range(-1, 3);
@@ -163,6 +177,8 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void StartGame()
     {
+        foreach (KeyValuePair<DiceSpawn, DiceOrientationData> die in _alliedSpawnPositions)
+            Debug.Log("garfeel" + die.Key.tilePosition);
         _winState = Win.None;
         phaseUpdateCancel?.Cancel();
         phaseUpdateCancel?.Dispose();
@@ -178,9 +194,9 @@ public class GameManager : MonoBehaviour, PhaseListener
         ClearMap();
 
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
-        foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in _alliedSpawnPositions)
+        foreach (KeyValuePair<DiceSpawn, DiceOrientationData> die in _alliedSpawnPositions)
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, false, die.Value);
-        foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in _enemySpawnPositions)
+        foreach (KeyValuePair<DiceSpawn, DiceOrientationData> die in _enemySpawnPositions)
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
 
@@ -208,7 +224,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void RerollGame()
     {
-        RollDefaultPositions();
+        SetDefaultPositions();
         StartGame();
     }
 

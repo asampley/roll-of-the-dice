@@ -10,12 +10,6 @@ using UnityEngine;
 [Serializable]
 public class BinarySerializable : ISerializable
 {
-#if UNITY_EDITOR
-    public static string DATA_DIRECTORY = "Data_Dev";
-#else
-    public static string DATA_DIRECTORY = "Data";
-#endif
-
     public BinarySerializable() { }
 
     protected BinarySerializable(SerializationInfo info, StreamingContext context)
@@ -29,8 +23,6 @@ public class BinarySerializable : ISerializable
         Type T = GetType();
         foreach (FieldInfo field in T.GetFields())
         {
-            Debug.Log(field.Name);
-            Debug.Log(field.IsStatic);
             if (field.IsStatic) continue;
             Debug.Log(field.Name);
             object value;
