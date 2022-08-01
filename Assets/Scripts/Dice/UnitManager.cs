@@ -264,14 +264,15 @@ public class UnitManager : MonoBehaviour, PhaseListener
         for (int i = 0; i < MaxMoves; i++)
         {
             Vector2Int next = path[i] + pos;
+            Debug.Log("Garfeel " + next);
             deltas.Add(path[i]);
             trans.Add(
                 MapManager.Instance.TileToWorldSpace(new Vector2Int(0, 0))
                 - MapManager.Instance.TileToWorldSpace(pos - next)
             );
 
-            GhostManager.Instance.SetupGhostEffects(this.gameObject, pos, trans, deltas);
-            pos = path[i];
+            GhostManager.Instance.SetupGhostEffects(this.gameObject, next, trans, deltas);
+            pos = next;
         }
     }
 

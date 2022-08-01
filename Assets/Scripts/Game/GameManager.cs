@@ -177,8 +177,6 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void StartGame()
     {
-        foreach (KeyValuePair<DiceSpawn, DiceOrientationData> die in _alliedSpawnPositions)
-            Debug.Log("garfeel" + die.Key.tilePosition);
         _winState = Win.None;
         phaseUpdateCancel?.Cancel();
         phaseUpdateCancel?.Dispose();
