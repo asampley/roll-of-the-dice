@@ -19,6 +19,31 @@ public class DataHandler : MonoBehaviour
     {
         Globals.UNIT_DATA = Resources.LoadAll<UnitData>(Globals.DICE_CLASS_SO) as UnitData[];
 
+        Globals.DICE_MATERIALS = new();
+        Globals.GHOST_MATERIALS = new();
+
+        foreach (UnitData u in Globals.UNIT_DATA) {
+            Material allyDice = new(u.diceMaterial);
+            Material enemyDice = new(u.diceMaterial);
+            Material allyGhost = new(u.ghostMaterial);
+            Material enemyGhost = new(u.ghostMaterial);
+
+            allyDice.name = u.unitClass + "AllyMaterial";
+            enemyDice.name = u.unitClass + "EnemyMaterial";
+            allyGhost.name = u.unitClass + "AllyMaterial";
+            enemyGhost.name = u.unitClass + "EnemyMaterial";
+
+            allyDice.color = u.allyColor;
+            enemyDice.color = u.enemyColor;
+            allyGhost.color = new Color32(u.allyColor.r, u.allyColor.g, u.allyColor.b, 170);
+            enemyGhost.color = new Color32(u.enemyColor.r, u.enemyColor.g, u.enemyColor.b, 170);
+
+            Globals.DICE_MATERIALS.Add((u.unitClass, false), allyDice);
+            Globals.DICE_MATERIALS.Add((u.unitClass, true), enemyDice);
+            Globals.GHOST_MATERIALS.Add((u.unitClass, false), allyGhost);
+            Globals.GHOST_MATERIALS.Add((u.unitClass, true), enemyGhost);
+        }
+
         string levelId = CoreDataHandler.Instance.LevelID;
 
         // Load game scene data
@@ -40,7 +65,7 @@ public class DataHandler : MonoBehaviour
         {
             if (!die.Transform) continue;
 
-            
+
 
             GameUnitData d = new GameUnitData()
             {

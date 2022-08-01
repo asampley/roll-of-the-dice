@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -18,6 +20,8 @@ public static class Globals
     public static readonly uint DICE_STATES = Enum.GetValues(typeof(DiceState)).Cast<uint>().Max() + 1;
     public static UnitData[] UNIT_DATA;
 
+    public static Dictionary<(DiceClass, bool), Material> DICE_MATERIALS;
+    public static Dictionary<(DiceClass, bool), Material> GHOST_MATERIALS;
 
     // FILE PATHS
     public static string DICE_CLASS_SO = "ScriptableObjects/DiceClasses";

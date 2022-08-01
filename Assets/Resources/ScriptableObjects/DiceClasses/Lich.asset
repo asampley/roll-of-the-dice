@@ -15,10 +15,18 @@ MonoBehaviour:
   unitName: Lich
   unitClass: 5
   prefab: {fileID: 4210247315298935970, guid: 37e6741a749cf534ebccf29ecce85a03, type: 3}
+  diceMaterial: {fileID: 2100000, guid: 448a83e2bc4a4504c9cb7ddf038e5ab2, type: 2}
+  ghostMaterial: {fileID: 2100000, guid: 2008b2c19a8507242bc3731138493540, type: 2}
   alliedMaterial: {fileID: 2100000, guid: f92fedead821bdf468e4821c57b5f8ca, type: 2}
   alliedGhostMaterial: {fileID: 2100000, guid: 2e81e85928ee17246ab6355c5748ec16, type: 2}
   enemyMaterial: {fileID: 2100000, guid: 5896dd23fe6785549853eb576976911c, type: 2}
   enemyGhostMaterial: {fileID: 2100000, guid: 9cd7da0180ff26e41a58752a84158e7b, type: 2}
+  allyColor:
+    serializedVersion: 2
+    rgba: 0
+  enemyColor:
+    serializedVersion: 2
+    rgba: 4278224012
   maxMoves: 3
   movementPattern: 0
   faces: 030000000300000003000000030000000300000004000000

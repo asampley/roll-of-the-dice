@@ -89,10 +89,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
     //Materials
     [HideInInspector]
     public Material ghostMaterial;
-    public Material alliedMaterial;
-    public Material enemyMaterial;
-    public Material alliedGhostMaterial;
-    public Material enemyGhostMaterial;
 
     public GameObject ghostComponents;
     private DieRotator _dieRotator;
@@ -160,20 +156,21 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     public void Initialize(DiceOrientationData orientation)
     {
+        ghostMaterial = Globals.GHOST_MATERIALS[(_unit.UnitClass, IsEnemy)];
+        GetComponentInChildren<MeshRenderer>().sharedMaterial
+            = Globals.DICE_MATERIALS[(_unit.UnitClass, IsEnemy)];
+        Debug.Log(_unit.UnitClass);
+
         if (IsEnemy)
         {
             GameManager.Instance.EnemyCount++;
             _enemyAI.enabled = true;
-            ghostMaterial = enemyGhostMaterial;
-            GetComponentInChildren<MeshRenderer>().sharedMaterial = enemyMaterial;
         }
         else
         {
             GameManager.Instance.PlayerCount++;
             _enemyAI.enabled = false;
             Destroy(_enemyAI);
-            ghostMaterial = alliedGhostMaterial;
-            GetComponentInChildren<MeshRenderer>().sharedMaterial = alliedMaterial; ;
         }
 
         if (!_unit.loadFromSave)

@@ -29,9 +29,8 @@ public class Unit
     protected string _unitName;
     public string UnitName
     { get => _unitName; }
-    protected DiceClass _unitClass;
     public DiceClass UnitClass
-    { get => _unitClass; }
+    { get => _data.unitClass; }
     public bool IsEnemy
     { get => _manager.IsEnemy; }
 
@@ -97,11 +96,6 @@ public class Unit
         _manager.Unit = this;
         _manager.UnitName = _data.unitName;
         _manager.IsEnemy = isEnemy;
-
-        _manager.alliedMaterial = _data.alliedMaterial;
-        _manager.alliedGhostMaterial = _data.alliedGhostMaterial;
-        _manager.enemyMaterial = _data.enemyMaterial;
-        _manager.enemyGhostMaterial = _data.enemyGhostMaterial;
 
         _manager.MaxMoves = _data.maxMoves;
         _manager.MovementPattern = _data.movementPattern;
