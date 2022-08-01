@@ -82,7 +82,9 @@ public class BinarySerializable : ISerializable
         Type T = instance.GetType();
         foreach (FieldInfo field in T.GetFields())
         {
+            Debug.Log(field);
             Type serializedType = BinarySerializableData.GetSerializedType(field);
+            Debug.Log(serializedType);
             if (serializedType.IsArray)
             {
                 Type serializedElementType = serializedType.GetElementType();

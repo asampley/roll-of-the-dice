@@ -39,11 +39,11 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
 
         int currentMoves = _unitManager.MaxMoves;
 
-        List<Vector2Int> deltas = new List<Vector2Int>();
-        List<Vector3> trans = new List<Vector3>();
+        List<Vector2Int> deltas = new();
+        List<Vector3> trans = new();
 
-        GhostManager.Instance.RemoveArrow(gameObject);
-        GhostManager.Instance.PushArrow(gameObject, pos);
+        GhostManager.Instance.RemoveArrow(this.gameObject);
+        GhostManager.Instance.PushArrow(this.gameObject, pos);
 
         while (currentMoves > 0) {
             var adjacent = GetTilesBeside(pos)
@@ -65,24 +65,14 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                 - MapManager.Instance.TileToWorldSpace(pos - next)
             );
 
-            GhostManager.Instance.PushArrow(gameObject, next);
-            var ghost = GhostManager.Instance.CreateGhost(gameObject, null, null);
-
-            var translator = ghost.GetComponentInChildren<DieTranslator>();
-            foreach (var t in trans) {
-                translator.Translate(t);
-            }
-
-            var rotator = ghost.GetComponentInChildren<DieRotator>();
-            foreach (var delta in deltas) {
-                rotator.RotateTileDelta(delta);
-            }
+            GhostManager.Instance.SetupGhostEffects(this.gameObject, next, trans, deltas);
 
             currentMoves--;
             pos = next;
         }
         Debug.Log("Created Path: " + _unitManager.PathStr());
     }
+
 
     public PhaseStepResult OnPhaseEnter(Phase phase) {
         switch(phase) {
@@ -92,6 +82,11 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                 UnreservePath();
                 return PhaseStepResult.Unchanged;
             case Phase.Player:
+                if (_unitManager.Unit.LoadFromSave)
+                {
+                    _unitManager.Unit.LoadFromSave = false;
+                    return PhaseStepResult.Done;
+                }
                 CreatePath();
                 return PhaseStepResult.Done;
             default:

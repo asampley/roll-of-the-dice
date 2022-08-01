@@ -7,8 +7,8 @@ public class GhostManager : MonoBehaviour {
     private static GhostManager _instance;
     public static GhostManager Instance { get { return _instance; } }
 
-    private Dictionary<GameObject, List<GameObject>> ghostsByContext = new Dictionary<GameObject, List<GameObject>>();
-    private Dictionary<GameObject, GameObject> arrowsByContext = new Dictionary<GameObject, GameObject>();
+    private readonly Dictionary<GameObject, List<GameObject>> ghostsByContext = new();
+    private readonly Dictionary<GameObject, GameObject> arrowsByContext = new();
 
     public GameObject ghostContainer;
     public GameObject arrowPrefab;
@@ -17,6 +17,20 @@ public class GhostManager : MonoBehaviour {
     {
         if (_instance == null)
             _instance = this;
+    }
+
+    public void SetupGhostEffects(GameObject ghostObject, Vector2Int next, List<Vector3> trans, List<Vector2Int> deltas)
+    {
+        GhostManager.Instance.PushArrow(ghostObject, next);
+        var ghost = GhostManager.Instance.CreateGhost(ghostObject, null, null);
+
+        var translator = ghost.GetComponentInChildren<DieTranslator>();
+        foreach (var t in trans)
+            translator.Translate(t);
+
+        var rotator = ghost.GetComponentInChildren<DieRotator>();
+        foreach (var delta in deltas)
+            rotator.RotateTileDelta(delta);
     }
 
     public GameObject CreateGhost(GameObject toGhost, Vector3? translation, Vector2Int? tileDelta, int rotationCount = 1) {

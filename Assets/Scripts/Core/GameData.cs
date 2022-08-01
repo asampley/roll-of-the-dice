@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
 
@@ -58,6 +59,7 @@ public class GameUnitData : BinarySerializable
     public DiceState[] faces;
     public Vector3 orientation;
     public int movesRemaining;
+    public GamePathData[] path;
 
     public GameUnitData() { }
 
@@ -84,3 +86,16 @@ public class DiceOrientationData : BinarySerializable
     }
 }
 
+
+[System.Serializable]
+public class GamePathData : BinarySerializable
+{
+    public Vector2Int path;
+
+    public GamePathData() { }
+
+    protected GamePathData(SerializationInfo info, StreamingContext context)
+    {
+        BinarySerializable.Deserialize(this, info, context);
+    }
+}

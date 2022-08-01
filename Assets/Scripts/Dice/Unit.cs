@@ -19,7 +19,7 @@ public class Unit
     }
 
     private bool _loadFromSave = false;
-    public bool loadFromSave
+    public bool LoadFromSave
     {
         get { return _loadFromSave; }
         set { _loadFromSave = value; }
@@ -27,12 +27,9 @@ public class Unit
 
     [Header("General")]
     protected string _unitName;
-    public string UnitName
-    { get => _unitName; }
-    public DiceClass UnitClass
-    { get => _data.unitClass; }
-    public bool IsEnemy
-    { get => _manager.IsEnemy; }
+    public string UnitName { get => _unitName; }
+    public DiceClass UnitClass { get => _data.unitClass; }
+    public bool IsEnemy { get => _manager.IsEnemy; }
 
 
     [Header("References")]
@@ -45,7 +42,8 @@ public class Unit
     [Header("Movement")]
     protected int _maxMoves;
     protected MovementPattern _movementPattern;
-    public int movesRemainging { get => _manager.movesAvailable; }
+    public int MovesRemainging { get => _manager.movesAvailable; }
+    public List<Vector2Int> Path { get => _manager.path; }
 
     [Header("Rotation")]
     protected Axes _axes;
@@ -71,11 +69,17 @@ public class Unit
     public static List<Unit> DICE_LIST;
 
 
-    public Unit(UnitData data, bool isEnemy, Vector3 diceOrientation, Vector2Int position, int moves, bool fromSave = false) : this(data, isEnemy, new DiceOrientationData(), fromSave)
+    public Unit(UnitData data, bool isEnemy, Vector3 diceOrientation, Vector2Int position, int moves, bool fromSave = false, List<Vector2Int> path = null) : this(data, isEnemy, new DiceOrientationData(), fromSave)
     {
         SetOrientation(diceOrientation);
         SetPosition(position);
         _manager.movesAvailable = moves;
+        if (path != null && isEnemy)
+        {
+            _manager.path = path;
+            _manager.MapPath();
+        }
+            
     }
     public Unit(UnitData data, bool isEnemy, DiceOrientationData startOrientation, bool fromSave = false)
     {

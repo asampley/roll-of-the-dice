@@ -59,11 +59,21 @@ public class DataHandler : MonoBehaviour
 
     public static GameLevelData SerializeGameData()
     {
-        GameLevelData data = new GameLevelData();
-        List<GameUnitData> dice = new List<GameUnitData>();
+        GameLevelData data = new();
+        List<GameUnitData> dice = new();
         foreach (Unit die in Unit.DICE_LIST)
         {
             if (!die.Transform) continue;
+
+            List<GamePathData> movement = new();
+            for (int i = 0; i < die.Path.Count; i++)
+            {
+                GamePathData m = new()
+                {
+                    path = die.Path[i]
+                };
+                movement.Add(m);
+            }
 
 
 
@@ -73,7 +83,8 @@ public class DataHandler : MonoBehaviour
                 position = die.GetPosition(),
                 faces = die.Faces,
                 orientation = die.orientation,
-                movesRemaining = die.movesRemainging,
+                movesRemaining = die.MovesRemainging,
+                path = movement.ToArray(),
             };
             dice.Add(d);
         }
@@ -102,7 +113,11 @@ public class DataHandler : MonoBehaviour
         foreach (GameUnitData die in data.dice)
         {
             UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => x.unitClass == die.diceClass).First();
-            Unit u = new Unit(unitData, die.isEnemy, die.orientation, die.position, die.movesRemaining, true);
+            List<Vector2Int> movement = new();
+            for (int i = 0; i < die.path.Length; i++)
+                movement.Add(die.path[i].path);
+
+            Unit u = new Unit(unitData, die.isEnemy, die.orientation, die.position, die.movesRemaining, true, movement);
             u.SetPosition(die.position);
             u.Faces = die.faces;
             GameManager.Instance.ImportUnit(u);

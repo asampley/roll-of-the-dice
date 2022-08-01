@@ -77,7 +77,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         set { _state = value; }
     }
 
-    private List<OverlayTile> _tilesInRange = new List<OverlayTile>();
+    private List<OverlayTile> _tilesInRange = new();
     public OverlayTile parentTile;
     [SerializeField]
     private MeshRenderer _meshRenderer;
@@ -105,7 +105,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
     public static event Action<UnitManager, UnitManager> ABeatsB;
     public static event Action<UnitManager, UnitManager> Draw;
 
-    public List<Vector2Int> path = new List<Vector2Int>();
+    public List<Vector2Int> path = new();
 
     private void Awake()
     {
@@ -172,7 +172,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
             Destroy(_enemyAI);
         }
 
-        if (!_unit.loadFromSave)
+        if (!_unit.LoadFromSave)
             ResetRange();
         SetOrientation(orientation);
     }
@@ -251,9 +251,33 @@ public class UnitManager : MonoBehaviour, PhaseListener
         path.Add((Vector2Int)delta);
     }
 
+    public void MapPath()
+    {
+        Vector2Int start = (Vector2Int)parentTile.gridLocation;
+        Vector2Int pos = start;
+        List<Vector2Int> deltas = new();
+        List<Vector3> trans = new();
+
+        GhostManager.Instance.RemoveArrow(this.gameObject);
+        GhostManager.Instance.PushArrow(this.gameObject, pos);
+
+        for (int i = 0; i < MaxMoves; i++)
+        {
+            Vector2Int next = path[i] + pos;
+            deltas.Add(path[i]);
+            trans.Add(
+                MapManager.Instance.TileToWorldSpace(new Vector2Int(0, 0))
+                - MapManager.Instance.TileToWorldSpace(pos - next)
+            );
+
+            GhostManager.Instance.SetupGhostEffects(this.gameObject, pos, trans, deltas);
+            pos = path[i];
+        }
+    }
+
     public async UniTask Fight()
     {
-        List<UnitManager> toKill = new List<UnitManager>();
+        List<UnitManager> toKill = new();
 
         foreach (OverlayTile tile in GetTilesAdjacent())
         {
@@ -579,9 +603,9 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 }
                 return PhaseStepResult.Done;
             case Phase.Player:
-                if (!IsEnemy && _unit.loadFromSave)
+                if (!IsEnemy && _unit.LoadFromSave)
                 {
-                    _unit.loadFromSave = false;
+                    _unit.LoadFromSave = false;
                     return PhaseStepResult.Passive;
                 }
                 if (!IsEnemy) {
