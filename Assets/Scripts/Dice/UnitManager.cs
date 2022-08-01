@@ -159,7 +159,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
         ghostMaterial = Globals.GHOST_MATERIALS[(_unit.UnitClass, IsEnemy)];
         GetComponentInChildren<MeshRenderer>().sharedMaterial
             = Globals.DICE_MATERIALS[(_unit.UnitClass, IsEnemy)];
-        Debug.Log(_unit.UnitClass);
 
         if (IsEnemy)
         {
