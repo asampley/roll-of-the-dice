@@ -18,7 +18,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
     private UnitManager _unitManager;
 
     private MovementStrategy Strategy {
-        get { return GetComponent<UnitManager>().Unit.MovementStrategy; }
+        get { return _unitManager.Unit.MovementStrategy; }
     }
 
     // Start is called before the first frame update
@@ -56,7 +56,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         GhostManager.Instance.PushArrow(this.gameObject, pos);
 
         while (currentMoves > 0) {
-            var adjacent = GetTilesBeside(pos)
+            var adjacent = _unitManager.GetTilesInRange(pos)
                 .Where(a => !a.IsBlocked)
                 .Select(a => (Vector2Int)a.gridLocation)
                 .Where(a => !EnemyPathManager.Instance.IsReserved(a))
@@ -70,9 +70,10 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                 case MovementStrategy.Aggressive:
                 case MovementStrategy.Evasive:
                     next = adjacent[0];
-                    int nearness = EnemyPathManager.Instance.NearnessToPlayer(next);
+                    int nearness = EnemyPathManager.Instance.NearnessToPlayer(_unitManager.MovementPattern, next);
+
                     foreach (var a in adjacent) {
-                        var n = EnemyPathManager.Instance.NearnessToPlayer(a);
+                        var n = EnemyPathManager.Instance.NearnessToPlayer(_unitManager.MovementPattern, a);
                         if (
                             (Strategy == MovementStrategy.Aggressive && n < nearness)
                             || (Strategy == MovementStrategy.Evasive && n > nearness)
@@ -116,6 +117,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                 if (_unitManager.Unit.LoadFromSave)
                 {
                     _unitManager.Unit.LoadFromSave = false;
+                    return PhaseStepResult.Done;
                 }
                 return PhaseStepResult.Unchanged;
             default:

@@ -331,7 +331,12 @@ public class GameManager : MonoBehaviour, PhaseListener
                 MovedPieces.Clear();
                 _playerMoveRemaining = _maxPlayerMoves;
 
-                EnemyPathManager.Instance.NewPathFinder(_players.Select(o => (Vector2Int)o.parentTile.gridLocation));
+                EnemyPathManager.Instance.NewPathFinder(
+                    _players
+                        .SelectMany(
+                            p => MapManager.Instance.GetSurroundingTiles((Vector2Int)p.parentTile.gridLocation)
+                        ).Select(o => (Vector2Int)o.gridLocation)
+                );
                 return PhaseStepResult.Unchanged;
             default:
                 return PhaseStepResult.Done;

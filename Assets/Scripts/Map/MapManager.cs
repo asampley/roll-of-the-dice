@@ -207,6 +207,24 @@ public class MapManager : MonoBehaviour
         return surroundingTiles;
     }
 
+    public List<OverlayTile> GetTilesKnight(Vector2Int position) {
+        List<OverlayTile> tiles = new();
+
+        foreach (int a in new int[] {-2, 2}) {
+            foreach (int b in new int[] {-1, 1}) {
+                foreach (var delta in new Vector2Int[] {new(a, b), new(b, a)}) {
+                    Vector2Int next = position + delta;
+
+                    if (map.TryGetValue(next, out OverlayTile nextTile) && !nextTile.IsBlocked) {
+                        tiles.Add(nextTile);
+                    }
+                }
+            }
+        }
+
+        return tiles;
+    }
+
     public void OnDestroy()
     {
         _instance = null;

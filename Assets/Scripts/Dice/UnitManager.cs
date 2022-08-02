@@ -77,6 +77,11 @@ public class UnitManager : MonoBehaviour, PhaseListener
         set { _state = value; }
     }
 
+    public Vector2Int Position
+    {
+        get { return (Vector2Int)parentTile.gridLocation; }
+    }
+
     private List<OverlayTile> _tilesInRange = new();
     public OverlayTile parentTile;
     [SerializeField]
@@ -454,24 +459,24 @@ public class UnitManager : MonoBehaviour, PhaseListener
             tile.HideTile();
     }
 
+    public List<OverlayTile> GetTilesInRange(Vector2Int position) {
+        if (_movesAvailable <= 0) return new();
+
+        return MovementPattern switch {
+            MovementPattern.Straight => MapManager.Instance.GetTilesStraightLine(position),
+            MovementPattern.Single => MapManager.Instance.GetSurroundingTiles(position),
+            MovementPattern.Knight => MapManager.Instance.GetTilesKnight(position),
+            _ => new(),
+        };
+    }
+
     private void GetTilesInRange()
     {
-        _tilesInRange.Clear();
-        if (_movesAvailable <= 0) return;
-
-        if (MovementPattern == MovementPattern.Straight)
-            _tilesInRange = GetTilesStraightLine();
-        else if (MovementPattern == MovementPattern.Single)
-            _tilesInRange = GetTilesAdjacent();
+        _tilesInRange = GetTilesInRange(Position);
     }
 
     private List<OverlayTile> GetTilesAdjacent() {
-        return MapManager.Instance.GetSurroundingTiles(new Vector2Int(parentTile.gridLocation.x, parentTile.gridLocation.y));
-    }
-
-    private List<OverlayTile> GetTilesStraightLine()
-    {
-        return MapManager.Instance.GetTilesStraightLine(new Vector2Int(parentTile.gridLocation.x, parentTile.gridLocation.y));
+        return MapManager.Instance.GetSurroundingTiles(Position);
     }
 
     public void ResetRange()
@@ -599,21 +604,23 @@ public class UnitManager : MonoBehaviour, PhaseListener
         switch (phase) {
             case Phase.Enemy:
                 if (IsEnemy) {
-                    ResetRange();
                     return PhaseStepResult.Unchanged;
+                } else {
+                    return PhaseStepResult.Done;
                 }
-                return PhaseStepResult.Done;
             case Phase.Player:
                 if (!IsEnemy && _unit.LoadFromSave)
                 {
                     _unit.LoadFromSave = false;
                     return PhaseStepResult.Passive;
                 }
-                if (!IsEnemy) {
-                    ResetRange();
-                    return PhaseStepResult.Passive;
-                } else {
+
+                ResetRange();
+
+                if (IsEnemy) {
                     return PhaseStepResult.Done;
+                } else {
+                    return PhaseStepResult.Passive;
                 }
             case Phase.TileEffects:
             case Phase.Fight:

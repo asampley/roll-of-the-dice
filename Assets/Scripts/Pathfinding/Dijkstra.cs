@@ -15,15 +15,13 @@ public class Dijkstra<V> where V : IEquatable<V>
         this._adjacent = adjacent;
 
         foreach (V goal in goals) {
-            this._cost.Add(goal, 0);
+            this._cost.TryAdd(goal, 0);
             this._open.Enqueue(goal, 0);
         }
     }
 
     public int Cost(V vertex) {
         while (!_cost.ContainsKey(vertex)) {
-            Debug.Log("Open list: " + Utilities.EnumerableString(_open.UnorderedItems));
-            Debug.Log("Cost: " + Utilities.EnumerableString(_cost));
             // return if there's nothing left
             if (_open.Count == 0) return Int32.MaxValue;
 
@@ -36,7 +34,6 @@ public class Dijkstra<V> where V : IEquatable<V>
             int currentCost = _cost[current];
 
             foreach (V adjacent in _adjacent(current)) {
-                Debug.Log("Adjacent: " + adjacent);
                 int cost = currentCost + 1;
 
                 if (!_cost.ContainsKey(adjacent)) {
@@ -50,5 +47,9 @@ public class Dijkstra<V> where V : IEquatable<V>
         }
 
         return _cost[vertex];
+    }
+
+    public bool TryCost(V vertex, out int cost) {
+        return _cost.TryGetValue(vertex, out cost);
     }
 }

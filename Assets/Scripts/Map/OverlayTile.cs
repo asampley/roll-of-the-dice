@@ -64,8 +64,31 @@ public class OverlayTile : MonoBehaviour
         occupyingDie = null;
     }
 
-    private void _onDebugMap()
+    private void _onDebugMap(DebugMapType type)
     {
-        gridLocationText.enabled = !gridLocationText.enabled;
+        gridLocationText.text = type switch {
+            DebugMapType.Coord => gridLocation.ToString(),
+            DebugMapType.PathSingle =>
+                EnemyPathManager.Instance.TryNearnessToPlayer(
+                    MovementPattern.Single,
+                    (Vector2Int)gridLocation,
+                    out int nearness
+                ) switch {
+                    true => nearness.ToString(),
+                    false => "",
+                },
+            DebugMapType.PathKnight =>
+                EnemyPathManager.Instance.TryNearnessToPlayer(
+                    MovementPattern.Knight,
+                    (Vector2Int)gridLocation,
+                    out int nearness
+                ) switch {
+                    true => nearness.ToString(),
+                    false => "",
+                },
+            _ => gridLocation.ToString(),
+        };
+
+        gridLocationText.enabled = type != DebugMapType.Off;
     }
 }

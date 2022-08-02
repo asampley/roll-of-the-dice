@@ -5,6 +5,13 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
+public enum DebugMapType {
+    Coord,
+    PathSingle,
+    PathKnight,
+    Off,
+}
+
 public class DebugConsole : MonoBehaviour
 {
     private bool _showConsole = false;
@@ -23,7 +30,7 @@ public class DebugConsole : MonoBehaviour
     private DisplayType _displayType = DisplayType.None;
     private static GUIStyle _logStyle;
 
-    public static event Action DebugMap;
+    public static event Action<DebugMapType> DebugMap;
     public static event Action DebugNames;
 
     private void Awake()
@@ -34,11 +41,14 @@ public class DebugConsole : MonoBehaviour
         {
             _displayType = DisplayType.Help;
         });
-
-        new DebugCommand("debug_map", "Toggles grid location text on/off.", "debug_map", () =>
-        {
-            DebugMap?.Invoke();
-        });
+        new DebugCommand<string>(
+            "debug_map",
+            "Toggles grid location text on/off.",
+            "debug_map [Coord|PathSingle|PathKnight]",
+            s => {
+                DebugMap?.Invoke(Enum.Parse<DebugMapType>(s, true));
+            }
+        );
         new DebugCommand("debug_names", "Toggles unit names on/off.", "debug_names", () =>
         {
             DebugNames?.Invoke();

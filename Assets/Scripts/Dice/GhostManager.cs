@@ -75,7 +75,6 @@ public class GhostManager : MonoBehaviour {
         var positions = new Vector3[arrow.positionCount];
         arrow.GetPositions(positions);
         positions[^1] = MapManager.Instance.TileToWorldSpace(next) + Globals.OVERLAY_LINE_Z_OFFSET * Vector3.forward;
-        Debug.Log(Utilities.EnumerableString(positions));
         arrow.SetPositions(positions);
 
         // add arrow head
