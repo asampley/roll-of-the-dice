@@ -91,13 +91,14 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
             _unitManager.path.Add(next - pos);
             EnemyPathManager.Instance.Reserve(this, next);
 
-            deltas.Add(next - pos);
-            trans.Add(
-                MapManager.Instance.TileToWorldSpace(new Vector2Int(0, 0))
-                - MapManager.Instance.TileToWorldSpace(pos - next)
-            );
+            foreach (var step in _unitManager.PathSteps(next - pos)) {
+                deltas.Add(step);
+                trans.Add(MapManager.Instance.TileDeltaToWorldDelta(step));
 
-            GhostManager.Instance.SetupGhostEffects(this.gameObject, next, trans, deltas);
+                pos += step;
+
+                GhostManager.Instance.SetupGhostEffects(this.gameObject, pos, trans, deltas);
+            }
 
             currentMoves--;
             pos = next;

@@ -709,7 +709,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         if (path.Count > 0) {
             OverlayTile tile;
             try {
-                var step = new Vector2Int(Math.Sign(path[0].x), Math.Sign(path[0].y));
+                var step = PathSteps(path[0]).First();
 
                 tile = MapManager.Instance.GetTileAtPos(
                     (Vector2Int)parentTile.gridLocation + step
@@ -743,6 +743,23 @@ public class UnitManager : MonoBehaviour, PhaseListener
         }
 
         Debug.Log("Garfield Ending StepPath: " + transform.name);
+    }
+
+    // break into intermediate steps that are occupied along the movement
+    public IEnumerable<Vector2Int> PathSteps(Vector2Int delta) {
+        switch (MovementPattern) {
+            case MovementPattern.Knight:
+            case MovementPattern.Single:
+                yield return delta;
+                break;
+            case MovementPattern.Straight:
+                while (delta != Vector2Int.zero) {
+                    var step = new Vector2Int(Math.Sign(delta.x), Math.Sign(delta.y));
+                    yield return step;
+                    delta -= step;
+                }
+                break;
+        }
     }
 
     public string PathStr() {
