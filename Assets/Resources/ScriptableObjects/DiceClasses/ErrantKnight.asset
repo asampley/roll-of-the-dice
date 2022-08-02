@@ -17,16 +17,13 @@ MonoBehaviour:
   prefab: {fileID: 4210247315298935970, guid: 37e6741a749cf534ebccf29ecce85a03, type: 3}
   diceMaterial: {fileID: 2100000, guid: 448a83e2bc4a4504c9cb7ddf038e5ab2, type: 2}
   ghostMaterial: {fileID: 2100000, guid: 2008b2c19a8507242bc3731138493540, type: 2}
-  alliedMaterial: {fileID: 2100000, guid: f92fedead821bdf468e4821c57b5f8ca, type: 2}
-  alliedGhostMaterial: {fileID: 2100000, guid: 2e81e85928ee17246ab6355c5748ec16, type: 2}
-  enemyMaterial: {fileID: 2100000, guid: b88d90d4a8497ab4fa80ab9fd04212c1, type: 2}
-  enemyGhostMaterial: {fileID: 2100000, guid: 2cb76ae2e54760d4d92b331fa80e21db, type: 2}
   allyColor:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4294938624
   enemyColor:
     serializedVersion: 2
     rgba: 4286513369
-  maxMoves: 7
-  movementPattern: 0
+  maxMoves: 1
+  movementPattern: 2
+  movementStrategy: 0
   faces: 030000000300000000000000010000000200000004000000
