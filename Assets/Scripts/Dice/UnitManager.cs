@@ -264,7 +264,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
             default:
                 return;
         }
-
         path.Add((Vector2Int)delta);
     }
 
@@ -715,17 +714,16 @@ public class UnitManager : MonoBehaviour, PhaseListener
         if (path.Count > 0) {
             OverlayTile tile;
             try {
+                
                 var step = new Vector2Int(Math.Sign(path[0].x), Math.Sign(path[0].y));
-                Debug.Log("Garfeel " + path.Count);
-
                 if (_movementPattern == MovementPattern.Knight)
                     tile = MapManager.Instance.GetTileAtPos(
-                        path[0]
+                        (Vector2Int)parentTile.gridLocation + path[0]
                     );
                 else
                     tile = MapManager.Instance.GetTileAtPos(
-                        (Vector2Int)parentTile.gridLocation + step
-                    );
+                            (Vector2Int)parentTile.gridLocation + step
+                        );
 
                 path[0] -= step;
 
