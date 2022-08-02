@@ -43,12 +43,6 @@ public class DataHandler : MonoBehaviour
             Globals.GHOST_MATERIALS.Add((u.unitClass, false), allyGhost);
             Globals.GHOST_MATERIALS.Add((u.unitClass, true), enemyGhost);
         }
-
-        string levelId = CoreDataHandler.Instance.LevelID;
-
-        // Load game scene data
-        GameLevelData.levelId = levelId;
-        GameLevelData.Load();
     }
 
     public static void SaveGameData()
@@ -125,6 +119,11 @@ public class DataHandler : MonoBehaviour
 
         Camera.main.transform.position = data.camPosition;
         Camera.main.orthographicSize = data.camDistance;
+
+        // Load game scene data
+        string levelId = CoreDataHandler.Instance.LevelID;
+        GameLevelData.levelId = levelId;
+        GameLevelData.Load();
     }
 
     public static void ClearData()

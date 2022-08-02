@@ -249,6 +249,15 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 } else {
                     break;
                 }
+            case MovementPattern.Knight:
+                if (delta.x != 0 && delta.y != 0)
+                {
+                    return;
+                }
+                else
+                {
+                    break;
+                }
             default:
                 return;
         }

@@ -121,6 +121,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
         phaseManager.AllPhaseListeners.Add(this);
         GameManager.Instance.WinEvent += w => _winState = w;
+        DataHandler.LoadGameData();
     }
 
     private void Start()
@@ -128,7 +129,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         Debug.Log("START NEW GAME");
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
-        DataHandler.LoadGameData();
+
         SetDefaultPositions();
         if (GameLevelData.Instance != null)
             LoadGame();
