@@ -6,6 +6,7 @@ public enum DiceClass
 {
     Pawn,
     Rook,
+    Knight,
     Artisan,
     Trebuchet,
     ErrantKnight,
