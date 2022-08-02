@@ -184,15 +184,22 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     // consumes each step of the enumerator only after the last move has completed
     private async UniTask MoveMany(IEnumerator<OverlayTile> tiles, CancellationToken token) {
-        if (tiles.MoveNext()) {
+        if (tiles.MoveNext())
+        {
             OverlayTile tile;
-            do {
+            do
+            {
                 tile = tiles.Current;
-
                 if (tile.IsBlocked || _movesAvailable <= 0) break;
-
                 GetTilesInRange();
-                if (!_tilesInRange.Contains(tile)) {
+                Debug.Log("Garfeel " + tile.gridLocation);
+                foreach (OverlayTile tileToCheck in _tilesInRange)
+                {
+                    Debug.Log("Garfeel " + tileToCheck.gridLocation);
+                }
+                if (!_tilesInRange.Contains(tile))
+                {
+                    Debug.Log("Garfeel fail");
                     return;
                 }
                 await UpdateTilePos(tile, token);
@@ -235,7 +242,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
     public void AddPath(OverlayTile tile)
     {
         var delta = tile.gridLocation - parentTile.gridLocation;
-        Debug.Log("Garfeel" + delta);
 
         // filter moves
         switch (this.MovementPattern)
@@ -251,7 +257,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 else
                     break;
             case MovementPattern.Knight:
-                if (delta.x != 0 && delta.y != 0)
+                if (Math.Abs(delta.x * delta.y) != 2)
                     return;
                 else
                     break;
@@ -511,7 +517,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
             GetComponentInChildren<DieRotator>().RotateTileDelta(delta);
             _unit.orientation = _dieRotator.FinalTarget().eulerAngles;
         }
-
+        Debug.Log("Garfeel");
         GetComponentInChildren<DieTranslator>().Translate(
             MapManager.Instance.TileDeltaToWorldDelta(delta)
         );
@@ -710,22 +716,31 @@ public class UnitManager : MonoBehaviour, PhaseListener
             OverlayTile tile;
             try {
                 var step = new Vector2Int(Math.Sign(path[0].x), Math.Sign(path[0].y));
+                Debug.Log("Garfeel " + path.Count);
 
-                tile = MapManager.Instance.GetTileAtPos(
-                    (Vector2Int)parentTile.gridLocation + step
-                );
+                if (_movementPattern == MovementPattern.Knight)
+                    tile = MapManager.Instance.GetTileAtPos(
+                        path[0]
+                    );
+                else
+                    tile = MapManager.Instance.GetTileAtPos(
+                        (Vector2Int)parentTile.gridLocation + step
+                    );
 
                 path[0] -= step;
 
                 await MoveAsync(tile, token);
 
-                if (path[0] == Vector2Int.zero) {
+                if (path[0] == Vector2Int.zero)
+                {
                     path.RemoveAt(0);
 
                     _movesAvailable--;
 
-                    if (!IsEnemy) {
-                        if (!GameManager.Instance.MovedPieces.Contains(this)) {
+                    if (!IsEnemy)
+                    {
+                        if (!GameManager.Instance.MovedPieces.Contains(this))
+                        {
                             GameManager.Instance.MovedPieces.Add(this);
                             GameManager.Instance.PlayerPiecesMoved += 1;
                         }
