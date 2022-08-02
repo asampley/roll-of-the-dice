@@ -6,10 +6,20 @@ using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
+public enum MovementStrategy {
+    Aggressive,
+    Evasive,
+    Random,
+}
+
 public class EnemyAI : MonoBehaviour, PhaseListener {
     public MonoBehaviour Self { get { return this; } }
 
     private UnitManager _unitManager;
+
+    private MovementStrategy Strategy {
+        get { return GetComponent<UnitManager>().Unit.MovementStrategy; }
+    }
 
     // Start is called before the first frame update
     void Start() {
@@ -54,7 +64,28 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
 
             if (adjacent.Count == 0) break;
 
-            var next = adjacent[(int)(UnityEngine.Random.value * adjacent.Count) % adjacent.Count];
+            Vector2Int next;
+
+            switch (Strategy) {
+                case MovementStrategy.Aggressive:
+                case MovementStrategy.Evasive:
+                    next = adjacent[0];
+                    int nearness = EnemyPathManager.Instance.NearnessToPlayer(next);
+                    foreach (var a in adjacent) {
+                        var n = EnemyPathManager.Instance.NearnessToPlayer(a);
+                        if (
+                            (Strategy == MovementStrategy.Aggressive && n < nearness)
+                            || (Strategy == MovementStrategy.Evasive && n > nearness)
+                        ) {
+                            next = a;
+                            nearness = n;
+                        }
+                    }
+                    break;
+                default:
+                    next = adjacent[(int)(UnityEngine.Random.value * adjacent.Count) % adjacent.Count];
+                    break;
+            }
 
             _unitManager.path.Add(next - pos);
             EnemyPathManager.Instance.Reserve(this, next);
@@ -85,8 +116,16 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
                 if (_unitManager.Unit.LoadFromSave)
                 {
                     _unitManager.Unit.LoadFromSave = false;
-                    return PhaseStepResult.Done;
                 }
+                return PhaseStepResult.Unchanged;
+            default:
+                return PhaseStepResult.Done;
+        }
+    }
+
+    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
+        switch(phase) {
+            case Phase.Player:
                 CreatePath();
                 return PhaseStepResult.Done;
             default:

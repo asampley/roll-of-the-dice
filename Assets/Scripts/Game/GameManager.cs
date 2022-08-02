@@ -47,10 +47,9 @@ public class GameManager : MonoBehaviour, PhaseListener
         set { _enemies = value; CheckWin(); }
     }
 
-    private int _players;
+    private HashSet<UnitManager> _players = new();
     public int PlayerCount {
-        get { return _players; }
-        set { _players = value; CheckWin(); }
+        get { return _players.Count; }
     }
 
     private bool _playerKingDefeated;
@@ -161,7 +160,7 @@ public class GameManager : MonoBehaviour, PhaseListener
             foreach (DiceSpawn spawn in levelData.enemyDice)
                 _enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
         }
-        
+
     }
 
     public DiceOrientationData GenerateDiceOrientation()
@@ -331,6 +330,8 @@ public class GameManager : MonoBehaviour, PhaseListener
                 PlayerPiecesMoved = 0;
                 MovedPieces.Clear();
                 _playerMoveRemaining = _maxPlayerMoves;
+
+                EnemyPathManager.Instance.NewPathFinder(_players.Select(o => (Vector2Int)o.parentTile.gridLocation));
                 return PhaseStepResult.Unchanged;
             default:
                 return PhaseStepResult.Done;
@@ -371,5 +372,15 @@ public class GameManager : MonoBehaviour, PhaseListener
     public void ImportUnit(Unit unit)
     {
         _loadPositions.Add(unit);
+    }
+
+    public void AddPlayer(UnitManager player) {
+        _players.Add(player);
+        CheckWin();
+    }
+
+    public void RemovePlayer(UnitManager player) {
+        _players.Remove(player);
+        CheckWin();
     }
 }

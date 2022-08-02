@@ -11,6 +11,8 @@ public class EnemyPathManager : MonoBehaviour {
     private HashSet<Vector2Int> taken = new HashSet<Vector2Int>();
     private Dictionary<EnemyAI, List<Vector2Int>> takenBy = new Dictionary<EnemyAI, List<Vector2Int>>();
 
+    private Dijkstra<Vector2Int> dijkstra;
+
     public bool Reserve(EnemyAI enemy, Vector2Int pos) {
         if (taken.Contains(pos)) return false;
 
@@ -52,5 +54,18 @@ public class EnemyPathManager : MonoBehaviour {
         string takenstr = "";
         foreach (var p in taken) takenstr += p;
         return takenstr;
+    }
+
+    public void NewPathFinder(IEnumerable<Vector2Int> targets) {
+        this.dijkstra = new (
+            p => MapManager.Instance.GetSurroundingTiles(p)
+                .Where(t => !t.IsBlocked)
+                .Select(t => (Vector2Int)t.gridLocation),
+            targets
+        );
+    }
+
+    public int NearnessToPlayer(Vector2Int position) {
+        return this.dijkstra.Cost(position);
     }
 }

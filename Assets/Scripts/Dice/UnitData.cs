@@ -19,6 +19,7 @@ public class UnitData : ScriptableObject
     [Header("Movement")]
     public int maxMoves;
     public MovementPattern movementPattern;
+    public MovementStrategy movementStrategy;
 
     [Header("Rotation")]
     public DiceState[] faces;

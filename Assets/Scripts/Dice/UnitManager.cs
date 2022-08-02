@@ -167,7 +167,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         }
         else
         {
-            GameManager.Instance.PlayerCount++;
+            GameManager.Instance.AddPlayer(this);
             _enemyAI.enabled = false;
             Destroy(_enemyAI);
         }
@@ -690,7 +690,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         else
         {
             GameManager.Instance.PlayerMoveRemaining--;
-            GameManager.Instance.PlayerCount--;
+            GameManager.Instance.RemovePlayer(this);
         }
     }
 
