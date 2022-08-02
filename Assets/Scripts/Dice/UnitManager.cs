@@ -269,7 +269,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
         for (int i = 0; i < MaxMoves; i++)
         {
             Vector2Int next = path[i] + pos;
-            Debug.Log("Garfeel " + next);
             deltas.Add(path[i]);
             trans.Add(
                 MapManager.Instance.TileToWorldSpace(new Vector2Int(0, 0))

@@ -103,7 +103,8 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
             pos = next;
         }
         Debug.Log("Created Path: " + _unitManager.PathStr());
-        DataHandler.SaveGameData();
+        if (GameManager.Instance.WinState == Win.None)
+            DataHandler.SaveGameData();
     }
 
 

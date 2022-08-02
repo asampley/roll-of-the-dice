@@ -12,7 +12,7 @@ public class DataHandler : MonoBehaviour
     private void Start()
     {
         DeserializeGameData();
-        WinEvent += (_) => ClearData();
+        GameManager.Instance.WinEvent += (_) => ClearData();
     }
 
     public static void LoadGameData()
@@ -130,8 +130,6 @@ public class DataHandler : MonoBehaviour
     public static void ClearData()
     {
         if (File.Exists(GameLevelData.GetFilePath()))
-        {
             File.Delete(GameLevelData.GetFilePath());
-        }
     }
 }
