@@ -139,8 +139,8 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientationData orientation)
     {
-        UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => (int)x.unitClass == (int)diceClass).First();
-        Unit die = new Unit(unitData, isEnemy, orientation);
+        UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => x.unitClass == diceClass).First();
+        Unit die = new(unitData, isEnemy, orientation);
         die.SetPosition(startPos);
     }
 

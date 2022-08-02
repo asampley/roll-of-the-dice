@@ -232,32 +232,29 @@ public class UnitManager : MonoBehaviour, PhaseListener
         HideTilesInRange();
     }
 
-    public void AddPath(OverlayTile tile) {
+    public void AddPath(OverlayTile tile)
+    {
         var delta = tile.gridLocation - parentTile.gridLocation;
+        Debug.Log("Garfeel" + delta);
 
         // filter moves
-        switch (this.MovementPattern) {
+        switch (this.MovementPattern)
+        {
             case MovementPattern.Single:
-                if (Math.Abs(delta.x) + Math.Abs(delta.y) != 1) {
+                if (Math.Abs(delta.x) + Math.Abs(delta.y) != 1)
                     return;
-                } else {
+                else
                     break;
-                }
             case MovementPattern.Straight:
-                if (delta.x != 0 && delta.y != 0) {
+                if (delta.x != 0 && delta.y != 0)
                     return;
-                } else {
+                else
                     break;
-                }
             case MovementPattern.Knight:
                 if (delta.x != 0 && delta.y != 0)
-                {
                     return;
-                }
                 else
-                {
                     break;
-                }
             default:
                 return;
         }
