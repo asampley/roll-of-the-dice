@@ -18,19 +18,19 @@ MonoBehaviour:
   gameRules: {fileID: 11400000, guid: 8fcb3547f400cc14bb10d7414947a2c2, type: 2}
   gridType: 0
   alliedDice:
-  - diceClass: 2
+  - diceClass: 3
     tilePosition: {x: 0, y: -2}
     isEnemy: 0
-  - diceClass: 2
+  - diceClass: 3
     tilePosition: {x: 5, y: 3}
     isEnemy: 0
   enemyDice:
-  - diceClass: 3
+  - diceClass: 5
     tilePosition: {x: 0, y: 3}
     isEnemy: 1
-  - diceClass: 3
+  - diceClass: 1
     tilePosition: {x: 5, y: -2}
     isEnemy: 1
-  - diceClass: 4
+  - diceClass: 1
     tilePosition: {x: 2, y: -1}
     isEnemy: 1

@@ -22,15 +22,15 @@ MonoBehaviour:
     tilePosition: {x: 5, y: 2}
     isEnemy: 0
   enemyDice:
-  - diceClass: 5
+  - diceClass: 6
     tilePosition: {x: 2, y: 6}
     isEnemy: 1
-  - diceClass: 5
+  - diceClass: 6
     tilePosition: {x: 2, y: -2}
     isEnemy: 1
-  - diceClass: 5
+  - diceClass: 6
     tilePosition: {x: 9, y: -2}
     isEnemy: 1
-  - diceClass: 5
+  - diceClass: 6
     tilePosition: {x: 9, y: 6}
     isEnemy: 1

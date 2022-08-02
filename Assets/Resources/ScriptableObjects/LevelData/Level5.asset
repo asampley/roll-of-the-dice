@@ -25,9 +25,9 @@ MonoBehaviour:
     tilePosition: {x: 7, y: 5}
     isEnemy: 0
   enemyDice:
-  - diceClass: 5
+  - diceClass: 4
     tilePosition: {x: 4, y: -1}
     isEnemy: 1
-  - diceClass: 5
+  - diceClass: 4
     tilePosition: {x: 3, y: 4}
     isEnemy: 1
