@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23ae3ea75ab725f4e8f9e1a9f8bb62da, type: 3}
-  m_Name: Level8
+  m_Name: Level9
   m_EditorClassIdentifier: Assembly-CSharp::StartPosition
-  levelName: Level8
+  levelName: Level9
   sceneName: Level8
-  nextLevel: {fileID: 11400000, guid: d089889296c5da446af609c20c24765a, type: 2}
+  nextLevel: {fileID: 0}
   gameRules: {fileID: 11400000, guid: 8fcb3547f400cc14bb10d7414947a2c2, type: 2}
   gridType: 0
   alliedDice:
-  - diceClass: 1
+  - diceClass: 2
     tilePosition: {x: -1, y: -5}
     isEnemy: 0
-  - diceClass: 1
+  - diceClass: 2
     tilePosition: {x: 0, y: -5}
     isEnemy: 0
   enemyDice:

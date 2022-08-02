@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7dd620c08bac8c46b8796d7e921ab86, type: 3}
-  m_Name: King
+  m_Name: Knight
   m_EditorClassIdentifier: 
-  unitName: King
-  unitClass: 7
+  unitName: Knight
+  unitClass: 2
   prefab: {fileID: 4210247315298935970, guid: 37e6741a749cf534ebccf29ecce85a03, type: 3}
   diceMaterial: {fileID: 2100000, guid: 448a83e2bc4a4504c9cb7ddf038e5ab2, type: 2}
   ghostMaterial: {fileID: 2100000, guid: 2008b2c19a8507242bc3731138493540, type: 2}
   allyColor:
     serializedVersion: 2
-    rgba: 4290795150
+    rgba: 63637
   enemyColor:
     serializedVersion: 2
-    rgba: 4287037439
-  maxMoves: 3
-  movementPattern: 0
-  movementStrategy: 1
-  faces: 050000000500000005000000050000000500000005000000
+    rgba: 40191
+  maxMoves: 1
+  movementPattern: 2
+  movementStrategy: 0
+  faces: 000000000000000001000000010000000200000002000000

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ErrantKnight
   m_EditorClassIdentifier: 
   unitName: Errant Knight
-  unitClass: 4
+  unitClass: 5
   prefab: {fileID: 4210247315298935970, guid: 37e6741a749cf534ebccf29ecce85a03, type: 3}
   diceMaterial: {fileID: 2100000, guid: 448a83e2bc4a4504c9cb7ddf038e5ab2, type: 2}
   ghostMaterial: {fileID: 2100000, guid: 2008b2c19a8507242bc3731138493540, type: 2}
