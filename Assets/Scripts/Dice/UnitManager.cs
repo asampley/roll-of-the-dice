@@ -276,7 +276,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 - MapManager.Instance.TileToWorldSpace(pos - next)
             );
 
-            GhostManager.Instance.SetupGhostEffects(this.gameObject, next, trans, deltas);
             pos = next;
         }
     }
@@ -601,27 +600,25 @@ public class UnitManager : MonoBehaviour, PhaseListener
     }
 
     public PhaseStepResult OnPhaseEnter(Phase phase) {
-        switch (phase) {
+        switch (phase)
+        {
             case Phase.Enemy:
-                if (IsEnemy) {
+                if (IsEnemy)
                     return PhaseStepResult.Unchanged;
-                } else {
+                else
                     return PhaseStepResult.Done;
-                }
+
             case Phase.Player:
                 if (!IsEnemy && _unit.LoadFromSave)
                 {
                     _unit.LoadFromSave = false;
                     return PhaseStepResult.Passive;
                 }
-
                 ResetRange();
-
-                if (IsEnemy) {
+                if (IsEnemy)
                     return PhaseStepResult.Done;
-                } else {
+                else
                     return PhaseStepResult.Passive;
-                }
             case Phase.TileEffects:
             case Phase.Fight:
                 return PhaseStepResult.Unchanged;

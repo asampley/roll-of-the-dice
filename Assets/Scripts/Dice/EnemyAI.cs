@@ -103,12 +103,18 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
             pos = next;
         }
         Debug.Log("Created Path: " + _unitManager.PathStr());
+        DataHandler.SaveGameData();
     }
 
 
     public PhaseStepResult OnPhaseEnter(Phase phase) {
         switch(phase) {
             case Phase.Enemy:
+                if (_unitManager.Unit.LoadFromSave)
+                {
+                    _unitManager.Unit.LoadFromSave = false;
+                    return PhaseStepResult.Unchanged;
+                }
                 GhostManager.Instance.RemoveGhosts(gameObject);
                 GhostManager.Instance.RemoveArrow(gameObject);
                 UnreservePath();

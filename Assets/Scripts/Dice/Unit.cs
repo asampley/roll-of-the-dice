@@ -75,7 +75,7 @@ public class Unit
         SetOrientation(diceOrientation);
         SetPosition(position);
         _manager.movesAvailable = moves;
-        if (path != null && isEnemy)
+        if (isEnemy)
         {
             _manager.path = path;
             _manager.MapPath();

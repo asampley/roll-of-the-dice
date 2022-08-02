@@ -79,6 +79,8 @@ public class PhaseManager {
     }
 
     public void Transition(Phase phase) {
+        if (GameManager.Instance.WinState == Win.None)
+            DataHandler.SaveGameData();
         phaseStack.RemoveAt(phaseStack.Count - 1);
 
         PhaseData phaseData = new PhaseData(phase);

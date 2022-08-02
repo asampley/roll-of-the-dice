@@ -34,6 +34,7 @@ public class GhostManager : MonoBehaviour {
     }
 
     public GameObject CreateGhost(GameObject toGhost, Vector3? translation, Vector2Int? tileDelta, int rotationCount = 1) {
+        Debug.Log("Garfeel spawn");
         var dieManager = toGhost.GetComponent<UnitManager>();
         var ghostComponents = dieManager.ghostComponents;
 
@@ -89,7 +90,6 @@ public class GhostManager : MonoBehaviour {
         if (!ghostsByContext.ContainsKey(context)) return;
 
         var ghostsToRemove = ghostsByContext[context];
-
         foreach (var ghost in ghostsByContext[context]) {
             Destroy(ghost);
         }

@@ -74,8 +74,7 @@ public class UIManager : MonoBehaviour
 
     public void MainMenu()
     {
-        if (GameManager.Instance.WinState == Win.None)
-            DataHandler.SaveGameData();
+
         CoreBooter.Instance.LoadMenu();
     }
 

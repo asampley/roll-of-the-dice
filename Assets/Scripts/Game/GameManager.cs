@@ -208,13 +208,11 @@ public class GameManager : MonoBehaviour, PhaseListener
         phaseUpdateCancel = new CancellationTokenSource();
 
         phaseManager.Clear();
-        phaseManager.Push(Phase.Setup);
+        phaseManager.Push(GameLevelData.Instance.currentPhase);
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
-        currentRound = 1;
-
-        ClearMap();
+        currentRound = GameLevelData.Instance.currentRound;
 
         RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
     }
@@ -298,9 +296,11 @@ public class GameManager : MonoBehaviour, PhaseListener
                 if (results.Any(r => r == PhaseStepResult.Changed)) {
                     phaseManager.Push(Phase.TileEffects);
                     phaseManager.Push(Phase.Fight);
-                } else if (results.Any(r => r == PhaseStepResult.Unchanged)) {
+                }
+                else if (results.Any(r => r == PhaseStepResult.Unchanged)) {
                     // do not transition
-                } else {
+                } else
+                {
                     phaseManager.Transition(Phase.Enemy);
                 }
                 break;
