@@ -3,6 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
+using TMPro;
+using Cysharp.Threading.Tasks;
 
 
 public class DataHandler : MonoBehaviour
@@ -11,11 +14,10 @@ public class DataHandler : MonoBehaviour
 
     private void Start()
     {
-        DeserializeGameData();
         GameManager.Instance.WinEvent += (_) => ClearData();
     }
 
-    public static void LoadGameData()
+    public static async UniTask LoadGameData()
     {
         Globals.UNIT_DATA = Resources.LoadAll<UnitData>(Globals.DICE_CLASS_SO) as UnitData[];
 
@@ -43,6 +45,13 @@ public class DataHandler : MonoBehaviour
             Globals.GHOST_MATERIALS.Add((u.unitClass, false), allyGhost);
             Globals.GHOST_MATERIALS.Add((u.unitClass, true), enemyGhost);
         }
+
+
+        // Load game scene data
+        GameLevelData.levelId = CoreDataHandler.Instance.LevelID;
+        GameLevelData.Load();
+
+        await UniTask.Yield();
     }
 
     public static void SaveGameData()
@@ -69,9 +78,7 @@ public class DataHandler : MonoBehaviour
                 movement.Add(m);
             }
 
-
-
-            GameUnitData d = new GameUnitData()
+            GameUnitData d = new()
             {
                 isEnemy = die.IsEnemy,
                 position = die.GetPosition(),
@@ -79,15 +86,22 @@ public class DataHandler : MonoBehaviour
                 orientation = die.orientation,
                 movesRemaining = die.MovesRemainging,
                 path = movement.ToArray(),
+                uid = die.Uid,
             };
             dice.Add(d);
         }
+
+        List<string> movedPiecesByUid = new();
+        foreach (UnitManager manager in GameManager.Instance.MovedPieces)
+            movedPiecesByUid.Add(manager.Unit.Uid);
 
         data.dice = dice.ToArray();
         data.camPosition = Camera.main.transform.position;
         data.camDistance = Camera.main.orthographicSize;
         data.currentPhase = GameManager.Instance.phaseManager.CurrentPhase.Value;
-        data.currentRound = GameManager.Instance.currentRound;
+        data.currentRound = GameManager.Instance.CurrentRound;
+        data.movedPieces = movedPiecesByUid.ToArray();
+        data.playerPiecesMoved = GameManager.Instance.PlayerPiecesMoved;
 
         data.alliedOrientations = new DiceOrientationData[GameManager.Instance.AlliedSpawnPositions.Count];
         data.enemyOrientations = new DiceOrientationData[GameManager.Instance.EnemySpawnPositions.Count];
@@ -99,7 +113,7 @@ public class DataHandler : MonoBehaviour
         return data;
     }
 
-    public static void DeserializeGameData()
+    public static async UniTask DeserializeGameData()
     {
         GameLevelData data = GameLevelData.Instance;
         if (data == null) return;
@@ -111,19 +125,25 @@ public class DataHandler : MonoBehaviour
             for (int i = 0; i < die.path.Length; i++)
                 movement.Add(die.path[i].path);
 
-            Unit u = new Unit(unitData, die.isEnemy, die.orientation, die.position, die.movesRemaining, true, movement);
+            Unit u = new(unitData, die.isEnemy, die.orientation, die.position, die.movesRemaining, true, movement);
             u.SetPosition(die.position);
             u.Faces = die.faces;
+            u.Uid = die.uid;
+            foreach (string movedUnit in data.movedPieces)
+            {
+                if (movedUnit == u.Uid)
+                    GameManager.Instance.MovedPieces.Add(u.UnitManager);
+            }
+
             GameManager.Instance.ImportUnit(u);
         }
 
         Camera.main.transform.position = data.camPosition;
         Camera.main.orthographicSize = data.camDistance;
+        GameManager.Instance.CurrentRound = data.currentRound;
 
-        // Load game scene data
-        string levelId = CoreDataHandler.Instance.LevelID;
-        GameLevelData.levelId = levelId;
-        GameLevelData.Load();
+
+        await UniTask.Yield();
     }
 
     public static void ClearData()

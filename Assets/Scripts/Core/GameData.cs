@@ -15,6 +15,8 @@ public class GameLevelData : BinarySerializable
     public float camDistance;
     public int currentRound;
     public Phase currentPhase;
+    public string[] movedPieces;
+    public int playerPiecesMoved;
     public DiceOrientationData[] alliedOrientations;
     public DiceOrientationData[] enemyOrientations;
 
@@ -28,8 +30,6 @@ public class GameLevelData : BinarySerializable
 
     public static string GetFilePath()
         => System.IO.Path.Combine(GetFolderPath(), Globals.DATA_FILE_NAME);
-
-
 
     public GameLevelData() { }
 
@@ -55,6 +55,7 @@ public class GameUnitData : BinarySerializable
 {
     public DiceClass diceClass;
     public bool isEnemy;
+    public string uid;
     public Vector2Int position;
     public DiceState[] faces;
     public Vector3 orientation;
@@ -68,8 +69,6 @@ public class GameUnitData : BinarySerializable
         BinarySerializable.Deserialize(this, info, context);
     }
 }
-
-
 
 [System.Serializable]
 public class DiceOrientationData : BinarySerializable
@@ -85,7 +84,6 @@ public class DiceOrientationData : BinarySerializable
         BinarySerializable.Deserialize(this, info, context);
     }
 }
-
 
 [System.Serializable]
 public class GamePathData : BinarySerializable

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -50,7 +49,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         set { _maxMoves = value; }
     }
     private int _movesAvailable;
-    public int movesAvailable
+    public int MovesAvailable
     {
         get { return _movesAvailable; }
         set { _movesAvailable = value; }
@@ -96,8 +95,8 @@ public class UnitManager : MonoBehaviour, PhaseListener
     public Material ghostMaterial;
 
     public GameObject ghostComponents;
-    private DieRotator _dieRotator;
-    public DieRotator DieRotator { get { return _dieRotator; }
+    private DieRotator _rotator;
+    public DieRotator DieRotator { get { return _rotator; }
     }
     private DieTexturer _dieTexturer;
     public DieTexturer DieTexturer { get { return _dieTexturer; }
@@ -114,7 +113,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     private void Awake()
     {
-        _dieRotator = GetComponentInChildren<DieRotator>();
+        _rotator = GetComponentInChildren<DieRotator>();
         _dieTexturer = GetComponentInChildren<DieTexturer>();
     }
 
@@ -180,21 +179,22 @@ public class UnitManager : MonoBehaviour, PhaseListener
         if (!_unit.LoadFromSave)
             ResetRange();
         SetOrientation(orientation);
+
     }
 
     // consumes each step of the enumerator only after the last move has completed
     private async UniTask MoveMany(IEnumerator<OverlayTile> tiles, CancellationToken token) {
-        if (tiles.MoveNext()) {
+        if (tiles.MoveNext())
+        {
             OverlayTile tile;
-            do {
+            do
+            {
                 tile = tiles.Current;
-
                 if (tile.IsBlocked || _movesAvailable <= 0) break;
-
                 GetTilesInRange();
-                if (!_tilesInRange.Contains(tile)) {
+
+                if (!_tilesInRange.Contains(tile))
                     return;
-                }
                 await UpdateTilePos(tile, token);
             } while (tiles.MoveNext());
         }
@@ -235,7 +235,6 @@ public class UnitManager : MonoBehaviour, PhaseListener
     public void AddPath(OverlayTile tile)
     {
         var delta = tile.gridLocation - parentTile.gridLocation;
-        Debug.Log("Garfeel" + delta);
 
         // filter moves
         switch (this.MovementPattern)
@@ -251,14 +250,13 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 else
                     break;
             case MovementPattern.Knight:
-                if (delta.x != 0 && delta.y != 0)
+                if (Math.Abs(delta.x * delta.y) != 2)
                     return;
                 else
                     break;
             default:
                 return;
         }
-
         path.Add((Vector2Int)delta);
     }
 
@@ -281,6 +279,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 - MapManager.Instance.TileToWorldSpace(pos - next)
             );
 
+            GhostManager.Instance.SetupGhostEffects(this.gameObject, next, trans, deltas);
             pos = next;
         }
     }
@@ -490,26 +489,47 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     public void SetOrientation(DiceOrientationData orientation)
     {
-        _dieRotator.RotateTileDelta(Vector2Int.right, orientation.xRolls);
-        _dieRotator.RotateTileDelta(Vector2Int.up, orientation.yRolls);
-        _dieRotator.RotateZ(orientation.zRolls);
-        _unit.orientation = _dieRotator.RotateNow().eulerAngles;
-        State = _dieRotator.GetUpFace();
+        _rotator.RotateTileDelta(Vector2Int.right, orientation.xRolls);
+        _rotator.RotateTileDelta(Vector2Int.up, orientation.yRolls);
+        _rotator.RotateZ(orientation.zRolls);
+        _unit.orientation = _rotator.RotateNow().eulerAngles;
+        State = _rotator.GetUpFace();
     }
 
     public void SetOrientation(Vector3 orientation)
     {
-        _dieRotator.SetRotation(Quaternion.Euler(orientation.x, orientation.y, orientation.z));
-        _unit.orientation = _dieRotator.RotateNow().eulerAngles;
-        State = _dieRotator.GetUpFace();
+        _rotator.SetRotation(Quaternion.Euler(orientation.x, orientation.y, orientation.z));
+        _unit.orientation = _rotator.RotateNow().eulerAngles;
+        State = _rotator.GetUpFace();
+    }
+
+    private void MoveToPosOld(Vector2Int delta, bool rotate = true)
+    {
+        if (rotate)
+        {
+            GetComponentInChildren<DieRotator>().RotateTileDelta(delta);
+            _unit.orientation = _rotator.FinalTarget().eulerAngles;
+        }
+
+        GetComponentInChildren<DieTranslator>().Translate(
+            MapManager.Instance.TileDeltaToWorldDelta(delta)
+        );
     }
 
     private void MoveToPos(Vector2Int delta, bool rotate = true)
     {
         if (rotate)
         {
-            GetComponentInChildren<DieRotator>().RotateTileDelta(delta);
-            _unit.orientation = _dieRotator.FinalTarget().eulerAngles;
+            if (delta.x > 0)
+                _rotator.RotateTileDelta(new Vector2Int(1, 0), Math.Abs(delta.x));
+            else if (delta.x < 0)
+                _rotator.RotateTileDelta(new Vector2Int(-1, 0), Math.Abs(delta.x));
+            if (delta.y > 0)
+                _rotator.RotateTileDelta(new Vector2Int(0, 1), Math.Abs(delta.y));
+            else if (delta.y < 0)
+                _rotator.RotateTileDelta(new Vector2Int(0, -1), Math.Abs(delta.y));
+
+            _unit.orientation = _rotator.FinalTarget().eulerAngles;
         }
 
         GetComponentInChildren<DieTranslator>().Translate(
@@ -519,8 +539,11 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     private async UniTask UpdateTilePos(OverlayTile newTile, CancellationToken token, bool rotate = true)
     {
-        MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
-        State = _dieRotator.GetUpFace();
+        if (_movementPattern == MovementPattern.Knight)
+            MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
+        else
+            MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
+        State = _rotator.GetUpFace();
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
 
@@ -541,14 +564,14 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 GetTilesInRange();
                 break;
             case TileType.RotateClockwise:
-                _dieRotator.RotateZ(1);
-                _unit.orientation = _dieRotator.FinalTarget().eulerAngles; ;
+                _rotator.RotateZ(1);
+                _unit.orientation = _rotator.FinalTarget().eulerAngles; ;
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 break;
             case TileType.RotateCounterClockwise:
-                _dieRotator.RotateZ(-1);
-                _unit.orientation = _dieRotator.FinalTarget().eulerAngles; ;
+                _rotator.RotateZ(-1);
+                _unit.orientation = _rotator.FinalTarget().eulerAngles; ;
                 GetTilesInRange();
                 break;
             case TileType.ShovePosX:
@@ -568,18 +591,18 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 GetTilesInRange();
                 break;
             case TileType.RemoveFace:
-                _dieRotator.SetDownFace(DiceState.Blank);
+                _rotator.SetDownFace(DiceState.Blank);
                 GetTilesInRange();
                 break;
             case TileType.Randomize:
-                int a = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
-                int b = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
-                int c = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
+                int a = UnityEngine.Random.Range(0, _rotator.axes.FaceEdges);
+                int b = UnityEngine.Random.Range(0, _rotator.axes.FaceEdges);
+                int c = UnityEngine.Random.Range(0, _rotator.axes.FaceEdges);
 
-                _dieRotator.RotateZ(a);
-                _dieRotator.RotateZ(b);
-                _dieRotator.RotateZ(c);
-                _unit.orientation = _dieRotator.FinalTarget().eulerAngles; ;
+                _rotator.RotateZ(a);
+                _rotator.RotateZ(b);
+                _rotator.RotateZ(c);
+                _unit.orientation = _rotator.FinalTarget().eulerAngles; ;
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 break;
@@ -710,22 +733,30 @@ public class UnitManager : MonoBehaviour, PhaseListener
             OverlayTile tile;
             try {
                 var step = PathSteps(path[0]).First();
+                if (_movementPattern == MovementPattern.Knight)
+                    tile = MapManager.Instance.GetTileAtPos(
+                        (Vector2Int)parentTile.gridLocation + path[0]
+                    );
+                else
+                    tile = MapManager.Instance.GetTileAtPos(
+                            (Vector2Int)parentTile.gridLocation + step
+                        );
 
-                tile = MapManager.Instance.GetTileAtPos(
-                    (Vector2Int)parentTile.gridLocation + step
-                );
 
                 path[0] -= step;
 
                 await MoveAsync(tile, token);
 
-                if (path[0] == Vector2Int.zero) {
+                if (path[0] == Vector2Int.zero)
+                {
                     path.RemoveAt(0);
 
                     _movesAvailable--;
 
-                    if (!IsEnemy) {
-                        if (!GameManager.Instance.MovedPieces.Contains(this)) {
+                    if (!IsEnemy)
+                    {
+                        if (!GameManager.Instance.MovedPieces.Contains(this))
+                        {
                             GameManager.Instance.MovedPieces.Add(this);
                             GameManager.Instance.PlayerPiecesMoved += 1;
                         }
@@ -742,7 +773,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
             }
         }
 
-        Debug.Log("Garfield Ending StepPath: " + transform.name);
+        Debug.Log("Ending StepPath: " + transform.name);
     }
 
     // break into intermediate steps that are occupied along the movement

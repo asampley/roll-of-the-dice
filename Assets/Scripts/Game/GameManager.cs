@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 
 public enum Win
@@ -94,7 +95,7 @@ public class GameManager : MonoBehaviour, PhaseListener
     }
 
     private int _currentRound;
-    public int currentRound
+    public int CurrentRound
     {
         get { return _currentRound; }
         set { _currentRound = value; CheckWin(); }
@@ -120,8 +121,7 @@ public class GameManager : MonoBehaviour, PhaseListener
             _instance = this;
 
         phaseManager.AllPhaseListeners.Add(this);
-        GameManager.Instance.WinEvent += w => _winState = w;
-        DataHandler.LoadGameData();
+        GameManager.Instance.WinEvent += w => _winState = w;        
     }
 
     private void Start()
@@ -129,12 +129,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         Debug.Log("START NEW GAME");
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
-
-        SetDefaultPositions();
-        if (GameLevelData.Instance != null)
-            LoadGame();
-        else
-            StartGame();
+        LoadGameData();
     }
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientationData orientation)
@@ -144,29 +139,28 @@ public class GameManager : MonoBehaviour, PhaseListener
         die.SetPosition(startPos);
     }
 
-    public void SetDefaultPositions()
+    public void SetDefaultPositions(bool reroll = false)
     {
         ClearDictionaries();
-        if (GameLevelData.Instance != null)
-        {
-            for (int i = 0; i < levelData.alliedDice.Length; i++)
-                _alliedSpawnPositions.Add(levelData.alliedDice[i], GameLevelData.Instance.alliedOrientations[i]);
-            for (int i = 0; i < levelData.enemyDice.Length; i++)
-                _enemySpawnPositions.Add(levelData.enemyDice[i], GameLevelData.Instance.enemyOrientations[i]);
-        }
-        else
+        if (reroll)
         {
             foreach (DiceSpawn spawn in levelData.alliedDice)
                 _alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
             foreach (DiceSpawn spawn in levelData.enemyDice)
                 _enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
         }
-
+        else if (GameLevelData.Instance != null)
+        {
+            for (int i = 0; i < levelData.alliedDice.Length; i++)
+                _alliedSpawnPositions.Add(levelData.alliedDice[i], GameLevelData.Instance.alliedOrientations[i]);
+            for (int i = 0; i < levelData.enemyDice.Length; i++)
+                _enemySpawnPositions.Add(levelData.enemyDice[i], GameLevelData.Instance.enemyOrientations[i]);
+        }
     }
 
     public DiceOrientationData GenerateDiceOrientation()
     {
-        DiceOrientationData orientation = new DiceOrientationData();
+        DiceOrientationData orientation = new();
 
         orientation.xRolls = UnityEngine.Random.Range(-1, 3);
         orientation.yRolls = UnityEngine.Random.Range(-1, 3);
@@ -175,7 +169,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         return orientation;
     }
 
-    public void StartGame()
+    public async UniTask SetupGame()
     {
         _winState = Win.None;
         phaseUpdateCancel?.Cancel();
@@ -187,7 +181,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
-        currentRound = 1;
+        CurrentRound = 1;
 
         ClearMap();
 
@@ -199,9 +193,10 @@ public class GameManager : MonoBehaviour, PhaseListener
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
 
         RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
+        await UniTask.Yield();
     }
 
-    public void LoadGame()
+    public async UniTask LoadGame()
     {
         _winState = Win.None;
         phaseUpdateCancel?.Cancel();
@@ -213,15 +208,16 @@ public class GameManager : MonoBehaviour, PhaseListener
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
-        currentRound = GameLevelData.Instance.currentRound;
+        CurrentRound = GameLevelData.Instance.currentRound;
 
         RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
+        await UniTask.Yield();        
     }
 
     public void RerollGame()
     {
-        SetDefaultPositions();
-        StartGame();
+        SetDefaultPositions(true);
+        SetupGame();
     }
 
     public void ClearMap()
@@ -241,14 +237,15 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void CheckWin()
     {
-        if (phaseManager.CurrentPhase == Phase.Setup) return;
+        if (phaseManager.CurrentPhase == Phase.Setup || phaseManager.CurrentPhase == null) return;
 
-        if (currentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
+        if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
             WinEvent?.Invoke(Win.Enemy);
         else if (PlayerCount == 0 || PlayerKingDefeated)
             WinEvent?.Invoke(Win.Enemy);
         else if (EnemyCount == 0)
             WinEvent?.Invoke(Win.Player);
+            
     }
 
     public void CheckWin(bool player)
@@ -262,12 +259,12 @@ public class GameManager : MonoBehaviour, PhaseListener
     private async UniTask RunPhaseUpdate(CancellationToken token) {
         Debug.Log("Start Run Phase Update: " + phaseManager.CurrentPhase);
 
-        while (true) {
+        while (true)
+        {
             await phaseManager.PhaseStep(token);
 
-            if (token.IsCancellationRequested) {
+            if (token.IsCancellationRequested)
                 return;
-            }
 
             TryAdvancePhase();
 
@@ -327,7 +324,7 @@ public class GameManager : MonoBehaviour, PhaseListener
                 return PhaseStepResult.Unchanged;
             case Phase.Player:
                 SetMaxMoves();
-                currentRound++;
+                CurrentRound++;
                 PlayerPiecesMoved = 0;
                 MovedPieces.Clear();
                 _playerMoveRemaining = _maxPlayerMoves;
@@ -344,15 +341,20 @@ public class GameManager : MonoBehaviour, PhaseListener
         }
     }
 
-    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
-        switch (phase) {
+    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token)
+    {
+        switch (phase)
+        {
             case Phase.Setup:
                 await UniTask.DelayFrame(1);
                 return PhaseStepResult.Done;
             case Phase.Player:
-                if (_playerMoveRemaining <= 0) {
+                if (_playerMoveRemaining <= 0)
+                {
                     return PhaseStepResult.Done;
-                } else {
+                }
+                else
+                {
                     return PhaseStepResult.Unchanged;
                 }
             default:
@@ -388,5 +390,17 @@ public class GameManager : MonoBehaviour, PhaseListener
     public void RemovePlayer(UnitManager player) {
         _players.Remove(player);
         CheckWin();
+    }
+
+    private async UniTask LoadGameData()
+    {
+        await DataHandler.LoadGameData();
+        await DataHandler.DeserializeGameData();
+        SetDefaultPositions();
+        if (GameLevelData.Instance != null)
+            await LoadGame();
+        else
+            await SetupGame();
+        
     }
 }
