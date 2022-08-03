@@ -83,11 +83,17 @@ public class DataHandler : MonoBehaviour
             dice.Add(d);
         }
 
+        List<string> movedPiecesByUid = new();
+        foreach (UnitManager manager in GameManager.Instance.MovedPieces)
+            movedPiecesByUid.Add(manager.Unit.Uid);
+
         data.dice = dice.ToArray();
         data.camPosition = Camera.main.transform.position;
         data.camDistance = Camera.main.orthographicSize;
         data.currentPhase = GameManager.Instance.phaseManager.CurrentPhase.Value;
         data.currentRound = GameManager.Instance.currentRound;
+        data.movedPieces = movedPiecesByUid.ToArray();
+        data.playerPiecesMoved = GameManager.Instance.PlayerPiecesMoved;
 
         data.alliedOrientations = new DiceOrientationData[GameManager.Instance.AlliedSpawnPositions.Count];
         data.enemyOrientations = new DiceOrientationData[GameManager.Instance.EnemySpawnPositions.Count];
@@ -114,11 +120,19 @@ public class DataHandler : MonoBehaviour
             Unit u = new Unit(unitData, die.isEnemy, die.orientation, die.position, die.movesRemaining, true, movement);
             u.SetPosition(die.position);
             u.Faces = die.faces;
+            u.Uid = die.uid;
+            foreach (string movedUnit in data.movedPieces)
+            {
+                if (movedUnit == u.Uid)
+                    GameManager.Instance.MovedPieces.Add(u.Manager);
+            }
+
             GameManager.Instance.ImportUnit(u);
         }
 
         Camera.main.transform.position = data.camPosition;
         Camera.main.orthographicSize = data.camDistance;
+        GameManager.Instance.currentRound = data.currentRound;
 
         // Load game scene data
         string levelId = CoreDataHandler.Instance.LevelID;

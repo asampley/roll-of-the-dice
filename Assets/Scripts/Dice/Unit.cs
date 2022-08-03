@@ -5,9 +5,9 @@ using UnityEngine;
 public class Unit
 {
     protected UnitManager _manager;
+    public UnitManager Manager { get => _manager; }
     protected UnitData _data;
-    public UnitData Data
-    { get => _data; }
+    public UnitData Data { get => _data; }
     protected Transform _transform;
     public Transform Transform
     { get =>_transform; }

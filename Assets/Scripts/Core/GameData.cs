@@ -15,6 +15,8 @@ public class GameLevelData : BinarySerializable
     public float camDistance;
     public int currentRound;
     public Phase currentPhase;
+    public string[] movedPieces;
+    public int playerPiecesMoved;
     public DiceOrientationData[] alliedOrientations;
     public DiceOrientationData[] enemyOrientations;
 
@@ -55,6 +57,7 @@ public class GameUnitData : BinarySerializable
 {
     public DiceClass diceClass;
     public bool isEnemy;
+    public string uid;
     public Vector2Int position;
     public DiceState[] faces;
     public Vector3 orientation;
