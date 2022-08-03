@@ -13,12 +13,12 @@ public enum Win
     Enemy,
 }
 
-public class GameManager : MonoBehaviour, PhaseListener
+public class GameManager : MonoBehaviour, IPhaseListener
 {
     private static GameManager _instance;
-    public static GameManager Instance { get { return _instance; } }
+    public static GameManager Instance { get => _instance; }
 
-    public MonoBehaviour Self { get { return this; } }
+    public MonoBehaviour Self { get => this; }
     //Dice
     public LevelData levelData;
     public GameRulesData gameRulesData;
@@ -27,14 +27,8 @@ public class GameManager : MonoBehaviour, PhaseListener
     private readonly Dictionary<DiceSpawn, DiceOrientationData> _alliedSpawnPositions = new();
     private readonly Dictionary<DiceSpawn, DiceOrientationData> _enemySpawnPositions = new();
 
-    public Dictionary<DiceSpawn, DiceOrientationData> AlliedSpawnPositions
-    {
-        get { return _alliedSpawnPositions; }
-    }
-    public Dictionary<DiceSpawn, DiceOrientationData> EnemySpawnPositions
-    {
-        get { return _enemySpawnPositions; }
-    }
+    public Dictionary<DiceSpawn, DiceOrientationData> AlliedSpawnPositions { get => _alliedSpawnPositions; }
+    public Dictionary<DiceSpawn, DiceOrientationData> EnemySpawnPositions { get => _enemySpawnPositions; }
 
     private readonly List<Unit> _loadPositions = new();
 
@@ -48,10 +42,8 @@ public class GameManager : MonoBehaviour, PhaseListener
         set { _enemies = value; CheckWin(); }
     }
 
-    private HashSet<UnitManager> _players = new();
-    public int PlayerCount {
-        get { return _players.Count; }
-    }
+    private readonly HashSet<UnitManager> _players = new();
+    public int PlayerCount { get =>  _players.Count; }
 
     private bool _playerKingDefeated;
     public bool PlayerKingDefeated {
@@ -102,7 +94,6 @@ public class GameManager : MonoBehaviour, PhaseListener
     }
 
     private int _maxNumberOfTurns;
-
     public int MaxNumberOfTurns
     {
         get { return _maxNumberOfTurns; }
@@ -110,10 +101,7 @@ public class GameManager : MonoBehaviour, PhaseListener
     }
 
     private Win _winState;
-    public Win WinState
-    {
-        get { return _winState; }
-    }
+    public Win WinState { get => _winState; }
 
     private void Awake()
     {

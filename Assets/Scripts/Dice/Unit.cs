@@ -60,7 +60,7 @@ public class Unit
         set { _faces = value; }
     }
     protected Vector3 _orientation;
-    public Vector3 orientation
+    public Vector3 Orientation
     {
         get { return _orientation; }
         set { _orientation = value; }
@@ -146,6 +146,6 @@ public class Unit
     public void SetOrientation(Vector3 newOrientation)
     {
         _unitManager.SetOrientation(newOrientation);
-        orientation = newOrientation;
+        Orientation = newOrientation;
     }
 }

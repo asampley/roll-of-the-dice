@@ -16,7 +16,7 @@ public class Face {
 
 [RequireComponent(typeof(MeshFilter))]
 public class DieTexturer : MonoBehaviour {
-    public static readonly Vector2 uvScale = new Vector2(1f / Globals.DICE_STATES, 1f);
+    public static readonly Vector2 uvScale = new(1f / Globals.DICE_STATES, 1f);
 
     [SerializeField]
     [HideInInspector]

@@ -8,7 +8,7 @@ public class GameLevelData : BinarySerializable
 {
     public static string levelId;
     private static GameLevelData _instance;
-    public static GameLevelData Instance => _instance;
+    public static GameLevelData Instance { get => _instance; }
 
     public GameUnitData[] dice;
     public Vector3 camPosition;

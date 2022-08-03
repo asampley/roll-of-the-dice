@@ -83,7 +83,7 @@ public class DataHandler : MonoBehaviour
                 isEnemy = die.IsEnemy,
                 position = die.GetPosition(),
                 faces = die.Faces,
-                orientation = die.orientation,
+                orientation = die.Orientation,
                 movesRemaining = die.MovesRemainging,
                 path = movement.ToArray(),
                 uid = die.Uid,

@@ -28,8 +28,7 @@ public enum PhaseStepResult {
     Changed,
 }
 
-public interface PhaseListener {
-    string name { get; }
+public interface IPhaseListener {
     MonoBehaviour Self { get; }
 
     // called once when the phase is entered
@@ -50,7 +49,7 @@ public interface PhaseListener {
 
 public class PhaseData {
     public Phase phase;
-    public HashSet<PhaseListener> phaseStep = new HashSet<PhaseListener>();
+    public HashSet<IPhaseListener> phaseStep = new();
     public PhaseStepResult[] results = new PhaseStepResult[] {};
 
     public PhaseData(Phase phase) {
@@ -63,7 +62,7 @@ public class PhaseData {
 }
 
 public class PhaseManager {
-    public readonly HashSet<PhaseListener> AllPhaseListeners = new();
+    public readonly HashSet<IPhaseListener> AllPhaseListeners = new();
     private readonly List<PhaseData> phaseStack = new();
 
     private PhaseData Current {
@@ -137,7 +136,7 @@ public class PhaseManager {
         CleanSet(Current.phaseStep);
 
         // copy list to protect from manipulation in the middle of processing
-        List<PhaseListener> toStep = new(Current.phaseStep);
+        List<IPhaseListener> toStep = new(Current.phaseStep);
 
         List<UniTask<PhaseStepResult>> tasks = new();
         List<CancellationTokenSource> sources = new();
@@ -174,7 +173,7 @@ public class PhaseManager {
         }
     }
 
-    private static void CleanSet(HashSet<PhaseListener> set) {
+    private static void CleanSet(HashSet<IPhaseListener> set) {
         // clean up anyone destroyed
         set.RemoveWhere(l => l.Self == null);
     }
@@ -184,7 +183,7 @@ public class PhaseManager {
         return Current.results;
     }
 
-    private async UniTask<PhaseStepResult> SafePhaseStep(PhaseListener listener, CancellationToken token) {
+    private async UniTask<PhaseStepResult> SafePhaseStep(IPhaseListener listener, CancellationToken token) {
         try {
             return await listener.OnPhaseStep(Current.phase, token);
         } catch (MissingReferenceException) {
@@ -198,7 +197,7 @@ public class PhaseManager {
         }
     }
 
-    public void AddPhaseProcessing(PhaseListener listener) {
+    public void AddPhaseProcessing(IPhaseListener listener) {
         Current.phaseStep.Add(listener);
     }
 

@@ -12,8 +12,8 @@ public enum MovementStrategy {
     Random,
 }
 
-public class EnemyAI : MonoBehaviour, PhaseListener {
-    public MonoBehaviour Self { get { return this; } }
+public class EnemyAI : MonoBehaviour, IPhaseListener {
+    public MonoBehaviour Self { get => this; }
 
     private UnitManager _unitManager;
 
