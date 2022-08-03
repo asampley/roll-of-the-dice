@@ -96,11 +96,12 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     public GameObject ghostComponents;
     private DieRotator _rotator;
-    public DieRotator DieRotator { get { return _rotator; }
-    }
+    public DieRotator DieRotator { get { return _rotator; } }
     private DieTexturer _dieTexturer;
-    public DieTexturer DieTexturer { get { return _dieTexturer; }
-    }
+    public DieTexturer DieTexturer { get { return _dieTexturer; } }
+
+    private bool _toTileEffect = false;
+    private bool _toFight = false;
 
     private TextMeshProUGUI nameText;
 
@@ -532,10 +533,10 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     private async UniTask UpdateTilePos(OverlayTile newTile, CancellationToken token, bool rotate = true)
     {
-        if (_movementPattern == MovementPattern.Knight)
-            MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
-        else
-            MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
+        _toFight = true;
+        _toTileEffect = true;
+
+        MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
         State = _rotator.GetUpFace();
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
@@ -683,14 +684,22 @@ public class UnitManager : MonoBehaviour, PhaseListener
                     return PhaseStepResult.Changed;
                 }
             case Phase.Fight:
-                await Fight();
+                if (_toFight) {
+                    _toFight = false;
+                    await Fight();
+                }
                 return PhaseStepResult.Done;
             case Phase.TileEffects:
-                if (await GetTileEffects(token)) {
-                    return PhaseStepResult.Changed;
-                } else {
-                    return PhaseStepResult.Done;
+                if (_toTileEffect) {
+                    _toTileEffect = false;
+
+                    if (await GetTileEffects(token)) {
+                        return PhaseStepResult.Changed;
+                    } else {
+                        return PhaseStepResult.Done;
+                    }
                 }
+                return PhaseStepResult.Done;
             default:
                 return PhaseStepResult.Done;
         }
