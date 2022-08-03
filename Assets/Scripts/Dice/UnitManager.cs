@@ -264,7 +264,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
     {
         Vector2Int start = (Vector2Int)parentTile.gridLocation;
         Vector2Int pos = start;
-        List<Vector2Int> deltas = new();
+        List<IEnumerable<Vector2Int>> deltas = new();
         List<Vector3> trans = new();
 
         GhostManager.Instance.RemoveArrow(this.gameObject);
@@ -273,7 +273,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         for (int i = 0; i < MaxMoves; i++)
         {
             Vector2Int next = path[i] + pos;
-            deltas.Add(path[i]);
+            deltas.Add(StepRotations(path[i]));
             trans.Add(
                 MapManager.Instance.TileToWorldSpace(new Vector2Int(0, 0))
                 - MapManager.Instance.TileToWorldSpace(pos - next)
@@ -516,24 +516,17 @@ public class UnitManager : MonoBehaviour, PhaseListener
         );
     }
 
-    private void MoveToPos(Vector2Int delta, bool rotate = true)
+    private void MoveToPos(Vector2Int step, bool rotate = true)
     {
         if (rotate)
         {
-            if (delta.x > 0)
-                _rotator.RotateTileDelta(new Vector2Int(1, 0), Math.Abs(delta.x));
-            else if (delta.x < 0)
-                _rotator.RotateTileDelta(new Vector2Int(-1, 0), Math.Abs(delta.x));
-            if (delta.y > 0)
-                _rotator.RotateTileDelta(new Vector2Int(0, 1), Math.Abs(delta.y));
-            else if (delta.y < 0)
-                _rotator.RotateTileDelta(new Vector2Int(0, -1), Math.Abs(delta.y));
+            _rotator.RotateTileDeltas(StepRotations(step));
 
             _unit.orientation = _rotator.FinalTarget().eulerAngles;
         }
 
         GetComponentInChildren<DieTranslator>().Translate(
-            MapManager.Instance.TileDeltaToWorldDelta(delta)
+            MapManager.Instance.TileDeltaToWorldDelta(step)
         );
     }
 
@@ -790,6 +783,37 @@ public class UnitManager : MonoBehaviour, PhaseListener
                     delta -= step;
                 }
                 break;
+        }
+    }
+
+    // break step into intermediate rotations
+    public IEnumerable<Vector2Int> StepRotations(Vector2Int step) {
+        Vector2Int delta;
+
+        if (Math.Abs(step.x) > Math.Abs(step.y)) {
+            delta = new(Math.Sign(step.x), 0);
+            while (step.x != 0) {
+                step -= delta;
+                yield return delta;
+            }
+
+            delta = new(0, Math.Sign(step.y));
+            while (step.y != 0) {
+                step -= delta;
+                yield return delta;
+            }
+        } else if (Math.Abs(step.x) < Math.Abs(step.y)) {
+            delta = new(0, Math.Sign(step.y));
+            while (step.y != 0) {
+                step -= delta;
+                yield return delta;
+            }
+
+            delta = new(Math.Sign(step.x), 0);
+            while (step.x != 0) {
+                step -= delta;
+                yield return delta;
+            }
         }
     }
 

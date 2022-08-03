@@ -72,7 +72,12 @@ public class DieRotator : MonoBehaviour {
     // rotate around an axis that is relative to the mesh original orientation
     void RotateAngleAxis(float angle, Vector3 axis, int count)
     {
-        Rotate(Quaternion.AngleAxis(angle, _qOffsetRotation * axis), count);
+        Rotate(RotationAngleAxis(angle, axis), count);
+    }
+
+    Quaternion RotationAngleAxis(float angle, Vector3 axis)
+    {
+        return Quaternion.AngleAxis(angle, _qOffsetRotation * axis);
     }
 
     // Computes an axis based on the tile delta.
@@ -82,6 +87,20 @@ public class DieRotator : MonoBehaviour {
         var axis = delta.x * axes.XAxis + delta.y * axes.YAxis;
 
         RotateAngleAxis(axes.FaceRotationAngle, axis, count);
+    }
+
+    // Computes an axis based on the tile delta.
+    // This collapses multiple rotations into one timestep.
+    public void RotateTileDeltas(IEnumerable<Vector2Int> deltas)
+    {
+        Quaternion rotation = Quaternion.identity;
+
+        foreach (var delta in deltas) {
+            var axis = delta.x * axes.XAxis + delta.y * axes.YAxis;
+            rotation = RotationAngleAxis(axes.FaceRotationAngle, axis) * rotation;
+        }
+
+        Rotate(rotation, 1);
     }
 
     public void RotateZ(int count)

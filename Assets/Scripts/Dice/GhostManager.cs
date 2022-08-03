@@ -19,8 +19,12 @@ public class GhostManager : MonoBehaviour {
             _instance = this;
     }
 
-    public void SetupGhostEffects(GameObject ghostObject, Vector2Int next, List<Vector3> trans, List<Vector2Int> deltas)
-    {
+    public void SetupGhostEffects(
+        GameObject ghostObject,
+        Vector2Int next,
+        List<Vector3> trans,
+        IEnumerable<IEnumerable<Vector2Int>> deltas
+    ) {
         GhostManager.Instance.PushArrow(ghostObject, next);
         var ghost = GhostManager.Instance.CreateGhost(ghostObject, null, null);
 
@@ -29,8 +33,8 @@ public class GhostManager : MonoBehaviour {
             translator.Translate(t);
 
         var rotator = ghost.GetComponentInChildren<DieRotator>();
-        foreach (var delta in deltas)
-            rotator.RotateTileDelta(delta);
+        foreach (var ds in deltas)
+            rotator.RotateTileDeltas(ds);
     }
 
     public GameObject CreateGhost(GameObject toGhost, Vector3? translation, Vector2Int? tileDelta, int rotationCount = 1) {
@@ -55,7 +59,7 @@ public class GhostManager : MonoBehaviour {
             else if (tileDelta.Value.y < 0)
                 rotator.RotateTileDelta(new Vector2Int(0, -1), Math.Abs(tileDelta.Value.y));
         }
- 
+
         if (translation != null) {
             var translator = ghost.GetComponentInChildren<DieTranslator>();
 

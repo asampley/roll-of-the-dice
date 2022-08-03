@@ -49,7 +49,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
 
         int currentMoves = _unitManager.MaxMoves;
 
-        List<Vector2Int> deltas = new();
+        List<List<Vector2Int>> deltas = new();
         List<Vector3> trans = new();
 
         GhostManager.Instance.RemoveArrow(this.gameObject);
@@ -92,7 +92,7 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
             EnemyPathManager.Instance.Reserve(this, next);
 
             foreach (var step in _unitManager.PathSteps(next - pos)) {
-                deltas.Add(step);
+                deltas.Add(_unitManager.StepRotations(step).ToList());
                 trans.Add(MapManager.Instance.TileDeltaToWorldDelta(step));
 
                 pos += step;
