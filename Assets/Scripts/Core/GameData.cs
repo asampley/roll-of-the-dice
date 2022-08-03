@@ -72,8 +72,6 @@ public class GameUnitData : BinarySerializable
     }
 }
 
-
-
 [System.Serializable]
 public class DiceOrientationData : BinarySerializable
 {
@@ -88,7 +86,6 @@ public class DiceOrientationData : BinarySerializable
         BinarySerializable.Deserialize(this, info, context);
     }
 }
-
 
 [System.Serializable]
 public class GamePathData : BinarySerializable

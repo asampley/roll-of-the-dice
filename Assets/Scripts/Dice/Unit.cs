@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Unit
 {
-    protected UnitManager _manager;
-    public UnitManager Manager { get => _manager; }
+    protected UnitManager _unitManager;
+    public UnitManager UnitManager { get => _unitManager; }
     protected UnitData _data;
     public UnitData Data { get => _data; }
     protected Transform _transform;
@@ -29,7 +29,7 @@ public class Unit
     protected string _unitName;
     public string UnitName { get => _unitName; }
     public DiceClass UnitClass { get => _data.unitClass; }
-    public bool IsEnemy { get => _manager.IsEnemy; }
+    public bool IsEnemy { get => _unitManager.IsEnemy; }
 
 
     [Header("References")]
@@ -43,8 +43,8 @@ public class Unit
     protected int _maxMoves;
     protected MovementPattern _movementPattern;
     public MovementStrategy MovementStrategy { get => _data.movementStrategy; }
-    public int MovesRemainging { get => _manager.movesAvailable; }
-    public List<Vector2Int> Path { get => _manager.path; }
+    public int MovesRemainging { get => _unitManager.movesAvailable; }
+    public List<Vector2Int> Path { get => _unitManager.path; }
 
     [Header("Rotation")]
     protected Axes _axes;
@@ -74,11 +74,11 @@ public class Unit
     {
         SetOrientation(diceOrientation);
         SetPosition(position);
-        _manager.movesAvailable = moves;
+        _unitManager.movesAvailable = moves;
         if (isEnemy)
         {
-            _manager.path = path;
-            _manager.MapPath();
+            _unitManager.path = path;
+            _unitManager.MapPath();
         }
 
     }
@@ -96,22 +96,22 @@ public class Unit
 
 
         // Setup Manager
-        _manager = g.GetComponent<UnitManager>();
+        _unitManager = g.GetComponent<UnitManager>();
 
-        _manager.Unit = this;
-        _manager.UnitName = _data.unitName;
-        _manager.IsEnemy = isEnemy;
+        _unitManager.Unit = this;
+        _unitManager.UnitName = _data.unitName;
+        _unitManager.IsEnemy = isEnemy;
 
-        _manager.MaxMoves = _data.maxMoves;
-        _manager.MovementPattern = _data.movementPattern;
+        _unitManager.MaxMoves = _data.maxMoves;
+        _unitManager.MovementPattern = _data.movementPattern;
 
         // Setup faces
-        _manager.DieTexturer.Faces = new DiceState[_data.faces.Length];
+        _unitManager.DieTexturer.Faces = new DiceState[_data.faces.Length];
         for (int n = 0; n < _data.faces.Length; n++)
-            _manager.DieTexturer.Faces[n] = _data.faces[n];
-        _manager.DieTexturer.Initialize();
-        _faces = _manager.DieTexturer.Faces;
-        _manager.Initialize(startOrientation);
+            _unitManager.DieTexturer.Faces[n] = _data.faces[n];
+        _unitManager.DieTexturer.Initialize();
+        _faces = _unitManager.DieTexturer.Faces;
+        _unitManager.Initialize(startOrientation);
 
         // Add to dice list for save data
         if (DICE_LIST == null)
@@ -131,20 +131,20 @@ public class Unit
 
         OverlayTile overlayTileManager = placedOnTile.gameObject.GetComponent<OverlayTile>();
 
-        overlayTileManager.MoveDiceToTile(_manager);
+        overlayTileManager.MoveDiceToTile(_unitManager);
         _transform.position = MapManager.Instance.TileToWorldSpace(placedOnTile.gridLocation);
     }
 
     public Vector2Int GetPosition()
     {
-        Vector2Int pos = (Vector2Int)_manager.parentTile.gridLocation;
+        Vector2Int pos = (Vector2Int)_unitManager.parentTile.gridLocation;
 
         return pos;
     }
 
     public void SetOrientation(Vector3 newOrientation)
     {
-        _manager.SetOrientation(newOrientation);
+        _unitManager.SetOrientation(newOrientation);
         orientation = newOrientation;
     }
 }

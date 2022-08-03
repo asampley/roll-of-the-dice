@@ -124,7 +124,7 @@ public class DataHandler : MonoBehaviour
             foreach (string movedUnit in data.movedPieces)
             {
                 if (movedUnit == u.Uid)
-                    GameManager.Instance.MovedPieces.Add(u.Manager);
+                    GameManager.Instance.MovedPieces.Add(u.UnitManager);
             }
 
             GameManager.Instance.ImportUnit(u);
