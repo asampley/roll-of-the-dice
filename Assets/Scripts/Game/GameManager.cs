@@ -142,10 +142,8 @@ public class GameManager : MonoBehaviour, PhaseListener
     public void SetDefaultPositions(bool reroll = false)
     {
         ClearDictionaries();
-        Debug.Log("Garfeel " + reroll);
         if (reroll)
         {
-            Debug.Log("Garfeel");
             foreach (DiceSpawn spawn in levelData.alliedDice)
                 _alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
             foreach (DiceSpawn spawn in levelData.enemyDice)
