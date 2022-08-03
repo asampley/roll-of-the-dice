@@ -63,8 +63,8 @@ public class PhaseData {
 }
 
 public class PhaseManager {
-    public readonly HashSet<PhaseListener> AllPhaseListeners = new HashSet<PhaseListener>();
-    private List<PhaseData> phaseStack = new List<PhaseData>();
+    public readonly HashSet<PhaseListener> AllPhaseListeners = new();
+    private readonly List<PhaseData> phaseStack = new();
 
     private PhaseData Current {
         get { return phaseStack.Count > 0 ? phaseStack[phaseStack.Count - 1] : null; }

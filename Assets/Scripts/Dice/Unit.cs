@@ -43,7 +43,7 @@ public class Unit
     protected int _maxMoves;
     protected MovementPattern _movementPattern;
     public MovementStrategy MovementStrategy { get => _data.movementStrategy; }
-    public int MovesRemainging { get => _unitManager.movesAvailable; }
+    public int MovesRemainging { get => _unitManager.MovesAvailable; }
     public List<Vector2Int> Path { get => _unitManager.path; }
 
     [Header("Rotation")]
@@ -74,13 +74,12 @@ public class Unit
     {
         SetOrientation(diceOrientation);
         SetPosition(position);
-        _unitManager.movesAvailable = moves;
+        _unitManager.MovesAvailable = moves;
         if (isEnemy)
         {
             _unitManager.path = path;
             _unitManager.MapPath();
         }
-
     }
     public Unit(UnitData data, bool isEnemy, DiceOrientationData startOrientation, bool fromSave = false)
     {

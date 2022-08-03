@@ -3,6 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
+using TMPro;
+using Cysharp.Threading.Tasks;
 
 
 public class DataHandler : MonoBehaviour
@@ -11,11 +14,10 @@ public class DataHandler : MonoBehaviour
 
     private void Start()
     {
-        DeserializeGameData();
         GameManager.Instance.WinEvent += (_) => ClearData();
     }
 
-    public static void LoadGameData()
+    public static async UniTask LoadGameData()
     {
         Globals.UNIT_DATA = Resources.LoadAll<UnitData>(Globals.DICE_CLASS_SO) as UnitData[];
 
@@ -43,10 +45,13 @@ public class DataHandler : MonoBehaviour
             Globals.GHOST_MATERIALS.Add((u.unitClass, false), allyGhost);
             Globals.GHOST_MATERIALS.Add((u.unitClass, true), enemyGhost);
         }
+
+        await UniTask.Yield();
     }
 
     public static void SaveGameData()
     {
+        Debug.Log("Garfeel Saving");
         GameLevelData.levelId = CoreDataHandler.Instance.LevelID;
         GameLevelData.Save(SerializeGameData());
     }
@@ -71,7 +76,7 @@ public class DataHandler : MonoBehaviour
 
 
 
-            GameUnitData d = new GameUnitData()
+            GameUnitData d = new()
             {
                 isEnemy = die.IsEnemy,
                 position = die.GetPosition(),
@@ -106,10 +111,10 @@ public class DataHandler : MonoBehaviour
         return data;
     }
 
-    public static void DeserializeGameData()
+    public static async UniTask DeserializeGameData()
     {
         GameLevelData data = GameLevelData.Instance;
-        if (data == null) return;
+        if (data == null) await UniTask.Yield();
 
         foreach (GameUnitData die in data.dice)
         {
@@ -118,7 +123,7 @@ public class DataHandler : MonoBehaviour
             for (int i = 0; i < die.path.Length; i++)
                 movement.Add(die.path[i].path);
 
-            Unit u = new Unit(unitData, die.isEnemy, die.orientation, die.position, die.movesRemaining, true, movement);
+            Unit u = new(unitData, die.isEnemy, die.orientation, die.position, die.movesRemaining, true, movement);
             u.SetPosition(die.position);
             u.Faces = die.faces;
             u.Uid = die.uid;
@@ -134,11 +139,14 @@ public class DataHandler : MonoBehaviour
         Camera.main.transform.position = data.camPosition;
         Camera.main.orthographicSize = data.camDistance;
         GameManager.Instance.currentRound = data.currentRound;
+        Debug.Log(GameManager.Instance.currentRound);
 
         // Load game scene data
         string levelId = CoreDataHandler.Instance.LevelID;
         GameLevelData.levelId = levelId;
         GameLevelData.Load();
+
+        await UniTask.Yield();
     }
 
     public static void ClearData()

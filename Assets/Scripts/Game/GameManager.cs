@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 
 public enum Win
@@ -121,7 +122,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
         phaseManager.AllPhaseListeners.Add(this);
         GameManager.Instance.WinEvent += w => _winState = w;
-        DataHandler.LoadGameData();
+        _LoadGameData();
     }
 
     private void Start()
@@ -166,7 +167,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public DiceOrientationData GenerateDiceOrientation()
     {
-        DiceOrientationData orientation = new DiceOrientationData();
+        DiceOrientationData orientation = new();
 
         orientation.xRolls = UnityEngine.Random.Range(-1, 3);
         orientation.yRolls = UnityEngine.Random.Range(-1, 3);
@@ -262,12 +263,12 @@ public class GameManager : MonoBehaviour, PhaseListener
     private async UniTask RunPhaseUpdate(CancellationToken token) {
         Debug.Log("Start Run Phase Update: " + phaseManager.CurrentPhase);
 
-        while (true) {
+        while (true)
+        {
             await phaseManager.PhaseStep(token);
 
-            if (token.IsCancellationRequested) {
+            if (token.IsCancellationRequested)
                 return;
-            }
 
             TryAdvancePhase();
 
@@ -388,5 +389,11 @@ public class GameManager : MonoBehaviour, PhaseListener
     public void RemovePlayer(UnitManager player) {
         _players.Remove(player);
         CheckWin();
+    }
+
+    private async UniTask _LoadGameData()
+    {
+        await DataHandler.LoadGameData();
+        await DataHandler.DeserializeGameData();
     }
 }

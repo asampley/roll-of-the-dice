@@ -102,7 +102,7 @@ public class UIManager : MonoBehaviour
         }
         gameInfo.SetActive(true);
         diceName.text = unit.UnitName;
-        movesAvailable.text = "Moves Available: " + unit.movesAvailable.ToString();
+        movesAvailable.text = "Moves Available: " + unit.MovesAvailable.ToString();
         GameObject inspectDie = unit.ghostComponents.gameObject;
         inspectorObject = Instantiate(inspectDie);
         inspectorObject.transform.parent = inspector;

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -50,7 +49,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         set { _maxMoves = value; }
     }
     private int _movesAvailable;
-    public int movesAvailable
+    public int MovesAvailable
     {
         get { return _movesAvailable; }
         set { _movesAvailable = value; }
@@ -192,16 +191,9 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 tile = tiles.Current;
                 if (tile.IsBlocked || _movesAvailable <= 0) break;
                 GetTilesInRange();
-                Debug.Log("Garfeel " + tile.gridLocation);
-                foreach (OverlayTile tileToCheck in _tilesInRange)
-                {
-                    Debug.Log("Garfeel " + tileToCheck.gridLocation);
-                }
+
                 if (!_tilesInRange.Contains(tile))
-                {
-                    Debug.Log("Garfeel fail");
                     return;
-                }
                 await UpdateTilePos(tile, token);
             } while (tiles.MoveNext());
         }
