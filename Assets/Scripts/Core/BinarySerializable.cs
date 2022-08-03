@@ -25,8 +25,7 @@ public class BinarySerializable : ISerializable
         {
             if (field.IsStatic) continue;
             Debug.Log(field.Name);
-            object value;
-            if (BinarySerializableData.Serialize(field, this, out value))
+            if (BinarySerializableData.Serialize(field, this, out object value))
             {
                 if (value.GetType().IsArray)
                 {

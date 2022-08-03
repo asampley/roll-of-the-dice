@@ -771,7 +771,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
             }
         }
 
-        Debug.Log("Garfield Ending StepPath: " + transform.name);
+        Debug.Log("Ending StepPath: " + transform.name);
     }
 
     // break into intermediate steps that are occupied along the movement

@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour, PhaseListener
     }
 
     private int _currentRound;
-    public int currentRound
+    public int CurrentRound
     {
         get { return _currentRound; }
         set { _currentRound = value; CheckWin(); }
@@ -121,8 +121,7 @@ public class GameManager : MonoBehaviour, PhaseListener
             _instance = this;
 
         phaseManager.AllPhaseListeners.Add(this);
-        GameManager.Instance.WinEvent += w => _winState = w;
-        _LoadGameData();
+        GameManager.Instance.WinEvent += w => _winState = w;        
     }
 
     private void Start()
@@ -130,12 +129,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         Debug.Log("START NEW GAME");
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
-
-        SetDefaultPositions();
-        if (GameLevelData.Instance != null)
-            LoadGame();
-        else
-            StartGame();
+        _LoadGameData();
     }
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientationData orientation)
@@ -176,7 +170,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         return orientation;
     }
 
-    public void StartGame()
+    public async UniTask SetupGame()
     {
         _winState = Win.None;
         phaseUpdateCancel?.Cancel();
@@ -188,7 +182,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
-        currentRound = 1;
+        CurrentRound = 1;
 
         ClearMap();
 
@@ -199,10 +193,10 @@ public class GameManager : MonoBehaviour, PhaseListener
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
 
-        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
+        await UniTask.Yield();
     }
 
-    public void LoadGame()
+    public async UniTask LoadGame()
     {
         _winState = Win.None;
         phaseUpdateCancel?.Cancel();
@@ -210,19 +204,19 @@ public class GameManager : MonoBehaviour, PhaseListener
         phaseUpdateCancel = new CancellationTokenSource();
 
         phaseManager.Clear();
-        phaseManager.Push(GameLevelData.Instance.currentPhase);
+        phaseManager.Push(Phase.Setup);
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
-        currentRound = GameLevelData.Instance.currentRound;
+        CurrentRound = GameLevelData.Instance.currentRound;
 
-        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
+        await UniTask.Yield();
     }
 
     public void RerollGame()
     {
         SetDefaultPositions();
-        StartGame();
+        SetupGame();
     }
 
     public void ClearMap()
@@ -244,12 +238,16 @@ public class GameManager : MonoBehaviour, PhaseListener
     {
         if (phaseManager.CurrentPhase == Phase.Setup) return;
 
-        if (currentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
+        if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
             WinEvent?.Invoke(Win.Enemy);
         else if (PlayerCount == 0 || PlayerKingDefeated)
             WinEvent?.Invoke(Win.Enemy);
         else if (EnemyCount == 0)
+        {
             WinEvent?.Invoke(Win.Player);
+            Debug.Log("Garfeel");
+        }
+            
     }
 
     public void CheckWin(bool player)
@@ -328,7 +326,7 @@ public class GameManager : MonoBehaviour, PhaseListener
                 return PhaseStepResult.Unchanged;
             case Phase.Player:
                 SetMaxMoves();
-                currentRound++;
+                CurrentRound++;
                 PlayerPiecesMoved = 0;
                 MovedPieces.Clear();
                 _playerMoveRemaining = _maxPlayerMoves;
@@ -395,5 +393,11 @@ public class GameManager : MonoBehaviour, PhaseListener
     {
         await DataHandler.LoadGameData();
         await DataHandler.DeserializeGameData();
+        SetDefaultPositions();
+        if (GameLevelData.Instance != null)
+            await LoadGame();
+        else
+            await SetupGame();
+        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
     }
 }

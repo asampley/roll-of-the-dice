@@ -46,6 +46,11 @@ public class DataHandler : MonoBehaviour
             Globals.GHOST_MATERIALS.Add((u.unitClass, true), enemyGhost);
         }
 
+
+        // Load game scene data
+        GameLevelData.levelId = CoreDataHandler.Instance.LevelID;
+        GameLevelData.Load();
+
         await UniTask.Yield();
     }
 
@@ -74,8 +79,6 @@ public class DataHandler : MonoBehaviour
                 movement.Add(m);
             }
 
-
-
             GameUnitData d = new()
             {
                 isEnemy = die.IsEnemy,
@@ -97,7 +100,7 @@ public class DataHandler : MonoBehaviour
         data.camPosition = Camera.main.transform.position;
         data.camDistance = Camera.main.orthographicSize;
         data.currentPhase = GameManager.Instance.phaseManager.CurrentPhase.Value;
-        data.currentRound = GameManager.Instance.currentRound;
+        data.currentRound = GameManager.Instance.CurrentRound;
         data.movedPieces = movedPiecesByUid.ToArray();
         data.playerPiecesMoved = GameManager.Instance.PlayerPiecesMoved;
 
@@ -114,7 +117,8 @@ public class DataHandler : MonoBehaviour
     public static async UniTask DeserializeGameData()
     {
         GameLevelData data = GameLevelData.Instance;
-        if (data == null) await UniTask.Yield();
+        Debug.Log("Garfeel " + data);
+        if (data == null) return;
 
         foreach (GameUnitData die in data.dice)
         {
@@ -138,13 +142,8 @@ public class DataHandler : MonoBehaviour
 
         Camera.main.transform.position = data.camPosition;
         Camera.main.orthographicSize = data.camDistance;
-        GameManager.Instance.currentRound = data.currentRound;
-        Debug.Log(GameManager.Instance.currentRound);
+        GameManager.Instance.CurrentRound = data.currentRound;
 
-        // Load game scene data
-        string levelId = CoreDataHandler.Instance.LevelID;
-        GameLevelData.levelId = levelId;
-        GameLevelData.Load();
 
         await UniTask.Yield();
     }

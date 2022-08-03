@@ -56,7 +56,7 @@ public class UIManager : MonoBehaviour
     {
         DataHandler.ClearData();
         Back();
-        GameManager.Instance.StartGame();
+        GameManager.Instance.SetupGame();
     }
 
     public void RerollLevel()

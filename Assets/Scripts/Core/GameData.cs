@@ -31,8 +31,6 @@ public class GameLevelData : BinarySerializable
     public static string GetFilePath()
         => System.IO.Path.Combine(GetFolderPath(), Globals.DATA_FILE_NAME);
 
-
-
     public GameLevelData() { }
 
     protected GameLevelData(SerializationInfo info, StreamingContext context)
