@@ -81,9 +81,9 @@ public class BinarySerializable : ISerializable
         Type T = instance.GetType();
         foreach (FieldInfo field in T.GetFields())
         {
-            Debug.Log(field);
+            if (Globals.DEBUG_SERIALIZATION)
+                Debug.Log(field.Name + " " + field.FieldType);
             Type serializedType = BinarySerializableData.GetSerializedType(field);
-            Debug.Log(serializedType);
             if (serializedType.IsArray)
             {
                 Type serializedElementType = serializedType.GetElementType();
@@ -92,8 +92,7 @@ public class BinarySerializable : ISerializable
                 for (int i = 0; i < nItems; i++)
                     deserializedValue.SetValue(info.GetValue($"{field.Name}__{i}", serializedElementType), i);
 
-                object value;
-                if (BinarySerializableData.Deserialize(field, deserializedValue, out value))
+                if (BinarySerializableData.Deserialize(field, deserializedValue, out object value))
                     field.SetValue(instance, value);
                 else
                     Debug.LogWarning($"Could not serialize field: {field.Name} - getting default values");
@@ -102,8 +101,7 @@ public class BinarySerializable : ISerializable
             {
                 if (field.IsStatic) continue;
                 object deserializedValue = info.GetValue(field.Name, field.FieldType);
-                object value;
-                if (BinarySerializableData.Deserialize(field, deserializedValue, out value))
+                if (BinarySerializableData.Deserialize(field, deserializedValue, out object value))
                     field.SetValue(instance, value);
                 else
                     Debug.LogWarning($"Could not serialize field: {field.Name} - getting default values");

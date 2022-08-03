@@ -701,7 +701,8 @@ public class UnitManager : MonoBehaviour, PhaseListener
     }
 
     void OnDestroy() {
-        Debug.Log("Destroying " + _unitName);
+        if (Globals.DEBUG_GAME_SETUP)
+            Debug.Log("Destroying " + _unitName);
         GhostManager.Instance.RemoveGhosts(gameObject);
 
         if (Globals.SELECTED_UNIT == this) {

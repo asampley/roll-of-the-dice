@@ -97,7 +97,8 @@ public class PhaseManager {
 
         Current.results = results;
 
-        Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
+        if (Globals.DEBUG_PHASES)
+            Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
     }
 
     public void Push(Phase phase) {
@@ -115,7 +116,8 @@ public class PhaseManager {
 
         Current.results = results;
 
-        Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
+        if (Globals.DEBUG_PHASES)
+            Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
     }
 
     public void Pop() {
@@ -129,7 +131,8 @@ public class PhaseManager {
             listener.OnPhaseResume(CurrentPhase.Value);
         }
 
-        Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
+        if (Globals.DEBUG_PHASES)
+            Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
     }
 
     public async UniTask PhaseStep(CancellationToken token) {

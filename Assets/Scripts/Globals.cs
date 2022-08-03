@@ -23,6 +23,16 @@ public static class Globals
     public static Dictionary<(DiceClass, bool), Material> DICE_MATERIALS;
     public static Dictionary<(DiceClass, bool), Material> GHOST_MATERIALS;
 
+
+    // DEBUGGING
+    public static bool DEBUG_GAME_SETUP;
+    public static bool DEBUG_UNIT_SPAWN;
+    public static bool DEBUG_SERIALIZATION;
+    public static bool DEBUG_PHASES;
+    public static bool DEBUG_AI;
+
+
+
     // FILE PATHS
     public static string DICE_CLASS_SO = "ScriptableObjects/DiceClasses";
     public static string LEVEL_DATA_SO = "ScriptableObjects/LevelData";

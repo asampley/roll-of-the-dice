@@ -62,6 +62,26 @@ public class DebugConsole : MonoBehaviour
             Debug.Log(GameManager.Instance.phaseManager.StackString());
             Debug.Log(Utilities.EnumerableString(GameManager.Instance.phaseManager.CurrentPhaseResults()));
         });
+        new DebugCommand("debug_game_setup", "Print game setup and cleanup debugging.", "debug_game_setup", () =>
+        {
+            Globals.DEBUG_GAME_SETUP = !Globals.DEBUG_GAME_SETUP;
+        });
+        new DebugCommand("debug_ai", "Print AI debugging.", "debug_ai", () =>
+        {
+            Globals.DEBUG_AI = !Globals.DEBUG_AI;
+        });
+        new DebugCommand("debug_phases", "Print phase debugging.", "debug_phases", () =>
+        {
+            Globals.DEBUG_PHASES = !Globals.DEBUG_PHASES;
+        });
+        new DebugCommand("debug_serialization", "Print serialization debugging.", "debug_serialization", () =>
+        {
+            Globals.DEBUG_SERIALIZATION = !Globals.DEBUG_SERIALIZATION;
+        });
+        new DebugCommand("debug_unit_spawn", "Print unit spawning debugging.", "debug_unit_spawn", () =>
+        {
+            Globals.DEBUG_UNIT_SPAWN = !Globals.DEBUG_UNIT_SPAWN;
+        });
         new DebugCommand("win", "Win the game.", "win", () =>
         {
             GameManager.Instance.CheckWin(true);

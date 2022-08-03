@@ -122,7 +122,8 @@ public class Unit
     public void SetPosition(Vector2Int pos)
     {
         var placedOnTile = MapManager.Instance.GetTileAtPos(pos);
-        Debug.Log(placedOnTile.gridLocation);
+        if (Globals.DEBUG_UNIT_SPAWN)
+            Debug.Log(UnitName + " spawned at " + placedOnTile.gridLocation);
         if (placedOnTile == null)
         {
             Debug.LogError("Dice spawning off map.");
