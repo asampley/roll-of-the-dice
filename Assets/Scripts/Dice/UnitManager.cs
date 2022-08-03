@@ -700,9 +700,10 @@ public class UnitManager : MonoBehaviour, PhaseListener
         nameText.enabled = !nameText.enabled;
     }
 
-    void OnDestroy() {
-        if (Globals.DEBUG_GAME_SETUP)
-            Debug.Log("Destroying " + _unitName);
+    void OnDestroy()
+    {
+        Logging.LogNotification(("Destroying " + _unitName).ToString(), LogType.GAME_SETUP);
+
         GhostManager.Instance.RemoveGhosts(gameObject);
 
         if (Globals.SELECTED_UNIT == this) {
@@ -720,8 +721,9 @@ public class UnitManager : MonoBehaviour, PhaseListener
         }
     }
 
-    public async UniTask StepPath(CancellationToken token) {
-        Debug.Log("Following Path: " + PathStr());
+    public async UniTask StepPath(CancellationToken token)
+    {
+        Logging.LogNotification(("Following Path: " + PathStr()).ToString(), LogType.AI);
 
         if (path.Count > 0) {
             OverlayTile tile;
@@ -767,7 +769,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
             }
         }
 
-        Debug.Log("Ending StepPath: " + transform.name);
+        Logging.LogNotification(("Ending StepPath: " + transform.name).ToString(), LogType.AI);
     }
 
     // break into intermediate steps that are occupied along the movement

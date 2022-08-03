@@ -24,7 +24,6 @@ public class BinarySerializable : ISerializable
         foreach (FieldInfo field in T.GetFields())
         {
             if (field.IsStatic) continue;
-            //Debug.Log(field.Name);
             if (BinarySerializableData.Serialize(field, this, out object value))
             {
                 if (value.GetType().IsArray)
@@ -81,8 +80,8 @@ public class BinarySerializable : ISerializable
         Type T = instance.GetType();
         foreach (FieldInfo field in T.GetFields())
         {
-            if (Globals.DEBUG_SERIALIZATION)
-                Debug.Log(field.Name + " " + field.FieldType);
+            Logging.LogNotification((field.Name + " " + field.FieldType).ToString(), LogType.SERIALIZATION);
+
             Type serializedType = BinarySerializableData.GetSerializedType(field);
             if (serializedType.IsArray)
             {

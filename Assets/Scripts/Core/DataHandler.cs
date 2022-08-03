@@ -3,8 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Threading.Tasks;
-using TMPro;
 using Cysharp.Threading.Tasks;
 
 
@@ -50,6 +48,8 @@ public class DataHandler : MonoBehaviour
         // Load game scene data
         GameLevelData.levelId = CoreDataHandler.Instance.LevelID;
         GameLevelData.Load();
+
+        // Setup debugging if in 
 
         await UniTask.Yield();
     }

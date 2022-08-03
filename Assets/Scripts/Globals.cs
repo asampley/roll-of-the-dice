@@ -32,7 +32,6 @@ public static class Globals
     public static bool DEBUG_AI;
 
 
-
     // FILE PATHS
     public static string DICE_CLASS_SO = "ScriptableObjects/DiceClasses";
     public static string LEVEL_DATA_SO = "ScriptableObjects/LevelData";
@@ -42,4 +41,9 @@ public static class Globals
     public static string DATA_DIRECTORY = "Data";
 #endif
     public static string DATA_FILE_NAME = "GameData.data";
+    public static string GetLogFolderPath()
+        => System.IO.Path.Combine(
+            Application.persistentDataPath,
+            Globals.DATA_DIRECTORY,
+            "Logs");
 }
