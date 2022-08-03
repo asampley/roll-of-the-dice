@@ -15,6 +15,8 @@ MonoBehaviour:
   levelName: Level1
   sceneName: Level1
   nextLevel: {fileID: 11400000, guid: 5add61967d911994cbaad2e8c812522e, type: 2}
+  camStartPos: {x: -0.25, y: 1, z: -200}
+  camStartDistance: 2.5
   gameRules: {fileID: 11400000, guid: 8fcb3547f400cc14bb10d7414947a2c2, type: 2}
   gridType: 0
   alliedDice:

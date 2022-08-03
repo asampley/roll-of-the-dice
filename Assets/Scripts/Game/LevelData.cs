@@ -16,10 +16,14 @@ public class LevelData : ScriptableObject
     public string levelName;
     public string sceneName;
     public LevelData nextLevel;
+    public Vector3 camStartPos = new(-0.25f, 1f, -200f);
+    public float camStartDistance = 2.5f;
 
+    [Header("Rules")]
     public GameRulesData gameRules;
     public GridType gridType;
 
+    [Header("Dice")]
     public DiceSpawn[] alliedDice;
     public DiceSpawn[] enemyDice;
 

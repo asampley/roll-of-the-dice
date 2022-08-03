@@ -57,7 +57,7 @@ public class BinarySerializable : ISerializable
         }
 
         IFormatter formatter = new BinaryFormatter();
-        FileStream s = new FileStream(filePath, FileMode.Open);
+        FileStream s = new(filePath, FileMode.Open);
         BinarySerializable d = (BinarySerializable)formatter.Deserialize(s);
 
         s.Close();
@@ -69,7 +69,7 @@ public class BinarySerializable : ISerializable
         if (!Directory.Exists(GameLevelData.GetFolderPath()))
             Directory.CreateDirectory(GameLevelData.GetFolderPath());
         IFormatter formatter = new BinaryFormatter();
-        FileStream s = new FileStream(filePath, FileMode.Create);
+        FileStream s = new(filePath, FileMode.Create);
         formatter.Serialize(s, instance);
         s.Close();
     }
