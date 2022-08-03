@@ -19,15 +19,15 @@ MonoBehaviour:
   gridType: 0
   alliedDice:
   - diceClass: 1
-    tilePosition: {x: -1, y: 3}
+    tilePosition: {x: 0, y: 2}
     isEnemy: 0
   - diceClass: 1
-    tilePosition: {x: 6, y: -2}
+    tilePosition: {x: 5, y: -1}
     isEnemy: 0
   enemyDice:
-  - diceClass: 3
-    tilePosition: {x: 0, y: -3}
+  - diceClass: 1
+    tilePosition: {x: 0, y: -1}
     isEnemy: 1
-  - diceClass: 3
-    tilePosition: {x: 5, y: 4}
+  - diceClass: 1
+    tilePosition: {x: 5, y: 2}
     isEnemy: 1

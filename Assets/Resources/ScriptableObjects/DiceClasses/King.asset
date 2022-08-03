@@ -23,7 +23,7 @@ MonoBehaviour:
   enemyColor:
     serializedVersion: 2
     rgba: 4287037439
-  maxMoves: 3
+  maxMoves: 2
   movementPattern: 0
   movementStrategy: 1
   faces: 050000000500000005000000050000000500000005000000
