@@ -79,6 +79,7 @@ public class DataHandler : MonoBehaviour
                 orientation = die.orientation,
                 movesRemaining = die.MovesRemainging,
                 path = movement.ToArray(),
+                uid = die.Uid,
             };
             dice.Add(d);
         }
