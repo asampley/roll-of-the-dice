@@ -79,11 +79,11 @@ public class PhaseManager {
     }
 
     public void Transition(Phase phase) {
-        if (GameManager.Instance.WinState == Win.None)
+        if (GameManager.Instance.WinState == Win.None && GameManager.Instance.phaseManager.CurrentPhase != Phase.Setup)
             DataHandler.SaveGameData();
         phaseStack.RemoveAt(phaseStack.Count - 1);
 
-        PhaseData phaseData = new PhaseData(phase);
+        PhaseData phaseData = new(phase);
         phaseStack.Add(phaseData);
 
         var listeners = AllPhaseListeners.ToArray();
@@ -101,7 +101,7 @@ public class PhaseManager {
     }
 
     public void Push(Phase phase) {
-        PhaseData phaseData = new PhaseData(phase);
+        PhaseData phaseData = new(phase);
         phaseStack.Add(phaseData);
 
         var listeners = AllPhaseListeners.ToArray();

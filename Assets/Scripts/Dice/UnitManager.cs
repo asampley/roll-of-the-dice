@@ -179,6 +179,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
         if (!_unit.LoadFromSave)
             ResetRange();
         SetOrientation(orientation);
+
     }
 
     // consumes each step of the enumerator only after the last move has completed

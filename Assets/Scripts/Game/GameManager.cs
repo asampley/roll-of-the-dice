@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         Debug.Log("START NEW GAME");
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
-        _LoadGameData();
+        LoadGameData();
     }
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientationData orientation)
@@ -204,13 +204,13 @@ public class GameManager : MonoBehaviour, PhaseListener
         phaseUpdateCancel = new CancellationTokenSource();
 
         phaseManager.Clear();
-        phaseManager.Push(Phase.Setup);
+        phaseManager.Push(GameLevelData.Instance.currentPhase);
 
         PlayerKingDefeated = false;
         MaxNumberOfTurns = gameRulesData.maxTurns;
         CurrentRound = GameLevelData.Instance.currentRound;
 
-        await UniTask.Yield();
+        await UniTask.Yield();        
     }
 
     public void RerollGame()
@@ -236,8 +236,10 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void CheckWin()
     {
-        if (phaseManager.CurrentPhase == Phase.Setup) return;
-
+        Debug.Log("Garfeel " + phaseManager.CurrentPhase);
+        if (phaseManager.CurrentPhase == Phase.Setup | phaseManager.CurrentPhase == null) return;
+        Debug.Log("Garfeel " + phaseManager.CurrentPhase);
+        Debug.Log("Garfeel " + EnemyCount);
         if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
             WinEvent?.Invoke(Win.Enemy);
         else if (PlayerCount == 0 || PlayerKingDefeated)
@@ -343,15 +345,20 @@ public class GameManager : MonoBehaviour, PhaseListener
         }
     }
 
-    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token) {
-        switch (phase) {
+    public async UniTask<PhaseStepResult> OnPhaseStep(Phase phase, CancellationToken token)
+    {
+        switch (phase)
+        {
             case Phase.Setup:
                 await UniTask.DelayFrame(1);
                 return PhaseStepResult.Done;
             case Phase.Player:
-                if (_playerMoveRemaining <= 0) {
+                if (_playerMoveRemaining <= 0)
+                {
                     return PhaseStepResult.Done;
-                } else {
+                }
+                else
+                {
                     return PhaseStepResult.Unchanged;
                 }
             default:
@@ -389,7 +396,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         CheckWin();
     }
 
-    private async UniTask _LoadGameData()
+    private async UniTask LoadGameData()
     {
         await DataHandler.LoadGameData();
         await DataHandler.DeserializeGameData();

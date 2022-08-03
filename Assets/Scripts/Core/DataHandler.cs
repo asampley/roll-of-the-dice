@@ -117,7 +117,6 @@ public class DataHandler : MonoBehaviour
     public static async UniTask DeserializeGameData()
     {
         GameLevelData data = GameLevelData.Instance;
-        Debug.Log("Garfeel " + data);
         if (data == null) return;
 
         foreach (GameUnitData die in data.dice)

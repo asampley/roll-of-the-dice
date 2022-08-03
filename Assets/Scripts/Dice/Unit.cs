@@ -70,7 +70,8 @@ public class Unit
     public static List<Unit> DICE_LIST;
 
 
-    public Unit(UnitData data, bool isEnemy, Vector3 diceOrientation, Vector2Int position, int moves, bool fromSave = false, List<Vector2Int> path = null) : this(data, isEnemy, new DiceOrientationData(), fromSave)
+    public Unit(UnitData data, bool isEnemy, Vector3 diceOrientation, Vector2Int position, int moves, bool fromSave = false, List<Vector2Int> path = null)
+        : this(data, isEnemy, new DiceOrientationData(), fromSave)
     {
         SetOrientation(diceOrientation);
         SetPosition(position);
