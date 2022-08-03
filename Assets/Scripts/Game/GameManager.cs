@@ -121,7 +121,7 @@ public class GameManager : MonoBehaviour, PhaseListener
             _instance = this;
 
         phaseManager.AllPhaseListeners.Add(this);
-        GameManager.Instance.WinEvent += w => _winState = w;        
+        GameManager.Instance.WinEvent += w => _winState = w;
     }
 
     private void Start()
@@ -211,7 +211,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         CurrentRound = GameLevelData.Instance.currentRound;
 
         RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
-        await UniTask.Yield();        
+        await UniTask.Yield();
     }
 
     public void RerollGame()
@@ -245,7 +245,7 @@ public class GameManager : MonoBehaviour, PhaseListener
             WinEvent?.Invoke(Win.Enemy);
         else if (EnemyCount == 0)
             WinEvent?.Invoke(Win.Player);
-            
+
     }
 
     public void CheckWin(bool player)
@@ -333,7 +333,8 @@ public class GameManager : MonoBehaviour, PhaseListener
                     _players
                         .SelectMany(
                             p => MapManager.Instance.GetSurroundingTiles((Vector2Int)p.parentTile.gridLocation)
-                        ).Select(o => (Vector2Int)o.gridLocation)
+                        ).Where(o => !o.IsBlocked)
+                        .Select(o => (Vector2Int)o.gridLocation)
                 );
                 return PhaseStepResult.Unchanged;
             default:
@@ -401,6 +402,6 @@ public class GameManager : MonoBehaviour, PhaseListener
             await LoadGame();
         else
             await SetupGame();
-        
+
     }
 }
