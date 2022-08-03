@@ -41,9 +41,9 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
         return MapManager.Instance.GetSurroundingTiles(pos);
     }
 
-    public void CreatePath() {
-        if (Globals.DEBUG_AI)
-            Debug.Log("Create Path: currently taken " + EnemyPathManager.Instance.TakenStr());
+    public void CreatePath()
+    {
+        Logging.LogNotification(("Create Path: currently taken " + EnemyPathManager.Instance.TakenStr()).ToString(), LogType.AI);
 
         Vector2Int start = (Vector2Int)_unitManager.parentTile.gridLocation;
         Vector2Int pos = start;
@@ -105,8 +105,8 @@ public class EnemyAI : MonoBehaviour, PhaseListener {
             pos = next;
         }
 
-        if (Globals.DEBUG_AI)
-            Debug.Log("Created Path: " + _unitManager.PathStr());
+        Logging.LogNotification(("Created Path: " + _unitManager.PathStr()).ToString(), LogType.AI);
+
         if (GameManager.Instance.WinState == Win.None)
             DataHandler.SaveGameData();
     }

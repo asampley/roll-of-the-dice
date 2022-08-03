@@ -97,8 +97,7 @@ public class PhaseManager {
 
         Current.results = results;
 
-        if (Globals.DEBUG_PHASES)
-            Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
+        Logging.LogNotification(("PhaseManager new stack " + Utilities.EnumerableString(phaseStack)).ToString(), LogType.PHASES);
     }
 
     public void Push(Phase phase) {
@@ -116,8 +115,7 @@ public class PhaseManager {
 
         Current.results = results;
 
-        if (Globals.DEBUG_PHASES)
-            Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
+        Logging.LogNotification(("PhaseManager new stack " + Utilities.EnumerableString(phaseStack)).ToString(), LogType.PHASES);
     }
 
     public void Pop() {
@@ -131,8 +129,7 @@ public class PhaseManager {
             listener.OnPhaseResume(CurrentPhase.Value);
         }
 
-        if (Globals.DEBUG_PHASES)
-            Debug.Log("PhaseManager new stack " + Utilities.EnumerableString(phaseStack));
+        Logging.LogNotification(("PhaseManager new stack " + Utilities.EnumerableString(phaseStack)).ToString(), LogType.PHASES);
     }
 
     public async UniTask PhaseStep(CancellationToken token) {
@@ -140,10 +137,10 @@ public class PhaseManager {
         CleanSet(Current.phaseStep);
 
         // copy list to protect from manipulation in the middle of processing
-        List<PhaseListener> toStep = new List<PhaseListener>(Current.phaseStep);
+        List<PhaseListener> toStep = new(Current.phaseStep);
 
-        List<UniTask<PhaseStepResult>> tasks = new List<UniTask<PhaseStepResult>>();
-        List<CancellationTokenSource> sources = new List<CancellationTokenSource>();
+        List<UniTask<PhaseStepResult>> tasks = new();
+        List<CancellationTokenSource> sources = new();
 
         foreach (var l in toStep) {
             var source = CancellationTokenSource.CreateLinkedTokenSource(

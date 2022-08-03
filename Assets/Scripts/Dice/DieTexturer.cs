@@ -60,8 +60,7 @@ public class DieTexturer : MonoBehaviour {
         var meshNormals = mesh.normals;
         var meshVertices = mesh.vertices;
 
-        if (Globals.DEBUG_UNIT_SPAWN)
-            Debug.Log("Vertices: " + Utilities.EnumerableString(meshVertices));
+        Logging.LogNotification(("Vertices: " + Utilities.EnumerableString(meshVertices)).ToString(), LogType.UNIT_SPAWN);
 
         var uvs = new Vector2[mesh.vertices.Length];
 
@@ -88,8 +87,8 @@ public class DieTexturer : MonoBehaviour {
                 uvs[t[j]] = Vector2.Scale(uv, uvScale) + Offset(face);
             }
         }
-        if (Globals.DEBUG_UNIT_SPAWN)
-            Debug.Log("Retexture " + this.name + ": uvs = " + Utilities.EnumerableString(uvs));
+
+        Logging.LogNotification(("Retexture " + this.name + ": uvs = " + Utilities.EnumerableString(uvs)).ToString(), LogType.UNIT_SPAWN);
 
         mesh.SetUVs(0, uvs);
     }
