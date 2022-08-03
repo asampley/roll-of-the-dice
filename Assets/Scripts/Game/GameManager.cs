@@ -126,7 +126,8 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     private void Start()
     {
-        Debug.Log("START NEW GAME");
+        if (Globals.DEBUG_GAME_SETUP)
+            Debug.Log("START NEW GAME");
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
         LoadGameData();
@@ -257,7 +258,8 @@ public class GameManager : MonoBehaviour, PhaseListener
     }
 
     private async UniTask RunPhaseUpdate(CancellationToken token) {
-        Debug.Log("Start Run Phase Update: " + phaseManager.CurrentPhase);
+        if (Globals.DEBUG_PHASES)
+            Debug.Log("Start Run Phase Update: " + phaseManager.CurrentPhase);
 
         while (true)
         {
@@ -372,7 +374,8 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void OnDestroy()
     {
-        Debug.Log("Destroying Game Manager");
+        if (Globals.DEBUG_GAME_SETUP)
+            Debug.Log("Destroying Game Manager");
         _instance = null;
         phaseManager = null;
     }
