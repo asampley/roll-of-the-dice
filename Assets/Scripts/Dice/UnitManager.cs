@@ -279,6 +279,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 - MapManager.Instance.TileToWorldSpace(pos - next)
             );
 
+            GhostManager.Instance.SetupGhostEffects(this.gameObject, next, trans, deltas);
             pos = next;
         }
     }
