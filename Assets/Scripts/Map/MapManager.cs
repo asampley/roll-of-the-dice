@@ -8,7 +8,7 @@ public class MapManager : MonoBehaviour
 {
     private static MapManager _instance;
     public static MapManager Instance {  get { return _instance; } }
-    private float ySpread;
+    private float zSpread;
     public OverlayTile overlayTilePrefab;
     public GameObject tileParent;
     public Tilemap tileMap;
@@ -28,7 +28,7 @@ public class MapManager : MonoBehaviour
 
     private void Start()
     {
-        ySpread = tileMap.GetComponent<TilemapRenderer>().sharedMaterial.GetFloat("_YSpread");
+        zSpread = tileMap.GetComponent<TilemapRenderer>().sharedMaterial.GetFloat("_ZSpread");
 
         GenerateMap();
     }
@@ -111,7 +111,14 @@ public class MapManager : MonoBehaviour
     public Vector3 TileToWorldSpace(Vector3Int pos)
     {
         Vector3 vec = this.tileMap.GetCellCenterWorld(pos);
-        vec += (ySpread * (vec.y - 0.25f)) * Vector3.forward;
+        vec += (zSpread * (pos.x + pos.y)) * Vector3.forward;
+        return vec;
+    }
+
+    public Vector2 TileToWorldSpace2(Vector2Int pos)
+    {
+        Vector3 vec = this.tileMap.GetCellCenterWorld((Vector3Int)pos);
+        vec += (zSpread * (pos.x + pos.y)) * Vector3.forward;
         return vec;
     }
 
