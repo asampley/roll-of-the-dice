@@ -139,24 +139,25 @@ public class GameManager : MonoBehaviour, PhaseListener
         die.SetPosition(startPos);
     }
 
-    public void SetDefaultPositions()
+    public void SetDefaultPositions(bool reroll = false)
     {
         ClearDictionaries();
-        if (GameLevelData.Instance != null)
+        Debug.Log("Garfeel " + reroll);
+        if (reroll)
+        {
+            Debug.Log("Garfeel");
+            foreach (DiceSpawn spawn in levelData.alliedDice)
+                _alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
+            foreach (DiceSpawn spawn in levelData.enemyDice)
+                _enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
+        }
+        else if (GameLevelData.Instance != null)
         {
             for (int i = 0; i < levelData.alliedDice.Length; i++)
                 _alliedSpawnPositions.Add(levelData.alliedDice[i], GameLevelData.Instance.alliedOrientations[i]);
             for (int i = 0; i < levelData.enemyDice.Length; i++)
                 _enemySpawnPositions.Add(levelData.enemyDice[i], GameLevelData.Instance.enemyOrientations[i]);
         }
-        else
-        {
-            foreach (DiceSpawn spawn in levelData.alliedDice)
-                _alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
-            foreach (DiceSpawn spawn in levelData.enemyDice)
-                _enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
-        }
-
     }
 
     public DiceOrientationData GenerateDiceOrientation()
@@ -217,7 +218,7 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void RerollGame()
     {
-        SetDefaultPositions();
+        SetDefaultPositions(true);
         SetupGame();
     }
 
@@ -238,19 +239,14 @@ public class GameManager : MonoBehaviour, PhaseListener
 
     public void CheckWin()
     {
-        Debug.Log("Garfeel " + phaseManager.CurrentPhase);
-        if (phaseManager.CurrentPhase == Phase.Setup | phaseManager.CurrentPhase == null) return;
-        Debug.Log("Garfeel " + phaseManager.CurrentPhase);
-        Debug.Log("Garfeel " + EnemyCount);
+        if (phaseManager.CurrentPhase == Phase.Setup || phaseManager.CurrentPhase == null) return;
+
         if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
             WinEvent?.Invoke(Win.Enemy);
         else if (PlayerCount == 0 || PlayerKingDefeated)
             WinEvent?.Invoke(Win.Enemy);
         else if (EnemyCount == 0)
-        {
             WinEvent?.Invoke(Win.Player);
-            Debug.Log("Garfeel");
-        }
             
     }
 

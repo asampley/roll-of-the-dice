@@ -24,7 +24,7 @@ public class BinarySerializable : ISerializable
         foreach (FieldInfo field in T.GetFields())
         {
             if (field.IsStatic) continue;
-            Debug.Log(field.Name);
+            //Debug.Log(field.Name);
             if (BinarySerializableData.Serialize(field, this, out object value))
             {
                 if (value.GetType().IsArray)

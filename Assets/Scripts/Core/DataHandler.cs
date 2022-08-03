@@ -56,7 +56,6 @@ public class DataHandler : MonoBehaviour
 
     public static void SaveGameData()
     {
-        Debug.Log("Garfeel Saving");
         GameLevelData.levelId = CoreDataHandler.Instance.LevelID;
         GameLevelData.Save(SerializeGameData());
     }
