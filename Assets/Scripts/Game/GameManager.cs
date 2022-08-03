@@ -193,6 +193,7 @@ public class GameManager : MonoBehaviour, PhaseListener
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
 
+        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
         await UniTask.Yield();
     }
 
@@ -210,6 +211,7 @@ public class GameManager : MonoBehaviour, PhaseListener
         MaxNumberOfTurns = gameRulesData.maxTurns;
         CurrentRound = GameLevelData.Instance.currentRound;
 
+        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
         await UniTask.Yield();        
     }
 
@@ -405,6 +407,6 @@ public class GameManager : MonoBehaviour, PhaseListener
             await LoadGame();
         else
             await SetupGame();
-        RunPhaseUpdate(phaseUpdateCancel.Token).Forget();
+        
     }
 }
