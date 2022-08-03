@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -42,12 +42,20 @@ public class GhostManager : MonoBehaviour {
 
         ghost.GetComponentInChildren<MeshRenderer>().sharedMaterial = dieManager.ghostMaterial;
 
-        if (tileDelta != null) {
+
+        if (tileDelta.HasValue)
+        {
             var rotator = ghost.GetComponentInChildren<DieRotator>();
-
-            rotator.RotateTileDelta(tileDelta.Value, rotationCount);
+            if (tileDelta.Value.x > 0)
+                rotator.RotateTileDelta(new Vector2Int(1, 0), Math.Abs(tileDelta.Value.x));
+            else if (tileDelta.Value.x < 0)
+                rotator.RotateTileDelta(new Vector2Int(-1, 0), Math.Abs(tileDelta.Value.x));
+            if (tileDelta.Value.y > 0)
+                rotator.RotateTileDelta(new Vector2Int(0, 1), Math.Abs(tileDelta.Value.y));
+            else if (tileDelta.Value.y < 0)
+                rotator.RotateTileDelta(new Vector2Int(0, -1), Math.Abs(tileDelta.Value.y));
         }
-
+ 
         if (translation != null) {
             var translator = ghost.GetComponentInChildren<DieTranslator>();
 

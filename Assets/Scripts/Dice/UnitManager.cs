@@ -96,8 +96,8 @@ public class UnitManager : MonoBehaviour, PhaseListener
     public Material ghostMaterial;
 
     public GameObject ghostComponents;
-    private DieRotator _dieRotator;
-    public DieRotator DieRotator { get { return _dieRotator; }
+    private DieRotator _rotator;
+    public DieRotator DieRotator { get { return _rotator; }
     }
     private DieTexturer _dieTexturer;
     public DieTexturer DieTexturer { get { return _dieTexturer; }
@@ -114,7 +114,7 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     private void Awake()
     {
-        _dieRotator = GetComponentInChildren<DieRotator>();
+        _rotator = GetComponentInChildren<DieRotator>();
         _dieTexturer = GetComponentInChildren<DieTexturer>();
     }
 
@@ -495,28 +495,49 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     public void SetOrientation(DiceOrientationData orientation)
     {
-        _dieRotator.RotateTileDelta(Vector2Int.right, orientation.xRolls);
-        _dieRotator.RotateTileDelta(Vector2Int.up, orientation.yRolls);
-        _dieRotator.RotateZ(orientation.zRolls);
-        _unit.orientation = _dieRotator.RotateNow().eulerAngles;
-        State = _dieRotator.GetUpFace();
+        _rotator.RotateTileDelta(Vector2Int.right, orientation.xRolls);
+        _rotator.RotateTileDelta(Vector2Int.up, orientation.yRolls);
+        _rotator.RotateZ(orientation.zRolls);
+        _unit.orientation = _rotator.RotateNow().eulerAngles;
+        State = _rotator.GetUpFace();
     }
 
     public void SetOrientation(Vector3 orientation)
     {
-        _dieRotator.SetRotation(Quaternion.Euler(orientation.x, orientation.y, orientation.z));
-        _unit.orientation = _dieRotator.RotateNow().eulerAngles;
-        State = _dieRotator.GetUpFace();
+        _rotator.SetRotation(Quaternion.Euler(orientation.x, orientation.y, orientation.z));
+        _unit.orientation = _rotator.RotateNow().eulerAngles;
+        State = _rotator.GetUpFace();
+    }
+
+    private void MoveToPosOld(Vector2Int delta, bool rotate = true)
+    {
+        if (rotate)
+        {
+            GetComponentInChildren<DieRotator>().RotateTileDelta(delta);
+            _unit.orientation = _rotator.FinalTarget().eulerAngles;
+        }
+
+        GetComponentInChildren<DieTranslator>().Translate(
+            MapManager.Instance.TileDeltaToWorldDelta(delta)
+        );
     }
 
     private void MoveToPos(Vector2Int delta, bool rotate = true)
     {
         if (rotate)
         {
-            GetComponentInChildren<DieRotator>().RotateTileDelta(delta);
-            _unit.orientation = _dieRotator.FinalTarget().eulerAngles;
+            if (delta.x > 0)
+                _rotator.RotateTileDelta(new Vector2Int(1, 0), Math.Abs(delta.x));
+            else if (delta.x < 0)
+                _rotator.RotateTileDelta(new Vector2Int(-1, 0), Math.Abs(delta.x));
+            if (delta.y > 0)
+                _rotator.RotateTileDelta(new Vector2Int(0, 1), Math.Abs(delta.y));
+            else if (delta.y < 0)
+                _rotator.RotateTileDelta(new Vector2Int(0, -1), Math.Abs(delta.y));
+
+            _unit.orientation = _rotator.FinalTarget().eulerAngles;
         }
-        Debug.Log("Garfeel");
+
         GetComponentInChildren<DieTranslator>().Translate(
             MapManager.Instance.TileDeltaToWorldDelta(delta)
         );
@@ -524,8 +545,11 @@ public class UnitManager : MonoBehaviour, PhaseListener
 
     private async UniTask UpdateTilePos(OverlayTile newTile, CancellationToken token, bool rotate = true)
     {
-        MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
-        State = _dieRotator.GetUpFace();
+        if (_movementPattern == MovementPattern.Knight)
+            MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
+        else
+            MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
+        State = _rotator.GetUpFace();
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
 
@@ -546,14 +570,14 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 GetTilesInRange();
                 break;
             case TileType.RotateClockwise:
-                _dieRotator.RotateZ(1);
-                _unit.orientation = _dieRotator.FinalTarget().eulerAngles; ;
+                _rotator.RotateZ(1);
+                _unit.orientation = _rotator.FinalTarget().eulerAngles; ;
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 break;
             case TileType.RotateCounterClockwise:
-                _dieRotator.RotateZ(-1);
-                _unit.orientation = _dieRotator.FinalTarget().eulerAngles; ;
+                _rotator.RotateZ(-1);
+                _unit.orientation = _rotator.FinalTarget().eulerAngles; ;
                 GetTilesInRange();
                 break;
             case TileType.ShovePosX:
@@ -573,18 +597,18 @@ public class UnitManager : MonoBehaviour, PhaseListener
                 GetTilesInRange();
                 break;
             case TileType.RemoveFace:
-                _dieRotator.SetDownFace(DiceState.Blank);
+                _rotator.SetDownFace(DiceState.Blank);
                 GetTilesInRange();
                 break;
             case TileType.Randomize:
-                int a = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
-                int b = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
-                int c = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
+                int a = UnityEngine.Random.Range(0, _rotator.axes.FaceEdges);
+                int b = UnityEngine.Random.Range(0, _rotator.axes.FaceEdges);
+                int c = UnityEngine.Random.Range(0, _rotator.axes.FaceEdges);
 
-                _dieRotator.RotateZ(a);
-                _dieRotator.RotateZ(b);
-                _dieRotator.RotateZ(c);
-                _unit.orientation = _dieRotator.FinalTarget().eulerAngles; ;
+                _rotator.RotateZ(a);
+                _rotator.RotateZ(b);
+                _rotator.RotateZ(c);
+                _unit.orientation = _rotator.FinalTarget().eulerAngles; ;
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 break;
