@@ -40,10 +40,21 @@ public static class Globals
 #else
     public static string DATA_DIRECTORY = "Data";
 #endif
+
     public static string DATA_FILE_NAME = "GameData.data";
+
+#if UNITY_WEBGL
+    public static string GetLogFolderPath()
+        => System.IO.Path.Combine(
+            "idbfs",
+            "BlockPaperScissorsANDupwq3wg0zw4czbq",
+            Globals.DATA_DIRECTORY,
+            "Logs");
+#else
     public static string GetLogFolderPath()
         => System.IO.Path.Combine(
             Application.persistentDataPath,
             Globals.DATA_DIRECTORY,
             "Logs");
+#endif
 }

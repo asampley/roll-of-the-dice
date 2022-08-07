@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public class MainMenuManager : MonoBehaviour
 {
     public GameObject mainMenu;
-    public GameObject levelSelect;
+    public GameObject worldSelect;
+    public GameObject meadowsLevels;
     public GameObject instructions;
     public GameObject options;
 
@@ -15,7 +16,13 @@ public class MainMenuManager : MonoBehaviour
     public void PlayGame()
     {
         mainMenu.SetActive(false);
-        levelSelect.SetActive(true);
+        worldSelect.SetActive(true);
+    }
+
+    public void SelectMeadows()
+    {
+        worldSelect.SetActive(false);
+        meadowsLevels.SetActive(true);
     }
 
     public void Instructions()
@@ -32,7 +39,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void Back()
     {
-        levelSelect.SetActive(false);
+        worldSelect.SetActive(false);
         instructions.SetActive(false);
         options.SetActive(false);
         mainMenu.SetActive(true);

@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23ae3ea75ab725f4e8f9e1a9f8bb62da, type: 3}
+  m_Name: MeadowsLevel4
+  m_EditorClassIdentifier: Assembly-CSharp::StartPosition
+  levelName: meadows4
+  sceneName: pond7x7
+  nextLevel: {fileID: 11400000, guid: 6f8f9d8e31cc6174fb39764e62bdd798, type: 2}
+  camStartPos: {x: 0.13, y: 1, z: -200}
+  camStartDistance: 2
+  gameRules: {fileID: 11400000, guid: 8fcb3547f400cc14bb10d7414947a2c2, type: 2}
+  gridType: 0
+  alliedDice:
+  - diceClass: 1
+    tilePosition: {x: -1, y: -3}
+    isEnemy: 0
+  - diceClass: 1
+    tilePosition: {x: 5, y: 3}
+    isEnemy: 0
+  enemyDice:
+  - diceClass: 0
+    tilePosition: {x: 2, y: 2}
+    isEnemy: 1
+  - diceClass: 0
+    tilePosition: {x: 4, y: 1}
+    isEnemy: 1
+  - diceClass: 0
+    tilePosition: {x: 3, y: -2}
+    isEnemy: 1
+  - diceClass: 1
+    tilePosition: {x: 0, y: 1}
+    isEnemy: 1
+  - diceClass: 1
+    tilePosition: {x: -1, y: 3}
+    isEnemy: 1
+  - diceClass: 1
+    tilePosition: {x: 5, y: -3}
+    isEnemy: 1

@@ -15,6 +15,50 @@ public enum DiceClass
     TetraPawn,
 }
 
+
+
+// Notation: Shape FaceNumber FaceRotation (2 Digits each)
+// C for Cube
+public enum DiceOrientation2
+{
+    C0000,
+    C0001,
+    C0002,
+    C0003,
+    C0004,
+    C0005,
+    C0100,
+    C0101,
+    C0102,
+    C0103,
+    C0104,
+    C0105,
+    C0200,
+    C0201,
+    C0202,
+    C0203,
+    C0204,
+    C0205,
+    C0300,
+    C0301,
+    C0302,
+    C0303,
+    C0304,
+    C0305,
+    C0400,
+    C0401,
+    C0402,
+    C0403,
+    C0404,
+    C0405,
+    C0500,
+    C0501,
+    C0502,
+    C0503,
+    C0504,
+    C0505,
+}
+
 [System.Serializable]
 public class DiceSpawn
 {

@@ -1,0 +1,131 @@
+
+7:41:49 PM : Create Path: currently taken 
+7:41:49 PM : Created Path: (2, 2) -> [(2, 1),]
+7:41:49 PM : Create Path: currently taken (4, 3)
+7:41:49 PM : Created Path: (4, 1) -> [(-1, 2),]
+7:41:49 PM : Create Path: currently taken (4, 3)(3, 3)
+7:41:49 PM : Created Path: (3, -2) -> [(-4, 0),]
+7:41:49 PM : Create Path: currently taken (4, 3)(3, 3)(-1, -2)
+7:41:49 PM : Created Path: (0, 1) -> [(3, 0),]
+7:42:56 PM : Following Path: (-1, -3) -> [(4, 0),]
+7:42:56 PM : Ending StepPath: Rook Player d7e67990-9db2-4dc2-8d9c-f9172533f6f8
+7:42:56 PM : Following Path: (0, -3) -> [(3, 0),]
+7:42:57 PM : Ending StepPath: Rook Player d7e67990-9db2-4dc2-8d9c-f9172533f6f8
+7:42:57 PM : Following Path: (1, -3) -> [(2, 0),]
+7:42:57 PM : Ending StepPath: Rook Player d7e67990-9db2-4dc2-8d9c-f9172533f6f8
+7:42:57 PM : Following Path: (2, -3) -> [(1, 0),]
+7:42:58 PM : Ending StepPath: Rook Player d7e67990-9db2-4dc2-8d9c-f9172533f6f8
+7:43:08 PM : Following Path: (5, 3) -> [(1, -2),]
+7:43:09 PM : Ending StepPath: Knight Player d47b8d4b-497d-4864-a761-6abf53287e40
+7:43:09 PM : Following Path: (2, 2) -> [(2, 1),]
+7:43:09 PM : Following Path: (4, 1) -> [(-1, 2),]
+7:43:09 PM : Following Path: (3, -2) -> [(-4, 0),]
+7:43:09 PM : Following Path: (0, 1) -> [(3, 0),]
+7:43:09 PM : Ending StepPath: Knight Enemy ceec6572-84fc-42a1-ab5e-bcaa9656af22
+7:43:09 PM : Ending StepPath: Rook Enemy 9be0a1e3-765f-4b56-84c2-685458fbb951
+7:43:09 PM : Ending StepPath: Rook Enemy ee96d0cd-41a4-4ab4-a5ca-1f55fa8291b4
+7:43:09 PM : Ending StepPath: Knight Enemy d667c33d-7a84-499c-a433-8109c7b46cac
+7:43:09 PM : Following Path: (2, -2) -> [(-3, 0),]
+7:43:09 PM : Following Path: (1, 1) -> [(2, 0),]
+7:43:10 PM : Ending StepPath: Rook Enemy ee96d0cd-41a4-4ab4-a5ca-1f55fa8291b4
+7:43:10 PM : Ending StepPath: Rook Enemy 9be0a1e3-765f-4b56-84c2-685458fbb951
+7:43:10 PM : Following Path: (1, -2) -> [(-2, 0),]
+7:43:10 PM : Following Path: (2, 1) -> [(1, 0),]
+7:43:10 PM : Ending StepPath: Rook Enemy ee96d0cd-41a4-4ab4-a5ca-1f55fa8291b4
+7:43:10 PM : Ending StepPath: Rook Enemy 9be0a1e3-765f-4b56-84c2-685458fbb951
+7:43:10 PM : Following Path: (0, -2) -> [(-1, 0),]
+7:43:11 PM : Ending StepPath: Rook Enemy ee96d0cd-41a4-4ab4-a5ca-1f55fa8291b4
+7:43:11 PM : Create Path: currently taken 
+7:43:11 PM : Created Path: (4, 3) -> [(1, -2),]
+7:43:11 PM : Create Path: currently taken (5, 1)
+7:43:11 PM : Created Path: (3, 3) -> [(1, -2),]
+7:43:11 PM : Create Path: currently taken (5, 1)(4, 1)
+7:43:11 PM : Created Path: (-1, -2) -> [(4, 0),]
+7:43:11 PM : Create Path: currently taken (5, 1)(4, 1)(3, -2)
+7:43:11 PM : Created Path: (3, 1) -> [(0, -2),]
+7:43:30 PM : Following Path: (6, 1) -> [(-2, -1),]
+7:43:30 PM : Ending StepPath: Knight Player d47b8d4b-497d-4864-a761-6abf53287e40
+7:43:43 PM : Following Path: (3, -3) -> [(-2, 0),]
+7:43:43 PM : Ending StepPath: Rook Player d7e67990-9db2-4dc2-8d9c-f9172533f6f8
+7:43:43 PM : Following Path: (2, -3) -> [(-1, 0),]
+7:43:44 PM : Ending StepPath: Rook Player d7e67990-9db2-4dc2-8d9c-f9172533f6f8
+7:43:44 PM : Following Path: (4, 3) -> [(1, -2),]
+7:43:44 PM : Following Path: (3, 3) -> [(1, -2),]
+7:43:44 PM : Following Path: (-1, -2) -> [(4, 0),]
+7:43:44 PM : Following Path: (3, 1) -> [(0, -2),]
+7:43:44 PM : Ending StepPath: Knight Enemy ceec6572-84fc-42a1-ab5e-bcaa9656af22
+7:43:44 PM : Ending StepPath: Rook Enemy 9be0a1e3-765f-4b56-84c2-685458fbb951
+7:43:44 PM : Ending StepPath: Rook Enemy ee96d0cd-41a4-4ab4-a5ca-1f55fa8291b4
+7:43:44 PM : Ending StepPath: Knight Enemy d667c33d-7a84-499c-a433-8109c7b46cac
+7:43:44 PM : Following Path: (0, -2) -> [(3, 0),]
+7:43:44 PM : Following Path: (3, 0) -> [(0, -1),]
+7:43:45 PM : Ending StepPath: Rook Enemy ee96d0cd-41a4-4ab4-a5ca-1f55fa8291b4
+7:43:45 PM : Ending StepPath: Rook Enemy 9be0a1e3-765f-4b56-84c2-685458fbb951
+7:43:45 PM : Following Path: (1, -2) -> [(2, 0),]
+7:43:45 PM : Ending StepPath: Rook Enemy ee96d0cd-41a4-4ab4-a5ca-1f55fa8291b4
+7:43:45 PM : Following Path: (2, -2) -> [(1, 0),]
+7:43:46 PM : Ending StepPath: Rook Enemy ee96d0cd-41a4-4ab4-a5ca-1f55fa8291b4
+7:43:46 PM : Create Path: currently taken 
+7:43:46 PM : Created Path: (5, 1) -> [(-2, -1),]
+7:43:46 PM : Create Path: currently taken (3, 0)
+7:43:46 PM : Created Path: (4, 1) -> [(-2, -1),]
+7:43:46 PM : Create Path: currently taken (3, 0)(2, 0)
+7:43:46 PM : Created Path: (3, -2) -> [(-2, 0),]
+7:43:46 PM : Create Path: currently taken (3, 0)(2, 0)(1, -2)
+7:43:46 PM : Created Path: (3, -1) -> [(0, 2),]
+7:44:03 PM : Following Path: (1, -3) -> [(0, 1),]
+7:44:04 PM : Ending StepPath: Rook Player d7e67990-9db2-4dc2-8d9c-f9172533f6f8
+7:44:11 PM : Following Path: (4, 0) -> [(1, -2),]
+7:44:12 PM : Ending StepPath: Knight Player d47b8d4b-497d-4864-a761-6abf53287e40
+7:44:12 PM : Following Path: (5, 1) -> [(-2, -1),]
+7:44:12 PM : Following Path: (4, 1) -> [(-2, -1),]
+7:44:12 PM : Following Path: (3, -2) -> [(-2, 0),]
+7:44:12 PM : Following Path: (3, -1) -> [(0, 2),]
+7:44:12 PM : Ending StepPath: Rook Enemy 9be0a1e3-765f-4b56-84c2-685458fbb951
+7:44:12 PM : Ending StepPath: Knight Enemy ceec6572-84fc-42a1-ab5e-bcaa9656af22
+7:44:12 PM : Ending StepPath: Rook Enemy ee96d0cd-41a4-4ab4-a5ca-1f55fa8291b4
+7:44:12 PM : Ending StepPath: Knight Enemy d667c33d-7a84-499c-a433-8109c7b46cac
+7:44:12 PM : Following Path: (2, -2) -> [(-1, 0),]
+7:44:12 PM : Ending StepPath: Rook Enemy ee96d0cd-41a4-4ab4-a5ca-1f55fa8291b4
+7:44:12 PM : Following Path: (3, -1) -> [(0, 1),]
+7:44:12 PM : Ending StepPath: Rook Enemy 9be0a1e3-765f-4b56-84c2-685458fbb951
+7:44:12 PM : Create Path: currently taken 
+7:44:12 PM : Created Path: (3, 0) -> [(1, -2),]
+7:44:12 PM : Create Path: currently taken (4, -2)
+7:44:12 PM : Created Path: (2, 0) -> [(1, -2),]
+7:44:12 PM : Create Path: currently taken (4, -2)(3, -2)
+7:44:12 PM : Created Path: (2, -2) -> [(0, -1),]
+7:44:12 PM : Create Path: currently taken (4, -2)(3, -2)(2, -3)
+7:44:12 PM : Created Path: (3, -1) -> [(0, -2),]
+7:44:19 PM : Following Path: (5, -2) -> [(-2, -1),]
+7:44:20 PM : Ending StepPath: Knight Player d47b8d4b-497d-4864-a761-6abf53287e40
+7:44:22 PM : Following Path: (1, -2) -> [(-1, 0),]
+7:44:23 PM : Ending StepPath: Rook Player d7e67990-9db2-4dc2-8d9c-f9172533f6f8
+7:44:23 PM : Following Path: (3, 0) -> [(1, -2),]
+7:44:23 PM : Following Path: (2, 0) -> [(1, -2),]
+7:44:23 PM : Following Path: (2, -2) -> [(0, -1),]
+7:44:23 PM : Following Path: (3, -1) -> [(0, -2),]
+7:44:23 PM : Ending StepPath: Rook Enemy 9be0a1e3-765f-4b56-84c2-685458fbb951
+7:44:23 PM : Ending StepPath: Knight Enemy ceec6572-84fc-42a1-ab5e-bcaa9656af22
+7:44:23 PM : Ending StepPath: Rook Enemy ee96d0cd-41a4-4ab4-a5ca-1f55fa8291b4
+7:44:23 PM : Ending StepPath: Knight Enemy d667c33d-7a84-499c-a433-8109c7b46cac
+7:44:23 PM : Following Path: (3, -1) -> [(0, -1),]
+7:44:23 PM : Ending StepPath: Rook Enemy 9be0a1e3-765f-4b56-84c2-685458fbb951
+7:44:23 PM : Create Path: currently taken 
+7:44:23 PM : Created Path: (4, -2) -> [(-2, -1),]
+7:44:23 PM : Create Path: currently taken (2, -3)
+7:44:23 PM : Created Path: (3, -2) -> [(-2, -1),]
+7:44:23 PM : Create Path: currently taken (2, -3)(1, -3)
+7:44:23 PM : Created Path: (3, -1) -> [(-1, 0),]
+7:44:26 PM : Following Path: (3, -3) -> [(-1, 2),]
+7:44:27 PM : Ending StepPath: Knight Player d47b8d4b-497d-4864-a761-6abf53287e40
+7:44:31 PM : Following Path: (0, -2) -> [(1, 0),]
+7:44:31 PM : Ending StepPath: Rook Player d7e67990-9db2-4dc2-8d9c-f9172533f6f8
+7:44:31 PM : Following Path: (4, -2) -> [(-2, -1),]
+7:44:31 PM : Following Path: (3, -2) -> [(-2, -1),]
+7:44:32 PM : Ending StepPath: Knight Enemy ceec6572-84fc-42a1-ab5e-bcaa9656af22
+7:44:32 PM : Ending StepPath: Knight Enemy d667c33d-7a84-499c-a433-8109c7b46cac
+7:44:32 PM : Create Path: currently taken 
+7:44:32 PM : Created Path: (2, -3) -> [(-2, 1),]
+7:44:36 PM : Following Path: (1, -2) -> [(1, 0),]
+7:44:36 PM : Ending StepPath: Rook Player d7e67990-9db2-4dc2-8d9c-f9172533f6f8
