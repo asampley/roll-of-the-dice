@@ -71,7 +71,7 @@ public class Unit
 
 
     public Unit(UnitData data, bool isEnemy, Vector3 diceOrientation, Vector2Int position, int moves, bool fromSave = false, List<Vector2Int> path = null)
-        : this(data, isEnemy, new DiceOrientationData(), fromSave)
+        : this(data, isEnemy, new DiceOrientation(), fromSave)
     {
         SetOrientation(diceOrientation);
         SetPosition(position);
@@ -82,7 +82,7 @@ public class Unit
             _unitManager.MapPath();
         }
     }
-    public Unit(UnitData data, bool isEnemy, DiceOrientationData startOrientation, bool fromSave = false)
+    public Unit(UnitData data, bool isEnemy, DiceOrientation startOrientation, bool fromSave = false)
     {
         _loadFromSave = fromSave;
         _data = data;

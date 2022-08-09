@@ -23,6 +23,9 @@ public static class Globals
     public static Dictionary<(DiceClass, bool), Material> DICE_MATERIALS;
     public static Dictionary<(DiceClass, bool), Material> GHOST_MATERIALS;
 
+    public static Dictionary<DiceOrientation, Vector3> ORIENTATION_TO_EULERS;
+    public static Dictionary<Vector3, DiceOrientation> EULERS_TO_ORIENTATION;
+
 
     // DEBUGGING
     public static bool DEBUG_GAME_SETUP;

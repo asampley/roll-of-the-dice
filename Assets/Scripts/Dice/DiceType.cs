@@ -15,11 +15,9 @@ public enum DiceClass
     TetraPawn,
 }
 
-
-
 // Notation: Shape FaceNumber FaceRotation (2 Digits each)
 // C for Cube
-public enum DiceOrientation2
+public enum DiceOrientation
 {
     C0000,
     C0001,
@@ -54,4 +52,6 @@ public class DiceSpawn
     public Vector2Int tilePosition;
     [HideInInspector]
     public bool isEnemy;
+    public bool randomOrientation;
+    public DiceOrientation diceOrientation;
 }

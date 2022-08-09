@@ -17,8 +17,8 @@ public class GameLevelData : BinarySerializable
     public Phase currentPhase;
     public string[] movedPieces;
     public int playerPiecesMoved;
-    public DiceOrientationData[] alliedOrientations;
-    public DiceOrientationData[] enemyOrientations;
+    public DiceOrientation[] alliedOrientations;
+    public DiceOrientation[] enemyOrientations;
 
     public static string GetFolderPath()
         => System.IO.Path.Combine(

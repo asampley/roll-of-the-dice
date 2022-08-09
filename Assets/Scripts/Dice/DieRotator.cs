@@ -6,7 +6,7 @@ using UnityEngine;
 public class DieRotator : MonoBehaviour {
     private Quaternion startRot;
     private float startTime;
-    private List<Quaternion> targets = new List<Quaternion>();
+    private readonly List<Quaternion> targets = new();
 
     [SerializeField]
     private Vector3 _offsetRotation;
@@ -113,6 +113,8 @@ public class DieRotator : MonoBehaviour {
         this.startRot = FinalTarget();
         this.targets.Clear();
         this.transform.localRotation = this.startRot;
+        Debug.Log(gameObject.GetComponentInParent<UnitManager>().name);
+        Debug.Log(gameObject.transform.rotation.eulerAngles);
         return this.transform.localRotation;
     }
 

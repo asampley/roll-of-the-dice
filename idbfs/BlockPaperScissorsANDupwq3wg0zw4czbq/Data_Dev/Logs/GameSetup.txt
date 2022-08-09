@@ -1,9 +1,4 @@
 
-7:41:48 PM : START NEW GAME
-7:44:23 PM : Destroying Rook
-7:44:27 PM : Destroying Rook
-7:44:32 PM : Destroying Knight
-7:44:36 PM : Destroying Knight
-7:46:01 PM : Destroying Game Manager
-7:46:01 PM : Destroying Rook
-7:46:01 PM : Destroying Knight
+1:31:28 PM : START NEW GAME
+1:31:45 PM : Destroying Game Manager
+1:31:48 PM : START NEW GAME

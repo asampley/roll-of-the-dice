@@ -156,7 +156,7 @@ public class UnitManager : MonoBehaviour, IPhaseListener
         }
     }
 
-    public void Initialize(DiceOrientationData orientation)
+    public void Initialize(DiceOrientation orientation)
     {
         ghostMaterial = Globals.GHOST_MATERIALS[(_unit.UnitClass, IsEnemy)];
         GetComponentInChildren<MeshRenderer>().sharedMaterial
@@ -485,11 +485,10 @@ public class UnitManager : MonoBehaviour, IPhaseListener
         _movesAvailable = MaxMoves;
     }
 
-    public void SetOrientation(DiceOrientationData orientation)
+    public void SetOrientation(DiceOrientation orientation)
     {
-        _rotator.RotateTileDelta(Vector2Int.right, orientation.xRolls);
-        _rotator.RotateTileDelta(Vector2Int.up, orientation.yRolls);
-        _rotator.RotateZ(orientation.zRolls);
+        Vector3 toOrientation = Globals.ORIENTATION_TO_EULERS[orientation];
+        _rotator.SetRotation(Quaternion.Euler(toOrientation.x, toOrientation.y, toOrientation.z));
         _unit.Orientation = _rotator.RotateNow().eulerAngles;
         State = _rotator.GetUpFace();
     }
@@ -499,19 +498,6 @@ public class UnitManager : MonoBehaviour, IPhaseListener
         _rotator.SetRotation(Quaternion.Euler(orientation.x, orientation.y, orientation.z));
         _unit.Orientation = _rotator.RotateNow().eulerAngles;
         State = _rotator.GetUpFace();
-    }
-
-    private void MoveToPosOld(Vector2Int delta, bool rotate = true)
-    {
-        if (rotate)
-        {
-            GetComponentInChildren<DieRotator>().RotateTileDelta(delta);
-            _unit.Orientation = _rotator.FinalTarget().eulerAngles;
-        }
-
-        GetComponentInChildren<DieTranslator>().Translate(
-            MapManager.Instance.TileDeltaToWorldDelta(delta)
-        );
     }
 
     private void MoveToPos(Vector2Int step, bool rotate = true)

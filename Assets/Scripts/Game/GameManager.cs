@@ -24,11 +24,11 @@ public class GameManager : MonoBehaviour, IPhaseListener
     public GameRulesData gameRulesData;
     public GameObject diceParent;
 
-    private readonly Dictionary<DiceSpawn, DiceOrientationData> _alliedSpawnPositions = new();
-    private readonly Dictionary<DiceSpawn, DiceOrientationData> _enemySpawnPositions = new();
+    private readonly Dictionary<DiceSpawn, DiceOrientation> _alliedSpawnPositions = new();
+    private readonly Dictionary<DiceSpawn, DiceOrientation> _enemySpawnPositions = new();
 
-    public Dictionary<DiceSpawn, DiceOrientationData> AlliedSpawnPositions { get => _alliedSpawnPositions; }
-    public Dictionary<DiceSpawn, DiceOrientationData> EnemySpawnPositions { get => _enemySpawnPositions; }
+    public Dictionary<DiceSpawn, DiceOrientation> AlliedSpawnPositions { get => _alliedSpawnPositions; }
+    public Dictionary<DiceSpawn, DiceOrientation> EnemySpawnPositions { get => _enemySpawnPositions; }
 
     private readonly List<Unit> _loadPositions = new();
 
@@ -121,7 +121,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
         LoadGameData();
     }
 
-    public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientationData orientation)
+    public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
     {
         UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => x.unitClass == diceClass).First();
         Unit die = new(unitData, isEnemy, orientation);
@@ -134,9 +134,20 @@ public class GameManager : MonoBehaviour, IPhaseListener
         if (reroll || GameLevelData.Instance == null)
         {
             foreach (DiceSpawn spawn in levelData.alliedDice)
-                _alliedSpawnPositions.Add(spawn, GenerateDiceOrientation());
+            {
+                if (spawn.randomOrientation)
+                    _alliedSpawnPositions.Add(spawn, GenerateDiceOrientation(true));
+                else
+                    _alliedSpawnPositions.Add(spawn, spawn.diceOrientation);
+            }
+                
             foreach (DiceSpawn spawn in levelData.enemyDice)
-                _enemySpawnPositions.Add(spawn, GenerateDiceOrientation());
+            {
+                if (spawn.randomOrientation)
+                    _enemySpawnPositions.Add(spawn, GenerateDiceOrientation(true));
+                else
+                    _enemySpawnPositions.Add(spawn, spawn.diceOrientation);
+            }
         }
         else
         {
@@ -147,13 +158,30 @@ public class GameManager : MonoBehaviour, IPhaseListener
         }
     }
 
-    public DiceOrientationData GenerateDiceOrientation()
+    public DiceOrientation GenerateDiceOrientation(bool isCube)
     {
-        DiceOrientationData orientation = new();
+        Debug.Log("Garfeel");
+        string identifier;
 
-        orientation.xRolls = UnityEngine.Random.Range(-1, 3);
-        orientation.yRolls = UnityEngine.Random.Range(-1, 3);
-        orientation.zRolls = UnityEngine.Random.Range(-1, 3);
+        switch (isCube)
+        {
+            case true:
+                identifier = "C";
+                break;
+            default:
+                identifier = null;
+                break;
+        }
+        List<DiceOrientation> validEnums = new();
+
+        foreach (DiceOrientation diceOrientation in Enum.GetValues(typeof(DiceOrientation)))
+        {
+            string valueCheck = diceOrientation.ToString().Substring(0,1);
+            if (valueCheck == identifier)
+                validEnums.Add(diceOrientation);
+        }
+
+        DiceOrientation orientation = validEnums[UnityEngine.Random.Range(0, (validEnums.Count + 1))];
 
         return orientation;
     }
@@ -178,9 +206,9 @@ public class GameManager : MonoBehaviour, IPhaseListener
         ClearMap();
 
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
-        foreach (KeyValuePair<DiceSpawn, DiceOrientationData> die in _alliedSpawnPositions)
+        foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in _alliedSpawnPositions)
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, false, die.Value);
-        foreach (KeyValuePair<DiceSpawn, DiceOrientationData> die in _enemySpawnPositions)
+        foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in _enemySpawnPositions)
             SpawnDie(die.Key.tilePosition, die.Key.diceClass, true, die.Value);
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
 
@@ -218,7 +246,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
             GameObject.Destroy(child.gameObject);
         MapManager.Instance.ClearMap();
         MapManager.Instance.GenerateMap();
-        Debug.Log("Finished clearing map");
+        Logging.LogNotification("Finished clearing map", LogType.GAME_SETUP);
     }
 
     public void ClearDictionaries()
