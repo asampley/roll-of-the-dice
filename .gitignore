@@ -47,6 +47,9 @@ ExportedObj/
 *.opendb
 *.VC.db
 
+# Ignore log files
+idbfs\BlockPaperScissorsANDupwq3wg0zw4czbq
+
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta
