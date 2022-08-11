@@ -86,6 +86,12 @@ public class DebugConsole : MonoBehaviour
         {
             GameManager.Instance.CheckWin(true);
         });
+        new DebugCommand<float, float, float, float>("set_orientation_quaternion", "Sets the orientation to a quaternion.", "set_orientation_quaternion", (q1, q2, q3, q4) =>
+        {
+            Globals.SELECTED_UNIT.DieRotator.SetRotation(new Quaternion(q1, q2, q3, q4));
+            Globals.SELECTED_UNIT.DieRotator.RotateNow();
+            Debug.Log("Garfeel running");
+        });
     }
 
     private void Update()
@@ -113,7 +119,7 @@ public class DebugConsole : MonoBehaviour
             GUI.SetNextControlName("ConsoleField");
             newInput = GUI.TextField(new Rect(0, 0, Screen.width, 24), _consoleInput);
             if (newInput != null)
-                newInput = Regex.Replace(newInput, @"[^a-zA-Z0-9 _?]", "");
+                newInput = Regex.Replace(newInput, @"[^a-zA-Z0-9 _?.-]", "");
             GUI.FocusControl("ConsoleField");
 
             float y = 24;
@@ -234,8 +240,7 @@ public class DebugConsole : MonoBehaviour
                 }
                 else if (command is DebugCommand<int> dcInt)
                 {
-                    int i;
-                    if (int.TryParse(inputParts[1], out i))
+                    if (int.TryParse(inputParts[1], out int i))
                         dcInt.Invoke(i);
                     else
                     {
@@ -245,8 +250,7 @@ public class DebugConsole : MonoBehaviour
                 }
                 else if (command is DebugCommand<float> dcFloat)
                 {
-                    float f;
-                    if (float.TryParse(inputParts[1], out f))
+                    if (float.TryParse(inputParts[1], out float f))
                         dcFloat.Invoke(f);
                     else
                     {
@@ -256,12 +260,24 @@ public class DebugConsole : MonoBehaviour
                 }
                 else if (command is DebugCommand<string, int> dcStringInt)
                 {
-                    int i;
-                    if (int.TryParse(inputParts[2], out i))
+                    if (int.TryParse(inputParts[2], out int i))
                         dcStringInt.Invoke(inputParts[1], i);
                     else
                     {
                         Debug.LogError($"'{command.Id}' requires a string and an int parameter!");
+                        return;
+                    }
+                }
+                else if (command is DebugCommand<float, float, float, float> dcFloatFloatFloatFloat)
+                {
+                    if (float.TryParse(inputParts[1], out float f1)
+                        && float.TryParse(inputParts[2], out float f2)
+                        && float.TryParse(inputParts[3], out float f3)
+                        && float.TryParse(inputParts[4], out float f4))
+                        dcFloatFloatFloatFloat.Invoke(f1, f2, f3, f4);
+                    else
+                    {
+                        Debug.LogError($"'{command.Id}' requires four float parameters!");
                         return;
                     }
                 }

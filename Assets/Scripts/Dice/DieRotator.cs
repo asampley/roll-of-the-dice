@@ -26,6 +26,9 @@ public class DieRotator : MonoBehaviour {
         set { _collapse = value; if (_collapse) CollapseTargets(); }
     }
 
+    private DiceOrientation _currentOrientation;
+
+
     void Awake()
     {
         this._qOffsetRotation = Quaternion.Euler(_offsetRotation);
@@ -67,6 +70,7 @@ public class DieRotator : MonoBehaviour {
         for (int i = 0; i < Math.Abs(count); ++i) {
             AddTarget(rotation * FinalTarget());
         }
+        UpdateOrientation();
     }
 
     // rotate around an axis that is relative to the mesh original orientation
@@ -101,29 +105,34 @@ public class DieRotator : MonoBehaviour {
         }
 
         Rotate(rotation, 1);
+        UpdateOrientation();
     }
 
     public void RotateZ(int count)
     {
         RotateAngleAxis(360f / axes.FaceEdges, axes.ZAxis, count);
+        UpdateOrientation();
     }
 
     public Quaternion RotateNow()
     {
+        UpdateOrientation();
         this.startRot = FinalTarget();
         this.targets.Clear();
         this.transform.localRotation = this.startRot;
-        Debug.Log(gameObject.GetComponentInParent<UnitManager>().name);
-        Debug.Log(gameObject.transform.rotation.eulerAngles);
+
+        Debug.Log("Garfeel " + this.transform.localRotation);
+        
         return this.transform.localRotation;
     }
 
     public void SetRotation(Quaternion target)
     {
         targets.Add(target);
+        UpdateOrientation();
         this.startRot = FinalTarget();
         this.targets.Clear();
-        this.transform.localRotation = this.startRot;
+        this.transform.localRotation = this.startRot;        
     }
 
     public void Update()
@@ -168,23 +177,34 @@ public class DieRotator : MonoBehaviour {
 
     public void SetOrientation(DiceOrientation orientation)
     {
+        _currentOrientation = orientation;
         foreach (KeyValuePair<DiceOrientation, Vector3> pair in Globals.ORIENTATION_TO_EULERS)
         {
             if (pair.Key == orientation)
             {
-                Debug.Log("Garfeel" + pair.Key + orientation);
                 this.SetRotation(Quaternion.Euler(pair.Value.x, pair.Value.y, pair.Value.z));
                 this.RotateNow();
             }
         }
     }
 
+    public void SetOrientation(Quaternion quaternion)
+    {
+        SetRotation(quaternion);
+    }
+
+    public void UpdateOrientation()
+    {
+        
+        _currentOrientation = GetOrientation();
+    }
+
     public DiceOrientation GetOrientation()
     {
-        Vector3 rotation = this.FinalTarget().eulerAngles;
+        Quaternion rotation = this.FinalTarget();
         DiceOrientation orientation = DiceOrientation.INVALID;
 
-        foreach (KeyValuePair<Vector3, DiceOrientation> pair in Globals.EULERS_TO_ORIENTATION)
+        foreach (KeyValuePair<Quaternion, DiceOrientation> pair in Globals.QUATERNION_TO_ORIENTATION)
         {
             if (pair.Key == rotation)
             {
@@ -193,7 +213,7 @@ public class DieRotator : MonoBehaviour {
         }
 
         if (orientation == DiceOrientation.INVALID)
-            Debug.LogError("Error: Invalid dice orientation reached");
+            Debug.LogError(transform.parent.name + " " + this.FinalTarget());
 
         return orientation;
     }
