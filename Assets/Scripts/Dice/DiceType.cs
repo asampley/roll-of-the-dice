@@ -13,6 +13,7 @@ public enum DiceClass
     Lich,
     King,
     TetraPawn,
+    TestPawn,
 }
 
 // Notation: Shape FaceNumber FaceRotation (2 Digits each)

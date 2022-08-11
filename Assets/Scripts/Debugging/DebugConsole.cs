@@ -274,9 +274,9 @@ public class DebugConsole : MonoBehaviour
                 else if (command is DebugCommand<float, float, float, float> dcFloatFloatFloatFloat)
                 {
                     if (float.TryParse(inputParts[1], out float f1)
-                        && float.TryParse(inputParts[2], out float f2)
-                        && float.TryParse(inputParts[3], out float f3)
-                        && float.TryParse(inputParts[4], out float f4))
+                    && float.TryParse(inputParts[2], out float f2)
+                    && float.TryParse(inputParts[3], out float f3)
+                    && float.TryParse(inputParts[4], out float f4))
                         dcFloatFloatFloatFloat.Invoke(f1, f2, f3, f4);
                     else
                     {
@@ -290,7 +290,7 @@ public class DebugConsole : MonoBehaviour
                         dcDiceOrientation.Invoke(d);
                     else
                     {
-                        Debug.LogError($"'{command.Id}' requires a float parameter!");
+                        Debug.LogError($"'{command.Id}' requires a DiceOrientation enum parameter!");
                         return;
                     }
                 }

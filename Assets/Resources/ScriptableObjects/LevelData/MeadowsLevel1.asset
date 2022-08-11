@@ -23,13 +23,21 @@ MonoBehaviour:
   - diceClass: 0
     tilePosition: {x: 2, y: 0}
     isEnemy: 0
+    randomOrientation: 0
+    diceOrientation: 14
   enemyDice:
   - diceClass: 0
     tilePosition: {x: 2, y: 2}
     isEnemy: 1
+    randomOrientation: 0
+    diceOrientation: 15
   - diceClass: 0
     tilePosition: {x: 1, y: 2}
     isEnemy: 1
+    randomOrientation: 0
+    diceOrientation: 7
   - diceClass: 0
     tilePosition: {x: 5, y: -1}
     isEnemy: 1
+    randomOrientation: 0
+    diceOrientation: 24
