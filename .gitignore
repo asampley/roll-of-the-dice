@@ -9,6 +9,7 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
+/idbfs/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -46,9 +47,6 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
-
-# Ignore log files
-/idbfs/
 
 # Unity3D generated meta files
 *.pidb.meta
