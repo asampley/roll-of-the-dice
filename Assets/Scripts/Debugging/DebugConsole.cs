@@ -86,11 +86,14 @@ public class DebugConsole : MonoBehaviour
         {
             GameManager.Instance.CheckWin(true);
         });
+        new DebugCommand<DiceOrientation>("set_orientation", "Sets the orientation to an emum.", "set_orientation", (e) =>
+        {
+            Globals.SELECTED_UNIT.DieRotator.SetOrientation(e);
+        });
         new DebugCommand<float, float, float, float>("set_orientation_quaternion", "Sets the orientation to a quaternion.", "set_orientation_quaternion", (q1, q2, q3, q4) =>
         {
             Globals.SELECTED_UNIT.DieRotator.SetRotation(new Quaternion(q1, q2, q3, q4));
             Globals.SELECTED_UNIT.DieRotator.RotateNow();
-            Debug.Log("Garfeel running");
         });
     }
 
@@ -278,6 +281,16 @@ public class DebugConsole : MonoBehaviour
                     else
                     {
                         Debug.LogError($"'{command.Id}' requires four float parameters!");
+                        return;
+                    }
+                }
+                else if (command is DebugCommand<DiceOrientation> dcDiceOrientation)
+                {
+                    if (DiceOrientation.TryParse(inputParts[1], out DiceOrientation d))
+                        dcDiceOrientation.Invoke(d);
+                    else
+                    {
+                        Debug.LogError($"'{command.Id}' requires a float parameter!");
                         return;
                     }
                 }

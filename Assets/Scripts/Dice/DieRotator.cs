@@ -120,8 +120,6 @@ public class DieRotator : MonoBehaviour {
         this.startRot = FinalTarget();
         this.targets.Clear();
         this.transform.localRotation = this.startRot;
-
-        Debug.Log("Garfeel " + this.transform.localRotation);
         
         return this.transform.localRotation;
     }
@@ -213,7 +211,7 @@ public class DieRotator : MonoBehaviour {
         }
 
         if (orientation == DiceOrientation.INVALID)
-            Debug.LogError(transform.parent.name + " " + this.FinalTarget());
+            Debug.LogError(transform.parent.name + " " + this.FinalTarget().ToString("f7"));
 
         return orientation;
     }

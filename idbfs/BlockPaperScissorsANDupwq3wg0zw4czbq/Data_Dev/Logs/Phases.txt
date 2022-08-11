@@ -1,4 +1,4 @@
 
-11:11:18 PM : PhaseManager new stack [Setup[GAME (GameManager),],]
-11:11:18 PM : Start Run Phase Update: Setup
-11:11:18 PM : PhaseManager new stack [Player[GAME (GameManager),Pawn Player 5efcedda-edc6-4d9a-a2a3-c34841061aac (UnitManager),Pawn Enemy b4506dc2-ac04-4e9b-bea7-6bf42f05f226 (EnemyAI),Pawn Enemy bbef00d9-9659-445d-a489-2538bce6838b (EnemyAI),Pawn Enemy ee51ee87-61d6-4470-90c8-bc0ccca522c4 (EnemyAI),],]
+12:07:34 AM : PhaseManager new stack [Setup[GAME (GameManager),],]
+12:07:34 AM : Start Run Phase Update: Setup
+12:07:34 AM : PhaseManager new stack [Player[GAME (GameManager),Pawn Player e3e2193a-6e2c-44b7-a962-90e7ec808583 (UnitManager),Pawn Enemy 9e0d147d-559e-48e1-8818-ae0044129609 (EnemyAI),Pawn Enemy 2d04fb11-3877-4abb-835a-451a7eaf9f1d (EnemyAI),Pawn Enemy 7b5c8b32-aae6-4c5e-9bbb-87225de6275c (EnemyAI),],]
