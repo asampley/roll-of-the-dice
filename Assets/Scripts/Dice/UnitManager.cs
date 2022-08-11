@@ -75,6 +75,11 @@ public class UnitManager : MonoBehaviour, IPhaseListener
         get { return _state; }
         set { _state = value; }
     }
+    public DiceOrientation Orientation
+    {
+        get => _rotator.GetOrientation();
+        set => _rotator.SetOrientation(value);
+    }
 
     public Vector2Int Position { get => (Vector2Int)parentTile.gridLocation; }
 
@@ -489,25 +494,19 @@ public class UnitManager : MonoBehaviour, IPhaseListener
     {
         Vector3 toOrientation = Globals.ORIENTATION_TO_EULERS[orientation];
         _rotator.SetRotation(Quaternion.Euler(toOrientation.x, toOrientation.y, toOrientation.z));
-        _unit.Orientation = _rotator.RotateNow().eulerAngles;
         State = _rotator.GetUpFace();
     }
 
     public void SetOrientation(Vector3 orientation)
     {
         _rotator.SetRotation(Quaternion.Euler(orientation.x, orientation.y, orientation.z));
-        _unit.Orientation = _rotator.RotateNow().eulerAngles;
         State = _rotator.GetUpFace();
     }
 
     private void MoveToPos(Vector2Int step, bool rotate = true)
     {
         if (rotate)
-        {
             _rotator.RotateTileDeltas(StepRotations(step));
-
-            _unit.Orientation = _rotator.FinalTarget().eulerAngles;
-        }
 
         GetComponentInChildren<DieTranslator>().Translate(
             MapManager.Instance.TileDeltaToWorldDelta(step)
@@ -542,13 +541,11 @@ public class UnitManager : MonoBehaviour, IPhaseListener
                 break;
             case TileType.RotateClockwise:
                 _rotator.RotateZ(1);
-                _unit.Orientation = _rotator.FinalTarget().eulerAngles; ;
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 break;
             case TileType.RotateCounterClockwise:
                 _rotator.RotateZ(-1);
-                _unit.Orientation = _rotator.FinalTarget().eulerAngles; ;
                 GetTilesInRange();
                 break;
             case TileType.ShovePosX:
@@ -579,7 +576,6 @@ public class UnitManager : MonoBehaviour, IPhaseListener
                 _rotator.RotateZ(a);
                 _rotator.RotateZ(b);
                 _rotator.RotateZ(c);
-                _unit.Orientation = _rotator.FinalTarget().eulerAngles; ;
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 break;

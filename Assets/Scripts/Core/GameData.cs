@@ -58,28 +58,13 @@ public class GameUnitData : BinarySerializable
     public string uid;
     public Vector2Int position;
     public DiceState[] faces;
-    public Vector3 orientation;
+    public DiceOrientation orientation;
     public int movesRemaining;
     public GamePathData[] path;
 
     public GameUnitData() { }
 
     protected GameUnitData(SerializationInfo info, StreamingContext context)
-    {
-        BinarySerializable.Deserialize(this, info, context);
-    }
-}
-
-[System.Serializable]
-public class DiceOrientationData : BinarySerializable
-{
-    public int xRolls;
-    public int yRolls;
-    public int zRolls;
-
-    public DiceOrientationData() { }
-
-    protected DiceOrientationData(SerializationInfo info, StreamingContext context)
     {
         BinarySerializable.Deserialize(this, info, context);
     }

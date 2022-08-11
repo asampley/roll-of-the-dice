@@ -52,8 +52,8 @@ public class DataHandler : MonoBehaviour
         Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0003, new Vector3(-200.705f, -49.107f, 247.792f));
         Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0100, new Vector3(159.295f, 49.107f, 112.208f));
         Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0101, new Vector3(159.295f, -49.107f, 67.792f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0102, new Vector3(-20.705f, -49.107f, -112.208f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0103, new Vector3(-20.705f, 49.107f, -67.792f));
+        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0102, new Vector3(-20.705f, 49.107f, -112.208f));
+        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0103, new Vector3(-20.705f, -49.107f, -67.792f));
         Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0200, new Vector3(-20.705f, 49.107f, -22.208f));
         Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0201, new Vector3(-200.705f, -49.107f, 157.792f));
         Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0202, new Vector3(20.705f, -130.893f, 22.208f));
@@ -79,8 +79,8 @@ public class DataHandler : MonoBehaviour
         Globals.EULERS_TO_ORIENTATION.Add(new Vector3(-200.705f, -49.107f, 247.792f), DiceOrientation.C0003);
         Globals.EULERS_TO_ORIENTATION.Add(new Vector3(159.295f, 49.107f, 112.208f), DiceOrientation.C0100);
         Globals.EULERS_TO_ORIENTATION.Add(new Vector3(159.295f, -49.107f, 67.792f), DiceOrientation.C0101);
-        Globals.EULERS_TO_ORIENTATION.Add(new Vector3(-20.705f, -49.107f, -112.208f), DiceOrientation.C0102);
-        Globals.EULERS_TO_ORIENTATION.Add(new Vector3(-20.705f, 49.107f, -67.792f), DiceOrientation.C0103);
+        Globals.EULERS_TO_ORIENTATION.Add(new Vector3(-20.705f, 49.107f, -112.208f), DiceOrientation.C0102);
+        Globals.EULERS_TO_ORIENTATION.Add(new Vector3(-20.705f, -49.107f, -67.792f), DiceOrientation.C0103);
         Globals.EULERS_TO_ORIENTATION.Add(new Vector3(-20.705f, 49.107f, -22.208f), DiceOrientation.C0200);
         Globals.EULERS_TO_ORIENTATION.Add(new Vector3(-200.705f, -49.107f, 157.792f), DiceOrientation.C0201);
         Globals.EULERS_TO_ORIENTATION.Add(new Vector3(20.705f, -130.893f, 22.208f), DiceOrientation.C0202);

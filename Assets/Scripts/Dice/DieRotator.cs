@@ -165,4 +165,36 @@ public class DieRotator : MonoBehaviour {
         texturer.Faces[face] = newDiceState;
         texturer.UpdateMesh();
     }
+
+    public void SetOrientation(DiceOrientation orientation)
+    {
+        foreach (KeyValuePair<DiceOrientation, Vector3> pair in Globals.ORIENTATION_TO_EULERS)
+        {
+            if (pair.Key == orientation)
+            {
+                Debug.Log("Garfeel" + pair.Key + orientation);
+                this.SetRotation(Quaternion.Euler(pair.Value.x, pair.Value.y, pair.Value.z));
+                this.RotateNow();
+            }
+        }
+    }
+
+    public DiceOrientation GetOrientation()
+    {
+        Vector3 rotation = this.FinalTarget().eulerAngles;
+        DiceOrientation orientation = DiceOrientation.INVALID;
+
+        foreach (KeyValuePair<Vector3, DiceOrientation> pair in Globals.EULERS_TO_ORIENTATION)
+        {
+            if (pair.Key == rotation)
+            {
+                orientation = pair.Value;
+            }
+        }
+
+        if (orientation == DiceOrientation.INVALID)
+            Debug.LogError("Error: Invalid dice orientation reached");
+
+        return orientation;
+    }
 }

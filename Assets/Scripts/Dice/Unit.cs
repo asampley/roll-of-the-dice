@@ -59,21 +59,15 @@ public class Unit
         get { return _faces; }
         set { _faces = value; }
     }
-    protected Vector3 _orientation;
-    public Vector3 Orientation
-    {
-        get { return _orientation; }
-        set { _orientation = value; }
-    }
+    public DiceOrientation Orientation { get => _unitManager.Orientation; }
     protected Vector3 _rotationOffset;
 
     public static List<Unit> DICE_LIST;
 
 
-    public Unit(UnitData data, bool isEnemy, Vector3 diceOrientation, Vector2Int position, int moves, bool fromSave = false, List<Vector2Int> path = null)
-        : this(data, isEnemy, new DiceOrientation(), fromSave)
+    public Unit(UnitData data, bool isEnemy, DiceOrientation startOrientation, Vector2Int position, int moves, bool fromSave = false, List<Vector2Int> path = null)
+        : this(data, isEnemy, startOrientation, fromSave)
     {
-        SetOrientation(diceOrientation);
         SetPosition(position);
         _unitManager.MovesAvailable = moves;
         if (isEnemy)
@@ -112,6 +106,7 @@ public class Unit
         _unitManager.DieTexturer.Initialize();
         _faces = _unitManager.DieTexturer.Faces;
         _unitManager.Initialize(startOrientation);
+        _unitManager.Orientation = startOrientation;
 
         // Add to dice list for save data
         if (DICE_LIST == null)
@@ -141,11 +136,5 @@ public class Unit
         Vector2Int pos = (Vector2Int)_unitManager.parentTile.gridLocation;
 
         return pos;
-    }
-
-    public void SetOrientation(Vector3 newOrientation)
-    {
-        _unitManager.SetOrientation(newOrientation);
-        Orientation = newOrientation;
     }
 }

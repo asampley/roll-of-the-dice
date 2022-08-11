@@ -15,7 +15,7 @@ public class BinarySerializableData
         typeof(GameLevelData),
         typeof(GameUnitData),
         typeof(GamePathData),
-        typeof(DiceOrientationData),
+        typeof(DiceOrientation),
         typeof(DiceState),
         typeof(DiceClass),
         typeof(Phase),
@@ -33,8 +33,7 @@ public class BinarySerializableData
             if (!serializeAll && !fieldsToSerialize.Contains(field.Name))
                 continue;
 
-            object value;
-            if (Serialize(field, obj, out value))
+            if (Serialize(field, obj, out object value))
                 properties[field.Name] = value;
         }
     }

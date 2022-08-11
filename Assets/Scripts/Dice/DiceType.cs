@@ -19,6 +19,7 @@ public enum DiceClass
 // C for Cube
 public enum DiceOrientation
 {
+    INVALID,
     C0000,
     C0001,
     C0002,
