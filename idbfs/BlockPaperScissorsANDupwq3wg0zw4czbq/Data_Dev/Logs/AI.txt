@@ -1,7 +1,19 @@
 
-12:07:34 AM : Create Path: currently taken 
-12:07:34 AM : Created Path: (2, 2) -> [(0, -1),]
-12:07:34 AM : Create Path: currently taken (2, 1)
-12:07:34 AM : Created Path: (1, 2) -> [(0, -1),]
-12:07:34 AM : Create Path: currently taken (2, 1)(1, 1)
-12:07:34 AM : Created Path: (5, -1) -> [(-1, 0),]
+12:37:35 PM : Create Path: currently taken 
+12:37:35 PM : Created Path: (2, 2) -> [(0, -1),]
+12:37:36 PM : Create Path: currently taken (2, 1)
+12:37:36 PM : Created Path: (1, 2) -> [(0, -1),]
+12:37:36 PM : Create Path: currently taken (2, 1)(1, 1)
+12:37:36 PM : Created Path: (5, -1) -> [(-1, 0),]
+12:37:40 PM : Following Path: (2, 0) -> [(-1, 0),]
+12:37:41 PM : Ending StepPath: Pawn Player e99bd301-ebed-4447-baf7-e991031735a1
+12:37:41 PM : Following Path: (2, 2) -> [(0, -1),]
+12:37:41 PM : Following Path: (1, 2) -> [(0, -1),]
+12:37:41 PM : Following Path: (5, -1) -> [(-1, 0),]
+12:37:41 PM : Ending StepPath: Pawn Enemy 2454b065-a265-4752-9f9c-93089fcb9237
+12:37:41 PM : Ending StepPath: Pawn Enemy f3e7a071-aec1-45cf-82a1-ef92f4285c55
+12:37:41 PM : Ending StepPath: Pawn Enemy 9ea5504a-591b-4fad-bea6-200231e71b94
+12:37:41 PM : Create Path: currently taken 
+12:37:41 PM : Created Path: (2, 1) -> [(-1, 0),]
+12:37:41 PM : Create Path: currently taken (1, 1)
+12:37:41 PM : Created Path: (4, -1) -> [(-1, 0),]

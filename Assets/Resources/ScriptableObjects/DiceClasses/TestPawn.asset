@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7dd620c08bac8c46b8796d7e921ab86, type: 3}
   m_Name: TestPawn
   m_EditorClassIdentifier: 
-  unitName: Pawn
-  unitClass: 0
+  unitName: TestPawn
+  unitClass: 9
   prefab: {fileID: 4210247315298935970, guid: 37e6741a749cf534ebccf29ecce85a03, type: 3}
   diceMaterial: {fileID: 2100000, guid: 448a83e2bc4a4504c9cb7ddf038e5ab2, type: 2}
   ghostMaterial: {fileID: 2100000, guid: 2008b2c19a8507242bc3731138493540, type: 2}

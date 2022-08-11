@@ -1,3 +1,13 @@
 
-12:07:33 AM : START NEW GAME
-12:07:34 AM : Finished clearing map
+12:37:35 PM : START NEW GAME
+12:37:35 PM : Finished clearing map
+12:37:41 PM : Destroying Pawn
+12:37:44 PM : Destroying Game Manager
+12:37:44 PM : Destroying Pawn
+12:37:44 PM : Destroying Pawn
+12:37:44 PM : Destroying Pawn
+12:37:47 PM : START NEW GAME
+12:37:49 PM : Destroying Game Manager
+12:37:49 PM : Destroying Pawn
+12:37:49 PM : Destroying Pawn
+12:37:49 PM : Destroying Pawn
