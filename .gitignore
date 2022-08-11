@@ -71,3 +71,7 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+idbfs/BlockPaperScissorsANDupwq3wg0zw4czbq/Data_Dev/Logs/GameSetup.txt
+idbfs/BlockPaperScissorsANDupwq3wg0zw4czbq/Data_Dev/Logs/Phases.txt
+idbfs/BlockPaperScissorsANDupwq3wg0zw4czbq/Data_Dev/Logs/Serialization.txt
+idbfs/BlockPaperScissorsANDupwq3wg0zw4czbq/Data_Dev/Logs/UnitSpawn.txt
