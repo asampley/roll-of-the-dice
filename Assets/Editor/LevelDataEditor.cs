@@ -78,7 +78,6 @@ public class LevelDataEditor : Editor
             EditorGUILayout.PropertyField(prop.FindPropertyRelative("tilePosition"), GUIContent.none);
             GUILayout.Space(10f);
             EditorGUILayout.PropertyField(prop.FindPropertyRelative("randomOrientation"), GUIContent.none);
-            //if (prop.FindPropertyRelative("randomOrientation").Equals(true))
             EditorGUILayout.PropertyField(prop.FindPropertyRelative("diceOrientation"), GUIContent.none);
             GUILayout.EndHorizontal();
         }
