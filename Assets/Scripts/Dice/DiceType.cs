@@ -52,8 +52,6 @@ public class DiceSpawn
 {
     public DiceClass diceClass;
     public Vector2Int tilePosition;
-    [HideInInspector]
-    public bool isEnemy;
     public bool randomOrientation;
     public DiceOrientation diceOrientation;
 }

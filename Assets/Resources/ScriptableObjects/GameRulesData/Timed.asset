@@ -16,4 +16,4 @@ MonoBehaviour:
   turnLimit: 0
   maxTurns: 10
   canMoveAll: 0
-  playerUnitsToMove: 1
+  playerUnitsToMove: 2

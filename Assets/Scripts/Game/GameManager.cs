@@ -189,7 +189,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
     public async UniTask SetupGame()
     {
         Camera.main.transform.position = levelData.camStartPos;
-        Camera.main.orthographicSize = levelData.camStartDistance;
+        Camera.main.orthographicSize = levelData.camStartDist;
 
         _winState = Win.None;
         phaseUpdateCancel?.Cancel();
