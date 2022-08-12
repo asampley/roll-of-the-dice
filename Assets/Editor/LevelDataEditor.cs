@@ -82,6 +82,16 @@ public class LevelDataEditor : Editor
             EditorGUILayout.PropertyField(prop.FindPropertyRelative("diceOrientation"), GUIContent.none);
             GUILayout.EndHorizontal();
         }
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Plus@2x"), _buttonsStyle, GUILayout.Width(20f), GUILayout.Height(20f)))
+        {
+            alliedDice.arraySize++;
+        }
+        if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Minus@2x"), _buttonsStyle, GUILayout.Width(20f), GUILayout.Height(20f)))
+        {
+            alliedDice.arraySize--;
+        }
+        EditorGUILayout.EndHorizontal();
         GUILayout.Space(10f);
 
 
@@ -114,6 +124,16 @@ public class LevelDataEditor : Editor
             EditorGUILayout.PropertyField(prop.FindPropertyRelative("diceOrientation"), GUIContent.none);
             GUILayout.EndHorizontal();
         }
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Plus@2x"), _buttonsStyle, GUILayout.Width(20f), GUILayout.Height(20f)))
+        {
+            enemyDice.arraySize++;
+        }
+        if (GUILayout.Button(EditorGUIUtility.IconContent("d_Toolbar Minus@2x"), _buttonsStyle, GUILayout.Width(20f), GUILayout.Height(20f)))
+        {
+            enemyDice.arraySize--;
+        }
+        EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.EndVertical();
         GUILayout.EndHorizontal();
