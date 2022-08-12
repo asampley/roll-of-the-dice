@@ -41,7 +41,3 @@ MonoBehaviour:
     tilePosition: {x: 5, y: -1}
     randomOrientation: 0
     diceOrientation: 24
-  - diceClass: 0
-    tilePosition: {x: 3, y: -1}
-    randomOrientation: 0
-    diceOrientation: 24

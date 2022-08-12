@@ -338,6 +338,7 @@ MonoBehaviour:
   gridLocation: {x: 0, y: 0, z: 0}
   occupyingDie: {fileID: 0}
   data: {fileID: 0}
+  gridLocationText: {fileID: 55514345230242130}
 --- !u!60 &6304565648070460763
 PolygonCollider2D:
   m_ObjectHideFlags: 0

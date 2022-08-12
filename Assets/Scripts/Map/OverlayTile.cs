@@ -9,7 +9,7 @@ public class OverlayTile : MonoBehaviour
     public UnitManager occupyingDie;
 
     public TileData data;
-    private TextMeshProUGUI gridLocationText;
+    public TextMeshProUGUI gridLocationText;
 
     private void OnEnable()
     {
@@ -28,7 +28,6 @@ public class OverlayTile : MonoBehaviour
     private void Awake()
     {
         occupyingDie = null;
-        gridLocationText = GetComponentInChildren<TextMeshProUGUI>();
         gridLocationText.enabled = false;
     }
 

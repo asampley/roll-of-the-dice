@@ -1,8 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEditor;
 
 public class MapManager : MonoBehaviour
 {
@@ -13,8 +13,8 @@ public class MapManager : MonoBehaviour
     public GameObject tileParent;
     public Tilemap tileMap;
 
-    public Dictionary<Vector2Int, OverlayTile> map;
-    private Dictionary<TileBase, TileData> tileDataDict = new Dictionary<TileBase, TileData>();
+    public Dictionary<Vector2Int, OverlayTile> map = new();
+    private readonly Dictionary<TileBase, TileData> tileDataDict = new();
 
     private void Awake()
     {
@@ -36,7 +36,6 @@ public class MapManager : MonoBehaviour
     public void GenerateMap()
     {
         BoundsInt bounds = tileMap.cellBounds;
-        map = new Dictionary<Vector2Int, OverlayTile>();
 
         for (int z = bounds.max.z; z >= bounds.min.z; z--)
         {
@@ -44,8 +43,8 @@ public class MapManager : MonoBehaviour
             {
                 for (int x = bounds.min.x; x < bounds.max.x; x++)
                 {
-                    var tileLocation = new Vector3Int(x, y, z);
-                    var tileKey = new Vector2Int(x, y);
+                    Vector3Int tileLocation = new(x, y, z);
+                    Vector2Int tileKey = new(x, y);
 
                     if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                     {
@@ -77,7 +76,7 @@ public class MapManager : MonoBehaviour
     public RaycastHit2D? GetFocusedTile()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 mousePos2d = new Vector2(mousePos.x, mousePos.y);
+        Vector2 mousePos2d = new(mousePos.x, mousePos.y);
         RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos2d, Vector2.zero);
 
         if (hits.Length > 0)
@@ -128,10 +127,10 @@ public class MapManager : MonoBehaviour
 
     public List<OverlayTile> GetSurroundingTiles(Vector2Int originTile)
     {
-        var surroundingTiles = new List<OverlayTile>();
+        List<OverlayTile> surroundingTiles = new();
 
 
-        Vector2Int TileToCheck = new Vector2Int(originTile.x + 1, originTile.y);
+        Vector2Int TileToCheck = new(originTile.x + 1, originTile.y);
         if (map.ContainsKey(TileToCheck))
         {
             if (Mathf.Abs(map[TileToCheck].gridLocation.z - map[originTile].gridLocation.z) <= 1)
@@ -164,10 +163,10 @@ public class MapManager : MonoBehaviour
 
     public List<OverlayTile> GetTilesStraightLine(Vector2Int originTile)
     {
-        var surroundingTiles = new List<OverlayTile>();
+        List<OverlayTile> surroundingTiles = new();
 
 
-        Vector2Int TileToCheck = new Vector2Int(originTile.x + 1, originTile.y);
+        Vector2Int TileToCheck = new(originTile.x + 1, originTile.y);
         while (map.ContainsKey(TileToCheck))
         {
             if (Mathf.Abs(map[TileToCheck].gridLocation.z - map[originTile].gridLocation.z) <= 1)
@@ -235,5 +234,14 @@ public class MapManager : MonoBehaviour
     public void OnDestroy()
     {
         _instance = null;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        GenerateMap();
+        foreach (KeyValuePair<Vector2Int, OverlayTile> pair in map)
+        {
+            pair.Value.gridLocationText.text = pair.Value.gridLocation.ToString();
+        }
     }
 }
