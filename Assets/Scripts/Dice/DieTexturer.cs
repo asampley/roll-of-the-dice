@@ -53,7 +53,19 @@ public class DieTexturer : MonoBehaviour {
 
     public void UpdateMesh()
     {
-        var mesh = this.GetComponent<MeshFilter>().mesh;
+        Mesh mesh;
+        if (Application.isPlaying)
+        {
+            mesh = this.GetComponent<MeshFilter>().mesh;
+            
+        }            
+        else
+        {
+            MeshFilter mf = GetComponent<MeshFilter>();
+            Mesh meshCopy = Mesh.Instantiate(mf.sharedMesh);
+            mesh = mf.mesh = meshCopy;
+        }
+            
 
         var originalUvs = originalMesh.uv;
         var meshTriangles = mesh.triangles;

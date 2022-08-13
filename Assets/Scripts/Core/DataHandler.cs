@@ -17,7 +17,7 @@ public class DataHandler : MonoBehaviour
 
     public static async UniTask LoadGameData()
     {
-        Globals.UNIT_DATA = Resources.LoadAll<UnitData>(Globals.DICE_CLASS_SO) as UnitData[];
+        Globals.UNIT_DATA = Resources.LoadAll<UnitData>(Globals.DICE_CLASS_FOLDER) as UnitData[];
 
         Globals.DICE_MATERIALS = new();
         Globals.GHOST_MATERIALS = new();
@@ -145,6 +145,7 @@ public class DataHandler : MonoBehaviour
         Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.4619398f, 0.1913417f, -0.3314136f, 0.8001031f), DiceOrientation.C0502);
         Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.1913417f, -0.4619398f, 0.8001031f, -0.3314136f), DiceOrientation.C0503);
 
+        if (!Application.isPlaying) return;
 
         // Load game scene data
         GameLevelData.levelId = CoreDataHandler.Instance.LevelID;

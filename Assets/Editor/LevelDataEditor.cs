@@ -19,37 +19,49 @@ public class LevelDataEditor : Editor
 
         serializedObject.Update();
 
-        GUILayoutOption[] mainOptions = new GUILayoutOption[]
-        {
+        LevelData levelData = (LevelData)target;
 
-        };
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Load Level");
+        GUILayout.Space(-180f);
+        if (GUILayout.Button(EditorGUIUtility.IconContent("SaveAs@2x"), _buttonsStyle, GUILayout.Width(20f), GUILayout.Height(20f)))
+        {
+            levelData.LoadScene();
+        }
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+
 
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.BeginVertical();
         GUILayout.Space(10f);
         EditorGUIUtility.labelWidth = 75f;
 
-
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("levelName"), true, mainOptions);
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("sceneName"), true, mainOptions);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("nextLevel"), true, mainOptions);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("levelName"), true);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("worldName"), true);
+        GUILayout.EndHorizontal();
+        
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("sceneName"), true);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("nextLevel"), true);
         GUILayout.EndHorizontal();
         GUILayout.Space(10f);
 
         EditorGUILayout.LabelField("Camera", EditorStyles.boldLabel);
         EditorGUIUtility.labelWidth = 85f;
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("camStartPos"), true, mainOptions);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("camStartDist"), true, mainOptions);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("camStartPos"), true);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("camStartDist"), true);
         GUILayout.EndHorizontal();
         GUILayout.Space(10f);
 
         EditorGUILayout.LabelField("Rules", EditorStyles.boldLabel);
         EditorGUILayout.BeginHorizontal();
         EditorGUIUtility.labelWidth = 75f;
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("gameRules"), true, mainOptions);
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("gridType"), true, mainOptions);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("gameRules"), true);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("gridType"), true);
         GUILayout.EndHorizontal();
         GUILayout.Space(10f);
 

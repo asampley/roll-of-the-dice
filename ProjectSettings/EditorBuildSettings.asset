@@ -42,15 +42,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Level/Level8.unity
     guid: e81a6372e68cbb54280399a8fc6d8653
   - enabled: 1
-    path: Assets/Scenes/Level/Meadows/drainage_ditch_8x8.unity
+    path: Assets/Scenes/Meadows/drainage_ditch_8x8.unity
     guid: 3763fb4668f82b643b9d5db726fbc3ce
   - enabled: 1
-    path: Assets/Scenes/Level/Meadows/Empty Field 5x5 1.unity
+    path: Assets/Scenes/Meadows/Empty Field 5x5.unity
     guid: b5cd187987932464ba19eba5bca4a33e
   - enabled: 1
-    path: Assets/Scenes/Level/Meadows/field5x5.unity
+    path: Assets/Scenes/Meadows/field5x5.unity
     guid: 3c8dfc1970c4b824684fb2787781eeec
   - enabled: 1
-    path: Assets/Scenes/Level/Meadows/pond7x7.unity
+    path: Assets/Scenes/Meadows/pond7x7.unity
     guid: 2393f9bf1ba19bc4f902c9b82bbc19cc
   m_configObjects: {}

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -70,12 +69,8 @@ public class CoreBooter : MonoBehaviour
                     SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName("GameScene")).completed += (_) =>
                         SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
                 else
-                    SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
-                
-
-            };
-            
-                  
+                    SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);          
+            };       
         };
         return op;
     }

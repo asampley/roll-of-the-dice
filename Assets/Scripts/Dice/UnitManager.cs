@@ -77,8 +77,8 @@ public class UnitManager : MonoBehaviour, IPhaseListener
     }
     public DiceOrientation Orientation
     {
-        get => _rotator.GetOrientation();
-        set => _rotator.SetOrientation(value);
+        get => _dieRotator.GetOrientation();
+        set => _dieRotator.SetOrientation(value);
     }
 
     public Vector2Int Position { get => (Vector2Int)parentTile.gridLocation; }
@@ -97,8 +97,11 @@ public class UnitManager : MonoBehaviour, IPhaseListener
     public Material ghostMaterial;
 
     public GameObject ghostComponents;
-    private DieRotator _rotator;
-    public DieRotator DieRotator { get => _rotator; }
+
+    [SerializeField]
+    private DieRotator _dieRotator;
+    public DieRotator DieRotator { get => _dieRotator; }
+    [SerializeField]
     private DieTexturer _dieTexturer;
     public DieTexturer DieTexturer { get => _dieTexturer; }
 
@@ -114,11 +117,6 @@ public class UnitManager : MonoBehaviour, IPhaseListener
 
     public List<Vector2Int> path = new();
 
-    private void Awake()
-    {
-        _rotator = GetComponentInChildren<DieRotator>();
-        _dieTexturer = GetComponentInChildren<DieTexturer>();
-    }
 
     static UnitManager() {
         ABeatsB += (a,b) => Debug.Log(a.State + "(" + a.name + ") beats " + b.State + "(" + b.name + ")");
@@ -167,6 +165,12 @@ public class UnitManager : MonoBehaviour, IPhaseListener
         GetComponentInChildren<MeshRenderer>().sharedMaterial
             = Globals.DICE_MATERIALS[(_unit.UnitClass, IsEnemy)];
 
+        if (!_unit.LoadFromSave)
+            ResetRange();
+        SetOrientation(orientation);
+
+        if (!Application.isPlaying) return;
+
         if (IsEnemy)
         {
             GameManager.Instance.EnemyCount++;
@@ -178,11 +182,6 @@ public class UnitManager : MonoBehaviour, IPhaseListener
             _enemyAI.enabled = false;
             Destroy(_enemyAI);
         }
-
-        if (!_unit.LoadFromSave)
-            ResetRange();
-        SetOrientation(orientation);
-
     }
 
     // consumes each step of the enumerator only after the last move has completed
@@ -493,20 +492,20 @@ public class UnitManager : MonoBehaviour, IPhaseListener
     public void SetOrientation(DiceOrientation orientation)
     {
         Vector3 toOrientation = Globals.ORIENTATION_TO_EULERS[orientation];
-        _rotator.SetRotation(Quaternion.Euler(toOrientation.x, toOrientation.y, toOrientation.z));
-        State = _rotator.GetUpFace();
+        _dieRotator.SetRotation(Quaternion.Euler(toOrientation.x, toOrientation.y, toOrientation.z));
+        State = _dieRotator.GetUpFace();
     }
 
     public void SetOrientation(Vector3 orientation)
     {
-        _rotator.SetRotation(Quaternion.Euler(orientation.x, orientation.y, orientation.z));
-        State = _rotator.GetUpFace();
+        _dieRotator.SetRotation(Quaternion.Euler(orientation.x, orientation.y, orientation.z));
+        State = _dieRotator.GetUpFace();
     }
 
     private void MoveToPos(Vector2Int step, bool rotate = true)
     {
         if (rotate)
-            _rotator.RotateTileDeltas(StepRotations(step));
+            _dieRotator.RotateTileDeltas(StepRotations(step));
 
         GetComponentInChildren<DieTranslator>().Translate(
             MapManager.Instance.TileDeltaToWorldDelta(step)
@@ -519,7 +518,7 @@ public class UnitManager : MonoBehaviour, IPhaseListener
         _toTileEffect = true;
 
         MoveToPos((Vector2Int)(newTile.gridLocation - parentTile.gridLocation), rotate);
-        State = _rotator.GetUpFace();
+        State = _dieRotator.GetUpFace();
         parentTile.RemoveDiceFromTile();
         newTile.MoveDiceToTile(this);
 
@@ -540,12 +539,12 @@ public class UnitManager : MonoBehaviour, IPhaseListener
                 GetTilesInRange();
                 break;
             case TileType.RotateClockwise:
-                _rotator.RotateZ(1);
+                _dieRotator.RotateZ(1);
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 break;
             case TileType.RotateCounterClockwise:
-                _rotator.RotateZ(-1);
+                _dieRotator.RotateZ(-1);
                 GetTilesInRange();
                 break;
             case TileType.ShovePosX:
@@ -565,17 +564,17 @@ public class UnitManager : MonoBehaviour, IPhaseListener
                 GetTilesInRange();
                 break;
             case TileType.RemoveFace:
-                _rotator.SetDownFace(DiceState.Blank);
+                _dieRotator.SetDownFace(DiceState.Blank);
                 GetTilesInRange();
                 break;
             case TileType.Randomize:
-                int a = UnityEngine.Random.Range(0, _rotator.axes.FaceEdges);
-                int b = UnityEngine.Random.Range(0, _rotator.axes.FaceEdges);
-                int c = UnityEngine.Random.Range(0, _rotator.axes.FaceEdges);
+                int a = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
+                int b = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
+                int c = UnityEngine.Random.Range(0, _dieRotator.axes.FaceEdges);
 
-                _rotator.RotateZ(a);
-                _rotator.RotateZ(b);
-                _rotator.RotateZ(c);
+                _dieRotator.RotateZ(a);
+                _dieRotator.RotateZ(b);
+                _dieRotator.RotateZ(c);
                 await UniTask.Delay(TimeSpan.FromSeconds(Globals.MOVEMENT_TIME), cancellationToken: token);
                 GetTilesInRange();
                 break;

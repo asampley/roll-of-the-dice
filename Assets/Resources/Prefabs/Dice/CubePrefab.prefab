@@ -54,11 +54,10 @@ MonoBehaviour:
   _moveIndicator: {fileID: 7596649282032493092}
   _enemyAI: {fileID: 255127251107806683}
   ghostMaterial: {fileID: 2100000, guid: 3a44730b7b62eaf4ab1c4fb986cb9077, type: 2}
-  alliedMaterial: {fileID: 0}
-  enemyMaterial: {fileID: 0}
-  alliedGhostMaterial: {fileID: 0}
-  enemyGhostMaterial: {fileID: 0}
   ghostComponents: {fileID: 2565298508812411040}
+  _dieRotator: {fileID: 5074197080693599334}
+  _dieTexturer: {fileID: 2055031223344649674}
+  path: []
 --- !u!114 &255127251107806683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,6 +212,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+--- !u!114 &2055031223344649674 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5502674515419014690, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+  m_PrefabInstance: {fileID: 5825860574062212072}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2565298508812411040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73d5172d7087c64ab9fcd92a022a39f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2565298508812411040 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8304734700538434376, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
@@ -223,6 +233,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7008636932835894278, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
   m_PrefabInstance: {fileID: 5825860574062212072}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5074197080693599334 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1635569790649016206, guid: be536d2d1149c534cb9da362ca62618a, type: 3}
+  m_PrefabInstance: {fileID: 5825860574062212072}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2565298508812411040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4883373c2865b97459d136574d506424, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!23 &6281394592449126351 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 572628169561156647, guid: be536d2d1149c534cb9da362ca62618a, type: 3}

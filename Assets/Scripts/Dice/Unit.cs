@@ -85,7 +85,9 @@ public class Unit
 
         _uid = System.Guid.NewGuid().ToString();
         _transform.name = data.unitClass + (isEnemy ? " Enemy " : " Player ") + _uid;
-        _transform.parent = GameManager.Instance.diceParent.transform;
+        if (Application.isPlaying)
+            _transform.parent = GameManager.Instance.diceParent.transform;
+
         _transform.rotation = Quaternion.identity;
 
 

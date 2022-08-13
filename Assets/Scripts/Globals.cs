@@ -36,8 +36,9 @@ public static class Globals
 
 
     // FILE PATHS
-    public static string DICE_CLASS_SO = "ScriptableObjects/DiceClasses";
-    public static string LEVEL_DATA_SO = "ScriptableObjects/LevelData";
+    public static string DICE_CLASS_FOLDER = "ScriptableObjects/DiceClasses";
+    public static string LEVEL_DATA_FOLDER = "ScriptableObjects/LevelData";
+    public static string SCENES_FOLDER = "Assets/Scenes";
 #if UNITY_EDITOR
     public static string DATA_DIRECTORY = "Data_Dev";
 #else

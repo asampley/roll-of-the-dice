@@ -7,7 +7,7 @@ using UnityEditor;
 public class MapManager : MonoBehaviour
 {
     private static MapManager _instance;
-    public static MapManager Instance {  get { return _instance; } }
+    public static MapManager Instance => _instance;
     private float zSpread;
     public OverlayTile overlayTilePrefab;
     public GameObject tileParent;
@@ -234,6 +234,12 @@ public class MapManager : MonoBehaviour
     public void OnDestroy()
     {
         _instance = null;
+    }
+
+    public void DeclareInstance()
+    {
+        if (_instance == null)
+            _instance = this;
     }
 
     private void OnDrawGizmosSelected()
