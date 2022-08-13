@@ -56,8 +56,7 @@ public class DieTexturer : MonoBehaviour {
         Mesh mesh;
         if (Application.isPlaying)
         {
-            mesh = this.GetComponent<MeshFilter>().mesh;
-            
+            mesh = this.GetComponent<MeshFilter>().mesh;            
         }            
         else
         {

@@ -77,6 +77,7 @@ public class LevelData : ScriptableObject
 
         mapManager.DeclareInstance();
         mapManager.GenerateMap();
+
         foreach (DiceSpawn die in alliedDice)
             SpawnDie(die.tilePosition, die.diceClass, false, die.diceOrientation);
         foreach (DiceSpawn die in enemyDice)

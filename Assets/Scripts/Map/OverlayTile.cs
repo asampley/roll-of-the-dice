@@ -90,4 +90,9 @@ public class OverlayTile : MonoBehaviour
 
         gridLocationText.enabled = type != DebugMapType.Off;
     }
+
+    private void OnDestroy()
+    {
+        Debug.Log("Destroying tile");
+    }
 }

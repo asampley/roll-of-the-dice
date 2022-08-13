@@ -162,8 +162,21 @@ public class UnitManager : MonoBehaviour, IPhaseListener
     public void Initialize(DiceOrientation orientation)
     {
         ghostMaterial = Globals.GHOST_MATERIALS[(_unit.UnitClass, IsEnemy)];
-        GetComponentInChildren<MeshRenderer>().sharedMaterial
-            = Globals.DICE_MATERIALS[(_unit.UnitClass, IsEnemy)];
+
+        if (Application.isPlaying)
+        {
+            GetComponentInChildren<MeshRenderer>().sharedMaterial = Globals.DICE_MATERIALS[(_unit.UnitClass, IsEnemy)];
+        }
+        else
+        {
+            Material editorMat = new(_unit.Data.diceMaterial);
+            if (IsEnemy)
+                editorMat.color = _unit.Data.enemyColor;
+            else
+                editorMat.color = _unit.Data.allyColor;
+
+            GetComponentInChildren<MeshRenderer>().sharedMaterial = editorMat;
+        }
 
         if (!_unit.LoadFromSave)
             ResetRange();

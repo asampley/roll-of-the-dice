@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 
 public enum Win
@@ -203,7 +202,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
         MaxNumberOfTurns = gameRulesData.maxTurns;
         CurrentRound = 1;
 
-        ClearMap();
+        await ClearMap();
 
         Debug.Log("player count " + PlayerCount + " enemy count " + EnemyCount + " player move remaining " + PlayerMoveRemaining);
         foreach (KeyValuePair<DiceSpawn, DiceOrientation> die in _alliedSpawnPositions)
@@ -240,13 +239,14 @@ public class GameManager : MonoBehaviour, IPhaseListener
         SetupGame();
     }
 
-    public void ClearMap()
+    public async UniTask ClearMap()
     {
         foreach(Transform child in diceParent.transform)
             GameObject.Destroy(child.gameObject);
-        MapManager.Instance.ClearMap();
-        MapManager.Instance.GenerateMap();
+        await MapManager.Instance.ClearMap();
+        await MapManager.Instance.GenerateMap();
         Logging.LogNotification("Finished clearing map", LogType.GAME_SETUP);
+        await UniTask.Yield();
     }
 
     public void ClearDictionaries()

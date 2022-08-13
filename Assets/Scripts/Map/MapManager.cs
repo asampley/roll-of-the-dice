@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEditor;
+using Cysharp.Threading.Tasks;
 
 public class MapManager : MonoBehaviour
 {
@@ -24,16 +24,10 @@ public class MapManager : MonoBehaviour
         foreach (var data in Resources.LoadAll<TileData>("ScriptableObjects/TileData/"))
             foreach (var tile in data.tiles)
                 tileDataDict.Add(tile, data);
-    }
-
-    private void Start()
-    {
         zSpread = tileMap.GetComponent<TilemapRenderer>().sharedMaterial.GetFloat("_ZSpread");
-
-        GenerateMap();
     }
 
-    public void GenerateMap()
+    public async UniTask GenerateMap()
     {
         BoundsInt bounds = tileMap.cellBounds;
 
@@ -43,11 +37,13 @@ public class MapManager : MonoBehaviour
             {
                 for (int x = bounds.min.x; x < bounds.max.x; x++)
                 {
+                    Debug.Log("Adding Tile");
                     Vector3Int tileLocation = new(x, y, z);
                     Vector2Int tileKey = new(x, y);
 
                     if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                     {
+                        Debug.Log("Adding Tile");
                         var overlayTile = Instantiate(overlayTilePrefab, tileParent.transform);
                         var cellWorldPos = TileToWorldSpace(tileLocation);
 
@@ -62,15 +58,21 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
+
+        await UniTask.Yield();
     }
 
-    public void ClearMap()
+    public async UniTask ClearMap()
     {
+        map.Clear();
         foreach (Transform child in tileParent.transform)
         {
             if (child.gameObject != null)
                 GameObject.Destroy(child.gameObject);
         }
+
+        Debug.Log("Garfeel2");
+        await UniTask.Yield();
     }
 
     public RaycastHit2D? GetFocusedTile()
@@ -244,6 +246,7 @@ public class MapManager : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if (Application.isPlaying) return;
         GenerateMap();
         foreach (KeyValuePair<Vector2Int, OverlayTile> pair in map)
         {
