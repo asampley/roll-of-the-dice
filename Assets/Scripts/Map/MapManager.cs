@@ -37,13 +37,11 @@ public class MapManager : MonoBehaviour
             {
                 for (int x = bounds.min.x; x < bounds.max.x; x++)
                 {
-                    Debug.Log("Adding Tile");
                     Vector3Int tileLocation = new(x, y, z);
                     Vector2Int tileKey = new(x, y);
 
                     if (tileMap.HasTile(tileLocation) && !map.ContainsKey(tileKey))
                     {
-                        Debug.Log("Adding Tile");
                         var overlayTile = Instantiate(overlayTilePrefab, tileParent.transform);
                         var cellWorldPos = TileToWorldSpace(tileLocation);
 
@@ -71,7 +69,6 @@ public class MapManager : MonoBehaviour
                 GameObject.Destroy(child.gameObject);
         }
 
-        Debug.Log("Garfeel2");
         await UniTask.Yield();
     }
 
