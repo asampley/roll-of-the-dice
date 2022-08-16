@@ -7,6 +7,7 @@ public class CoreBooter : MonoBehaviour
     public static CoreBooter Instance;
     public UnityEngine.UI.Image sceneTransitioner;
     private string _prevLevel;
+    public LevelData loadFromEditor;
     
 
     private void Awake()
@@ -17,7 +18,7 @@ public class CoreBooter : MonoBehaviour
 
     private void Start()
     {
-        LoadMenu();
+        LoadMenu();   
     }
 
     public void LoadMenu() => StartCoroutine(_SwitchingScene("menu"));
@@ -43,6 +44,14 @@ public class CoreBooter : MonoBehaviour
             {
                 SceneManager.UnloadSceneAsync(s);
                 SceneManager.UnloadSceneAsync(CoreDataHandler.Instance.LevelData.sceneName);
+            }
+            if (loadFromEditor != null)
+            {
+                CoreDataHandler.Instance.SetLevelID(loadFromEditor);
+                GameLevelData.levelId = CoreDataHandler.Instance.LevelID;
+                DataHandler.ClearData();
+                LoadLevel(loadFromEditor);
+                loadFromEditor = null;
             }                
         };
         return op;

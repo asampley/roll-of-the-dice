@@ -29,6 +29,10 @@ public class LevelDataEditor : Editor
         {
             levelData.LoadScene();
         }
+        if (GUILayout.Button(EditorGUIUtility.IconContent("d_Animation.Play"), _buttonsStyle, GUILayout.Width(20f), GUILayout.Height(20f)))
+        {
+            levelData.LoadGame();
+        }
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 

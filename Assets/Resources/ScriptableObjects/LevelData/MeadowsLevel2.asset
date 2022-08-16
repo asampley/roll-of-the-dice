@@ -13,29 +13,36 @@ MonoBehaviour:
   m_Name: MeadowsLevel2
   m_EditorClassIdentifier: Assembly-CSharp::StartPosition
   levelName: meadows2
+  worldName: 0
   sceneName: field5x5
   nextLevel: {fileID: 11400000, guid: aefdadc300de958419c41aa3e9abc304, type: 2}
   camStartPos: {x: 0.13, y: 1, z: -200}
-  camStartDistance: 2
+  camStartDist: 2.5
   gameRules: {fileID: 11400000, guid: 8fcb3547f400cc14bb10d7414947a2c2, type: 2}
   gridType: 0
   alliedDice:
   - diceClass: 0
     tilePosition: {x: 2, y: 0}
-    isEnemy: 0
+    randomOrientation: 0
+    diceOrientation: 14
   - diceClass: 0
     tilePosition: {x: 5, y: 3}
-    isEnemy: 0
+    randomOrientation: 0
+    diceOrientation: 21
   enemyDice:
   - diceClass: 0
     tilePosition: {x: 2, y: 2}
-    isEnemy: 1
+    randomOrientation: 0
+    diceOrientation: 15
   - diceClass: 0
     tilePosition: {x: 4, y: 1}
-    isEnemy: 1
+    randomOrientation: 0
+    diceOrientation: 19
   - diceClass: 0
     tilePosition: {x: 5, y: -1}
-    isEnemy: 1
+    randomOrientation: 0
+    diceOrientation: 22
   - diceClass: 0
     tilePosition: {x: 1, y: -1}
-    isEnemy: 1
+    randomOrientation: 0
+    diceOrientation: 24

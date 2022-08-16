@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEditor;
 using UnityEditor.SceneManagement;
 using Unity.EditorCoroutines.Editor;
+
 
 public enum GridType
 {
@@ -37,7 +39,7 @@ public class LevelData : ScriptableObject
     // Dice
     public DiceSpawn[] alliedDice;
     public DiceSpawn[] enemyDice;
-    
+
 
     private void OnValidate()
     {
@@ -96,5 +98,17 @@ public class LevelData : ScriptableObject
         UnitData unitData = Globals.UNIT_DATA.Where((UnitData x) => x.unitClass == diceClass).First();
         Unit die = new(unitData, isEnemy, orientation);
         die.SetPosition(startPos);
+    }
+
+    public void LoadGame()
+    {
+        if (Application.isPlaying) return;
+
+        EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+        string scene = Globals.SCENES_FOLDER + "/Core.unity";
+        EditorSceneManager.OpenScene(scene);
+        FindObjectOfType<CoreBooter>().loadFromEditor = this;
+
+        EditorApplication.EnterPlaymode();
     }
 }

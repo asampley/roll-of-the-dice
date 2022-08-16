@@ -217,6 +217,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
 
     public async UniTask LoadGame()
     {
+
         _winState = Win.None;
         phaseUpdateCancel?.Cancel();
         phaseUpdateCancel?.Dispose();
@@ -246,6 +247,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
         await MapManager.Instance.ClearMap();
         await MapManager.Instance.GenerateMap();
         Logging.LogNotification("Finished clearing map", LogType.GAME_SETUP);
+
         await UniTask.Yield();
     }
 
@@ -417,6 +419,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
 
     private async UniTask LoadGameData()
     {
+        await MapManager.Instance.GenerateMap();
         await DataHandler.LoadGameData();
         await DataHandler.DeserializeGameData();
         SetDefaultPositions();
