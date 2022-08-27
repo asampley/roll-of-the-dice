@@ -504,8 +504,7 @@ public class UnitManager : MonoBehaviour, IPhaseListener
 
     public void SetOrientation(DiceOrientation orientation)
     {
-        Vector3 toOrientation = Globals.ORIENTATION_TO_EULERS[orientation];
-        _dieRotator.SetRotation(Quaternion.Euler(toOrientation.x, toOrientation.y, toOrientation.z));
+        _dieRotator.SetOrientation(orientation);
         State = _dieRotator.GetUpFace();
     }
 

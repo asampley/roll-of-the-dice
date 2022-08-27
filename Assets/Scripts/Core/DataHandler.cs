@@ -44,114 +44,13 @@ public class DataHandler : MonoBehaviour
             Globals.GHOST_MATERIALS.Add((u.unitClass, true), enemyGhost);
         }
 
-        Globals.ORIENTATION_TO_EULERS = new();
-
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0000, new Vector3(-20.705f, 49.107f, 67.792f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0001, new Vector3(-20.705f, -49.107f, 112.208f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0002, new Vector3(-200.705f, 49.107f, 292.208f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0003, new Vector3(-200.705f, -49.107f, 247.792f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0100, new Vector3(159.295f, 49.107f, 112.208f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0101, new Vector3(159.295f, -49.107f, 67.792f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0102, new Vector3(-20.705f, 49.107f, -112.208f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0103, new Vector3(-20.705f, -49.107f, -67.792f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0200, new Vector3(-20.705f, 49.107f, -22.208f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0201, new Vector3(-200.705f, -49.107f, 157.792f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0202, new Vector3(20.705f, -130.893f, 22.208f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0203, new Vector3(-20.705f, -49.107f, 22.208f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0300, new Vector3(159.295f, 49.107f, 22.208f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0301, new Vector3(-20.705f, 49.107f, 157.792f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0302, new Vector3(-200.705f, -49.107f, 337.792f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0303, new Vector3(339.295f, -49.107f, -157.792f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0400, new Vector3(-120f, 0f, 135f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0401, new Vector3(-120f, 0f, 45f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0402, new Vector3(-120f, 0f, 315f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0403, new Vector3(-120f, 0f, 225f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0500, new Vector3(60f, 0f, 135f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0501, new Vector3(60f, 0f, 45f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0502, new Vector3(60f, 0f, 315f));
-        Globals.ORIENTATION_TO_EULERS.Add(DiceOrientation.C0503, new Vector3(60f, 0f, 225f));
-
-
-
-        Globals.QUATERNION_TO_ORIENTATION = new();
-
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.3651079f, -0.2507781f, 0.560671f, 0.6996103f), DiceOrientation.C0000);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.0923367f, -0.4304636f, -0.4370117f, -0.7843442f), DiceOrientation.C0000);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.0922953f, 0.4304627f, 0.5609835f, 0.7010570f), DiceOrientation.C0000);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.0922951f, -0.4304563f, -0.5609850f, -0.7010598f), DiceOrientation.C0000);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.4304627f, -0.0922953f, 0.7843471f, 0.4370161f), DiceOrientation.C0001);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.4304627f, -0.0922953f, 0.7010570f, 0.5609835f), DiceOrientation.C0001);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.701057f, 0.5609835f, 0.2481507f, 0.3636452f), DiceOrientation.C0002);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.7010570f, 0.5609835f, -0.4304627f, -0.0922953f), DiceOrientation.C0002);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.7010574f, -0.5609856f, 0.4304594f, 0.0922960f), DiceOrientation.C0002);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.5609835f, 0.701057f, -0.3636452f, -0.2481507f), DiceOrientation.C0003);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.5609835f, 0.7010570f, 0.0922953f, 0.4304627f), DiceOrientation.C0003);
-
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.5609835f, -0.701057f, 0.3636452f, -0.2481507f), DiceOrientation.C0100);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.5609835f, -0.7010570f, -0.0922952f, 0.4304627f), DiceOrientation.C0100);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.5609856f, 0.7010574f, 0.0922959f, -0.4304593f), DiceOrientation.C0100);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.0990457f, 0.8923991f, -0.2391176f, -0.3696439f), DiceOrientation.C0100);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.701057f, -0.5609835f, -0.2481507f, 0.3636452f), DiceOrientation.C0101);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.7010570f, -0.5609835f, 0.4304627f, -0.0922952f), DiceOrientation.C0101);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.7010592f, 0.5609829f, -0.4304594f, 0.0922985f), DiceOrientation.C0101);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.4304437f, 0.0923295f, -0.784343f, 0.4370349f), DiceOrientation.C0102);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.4304627f, 0.0922953f, -0.7010570f, 0.5609835f), DiceOrientation.C0102);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.4304585f, -0.0923000f, 0.7010573f, -0.5609855f), DiceOrientation.C0102);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.2317429f, -0.3449218f, -0.5072575f, 0.7549927f), DiceOrientation.C0103);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.0922953f, -0.4304627f, -0.5609835f, 0.7010570f), DiceOrientation.C0103);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.0922960f, 0.4304593f, 0.5609856f, -0.7010573f), DiceOrientation.C0103);
-
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.2391205f, 0.3696458f, -0.2456001f, 0.8636342f), DiceOrientation.C0200);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.2391205f, 0.3696457f, -0.0990469f, 0.8923973f), DiceOrientation.C0200);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.2391161f, -0.3696410f, 0.0990478f, -0.8924005f), DiceOrientation.C0200);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.0990469f, 0.8923974f, -0.081667f, -0.432605f), DiceOrientation.C0201);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.0990469f, 0.8923973f, -0.2391205f, 0.3696457f), DiceOrientation.C0201);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.0990469f, -0.8923974f, -0.081667f, 0.432605f), DiceOrientation.C0202);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.0990625f, -0.8923957f, -0.0816594f, -0.4326064f), DiceOrientation.C0202);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.0990469f, -0.8923973f, 0.2391205f, 0.3696457f), DiceOrientation.C0202);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.7010573f, -0.5609856f, 0.4304594f, 0.0922960f), DiceOrientation.C0202);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.2391205f, -0.3696458f, 0.2456001f, 0.8636342f), DiceOrientation.C0203);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.2391205f, -0.3696457f, 0.0990469f, 0.8923973f), DiceOrientation.C0203);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.2391176f, 0.3696438f, -0.0990457f, -0.8923991f), DiceOrientation.C0203);
-
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.8923974f, -0.0990469f, 0.432605f, 0.081667f), DiceOrientation.C0300);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.8923973f, -0.0990469f, -0.3696457f, 0.2391205f), DiceOrientation.C0300);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.8923978f, 0.0990439f, 0.3696469f, -0.2391188f), DiceOrientation.C0300);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.3696457f, 0.2391205f, 0.8636342f, 0.2456001f), DiceOrientation.C0301);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.3696457f, 0.2391205f, 0.8923973f, 0.0990469f), DiceOrientation.C0301);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.3696458f, -0.2391205f, -0.8636342f, -0.2456001f), DiceOrientation.C0301);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.3696456f, -0.2391160f, -0.8923985f, -0.0990489f), DiceOrientation.C0301);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.8923974f, 0.0990469f, -0.432605f, 0.081667f), DiceOrientation.C0302);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.8923895f, 0.0990751f, 0.4326247f, -0.0816141f), DiceOrientation.C0302);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.8923974f, 0.0990471f, 0.3696457f, 0.2391206f), DiceOrientation.C0302);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.8924004f, -0.0990478f, -0.3696410f, -0.2391161f), DiceOrientation.C0302);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.3696458f, 0.2391205f, 0.8636342f, -0.2456001f), DiceOrientation.C0303);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.3696456f, 0.2391159f, 0.8923985f, -0.0990489f), DiceOrientation.C0303);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.3696456f, -0.2391159f, -0.8923985f, 0.0990489f), DiceOrientation.C0303);
-
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.3314136f, 0.8001031f, 0.4619398f, 0.1913417f), DiceOrientation.C0400);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.8001031f, 0.3314136f, 0.1913417f, 0.4619398f), DiceOrientation.C0401);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.8001031f, -0.3314136f, 0.1913417f, -0.4619398f), DiceOrientation.C0401);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.8001031f, 0.3314136f, 0.1913417f, -0.4619398f), DiceOrientation.C0402);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.7010714f, 0.560958f, -0.248202f, -0.3636217f), DiceOrientation.C0402);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.8001043f, -0.3314103f, -0.1913438f, 0.4619392f), DiceOrientation.C0402);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.3314136f, 0.8001031f, 0.4619398f, -0.1913417f), DiceOrientation.C0403);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.3314142f, -0.8001009f, -0.4619422f, 0.1913440f), DiceOrientation.C0403);
-
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.1913417f, -0.4619398f, 0.8001031f, 0.3314136f), DiceOrientation.C0500);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.4619398f, -0.1913417f, 0.3314136f, 0.8001031f), DiceOrientation.C0501);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.4619391f, 0.1913438f, -0.3314104f, -0.8001043f), DiceOrientation.C0501);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.4619398f, -0.1913417f, 0.3314136f, -0.8001031f), DiceOrientation.C0502);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(0.4619398f, 0.1913417f, -0.3314136f, 0.8001031f), DiceOrientation.C0502);
-        Globals.QUATERNION_TO_ORIENTATION.Add(new Quaternion(-0.1913417f, -0.4619398f, 0.8001031f, -0.3314136f), DiceOrientation.C0503);
-
         if (!Application.isPlaying) return;
 
         // Load game scene data
         GameLevelData.levelId = CoreDataHandler.Instance.LevelID;
         GameLevelData.Load();
 
-        // Setup debugging if in 
+        // Setup debugging if in
 
         await UniTask.Yield();
     }

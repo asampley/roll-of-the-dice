@@ -13,26 +13,42 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: Assembly-CSharp::StartPosition
   levelName: Level1
+  worldName: 0
   sceneName: Level1
   nextLevel: {fileID: 11400000, guid: 5add61967d911994cbaad2e8c812522e, type: 2}
   camStartPos: {x: -0.25, y: 1, z: -200}
-  camStartDistance: 2.5
+  camStartDist: 2.5
   gameRules: {fileID: 11400000, guid: 8fcb3547f400cc14bb10d7414947a2c2, type: 2}
   gridType: 0
   alliedDice:
   - diceClass: 0
     tilePosition: {x: 0, y: -2}
-    isEnemy: 0
+    randomOrientation: 0
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
   - diceClass: 0
     tilePosition: {x: 3, y: 2}
-    isEnemy: 0
+    randomOrientation: 0
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
   enemyDice:
   - diceClass: 0
     tilePosition: {x: 1, y: 3}
-    isEnemy: 1
+    randomOrientation: 0
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
   - diceClass: 0
     tilePosition: {x: 4, y: 0}
-    isEnemy: 1
+    randomOrientation: 0
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
   - diceClass: 0
     tilePosition: {x: 2, y: -1}
-    isEnemy: 1
+    randomOrientation: 0
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0

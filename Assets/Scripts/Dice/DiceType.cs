@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,35 +17,43 @@ public enum DiceClass
     TestPawn,
 }
 
-// Notation: Shape FaceNumber FaceRotation (2 Digits each)
-// C for Cube
-public enum DiceOrientation
-{
-    INVALID,
-    C0000,
-    C0001,
-    C0002,
-    C0003,
-    C0100,
-    C0101,
-    C0102,
-    C0103,
-    C0200,
-    C0201,
-    C0202,
-    C0203,
-    C0300,
-    C0301,
-    C0302,
-    C0303,
-    C0400,
-    C0401,
-    C0402,
-    C0403,
-    C0500,
-    C0501,
-    C0502,
-    C0503,
+// Face number is on top, face rotation is how many times to rotate about that face
+[Serializable]
+public struct DiceOrientation {
+    public static readonly DiceOrientation ZERO = new DiceOrientation();
+
+    public int FaceNumber;
+    public int FaceRotation;
+
+    public DiceOrientation(int faceNumber, int faceRotation) {
+        this.FaceNumber = faceNumber;
+        this.FaceRotation = faceRotation;
+    }
+
+    public static bool operator==(DiceOrientation a, DiceOrientation b) {
+        return a.FaceNumber == b.FaceNumber && a.FaceRotation == b.FaceRotation;
+    }
+
+    public static bool operator!=(DiceOrientation a, DiceOrientation b) {
+        return !(a == b);
+    }
+
+    override public bool Equals(object? o) {
+        if (o != null && o is DiceOrientation) {
+            return this == (DiceOrientation)o;
+        } else {
+            return false;
+        }
+    }
+
+    override public int GetHashCode() {
+        int hash = 23;
+        hash = hash * 31 + FaceNumber;
+        hash = hash * 31 + FaceRotation;
+        return hash;
+    }
+
+    override public string ToString() => "DiceOrientation(" + FaceNumber + "," + FaceRotation + ")";
 }
 
 [System.Serializable]

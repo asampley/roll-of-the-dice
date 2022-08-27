@@ -120,7 +120,7 @@ public class DieRotator : MonoBehaviour {
         this.startRot = FinalTarget();
         this.targets.Clear();
         this.transform.localRotation = this.startRot;
-        
+
         return this.transform.localRotation;
     }
 
@@ -130,7 +130,7 @@ public class DieRotator : MonoBehaviour {
         UpdateOrientation();
         this.startRot = FinalTarget();
         this.targets.Clear();
-        this.transform.localRotation = this.startRot;        
+        this.transform.localRotation = this.startRot;
     }
 
     public void Update()
@@ -176,13 +176,12 @@ public class DieRotator : MonoBehaviour {
     public void SetOrientation(DiceOrientation orientation)
     {
         _currentOrientation = orientation;
-        foreach (KeyValuePair<DiceOrientation, Vector3> pair in Globals.ORIENTATION_TO_EULERS)
-        {
-            if (pair.Key == orientation)
-            {
-                this.SetRotation(Quaternion.Euler(pair.Value.x, pair.Value.y, pair.Value.z));
-                this.RotateNow();
-            }
+
+        if (axes.OrientationToQuaternion.TryGetValue(_currentOrientation, out Quaternion quat)) {
+            this.SetRotation(_qOffsetRotation * quat);
+            this.RotateNow();
+        } else {
+            Debug.LogError(transform.parent.name + " " + _currentOrientation);
         }
     }
 
@@ -193,26 +192,20 @@ public class DieRotator : MonoBehaviour {
 
     public void UpdateOrientation()
     {
-        
+
         _currentOrientation = GetOrientation();
     }
 
     public DiceOrientation GetOrientation()
     {
-        Quaternion rotation = this.FinalTarget();
-        DiceOrientation orientation = DiceOrientation.INVALID;
+        Quaternion rot = Quaternion.Inverse(_qOffsetRotation) * this.FinalTarget();
+        HashQuat rotation = new HashQuat(rot);
 
-        foreach (KeyValuePair<Quaternion, DiceOrientation> pair in Globals.QUATERNION_TO_ORIENTATION)
-        {
-            if (pair.Key == rotation)
-            {
-                orientation = pair.Value;
-            }
+        if (axes.QuaternionToOrientation.TryGetValue(new HashQuat(rot), out DiceOrientation orientation)) {
+            return orientation;
+        } else {
+            Debug.LogError(transform.parent.name + " " + this.FinalTarget().ToString("f7") + " -> " + rot);
+            return DiceOrientation.ZERO;
         }
-
-        if (orientation == DiceOrientation.INVALID)
-            Debug.LogError(transform.parent.name + " " + this.FinalTarget().ToString("f7"));
-
-        return orientation;
     }
 }

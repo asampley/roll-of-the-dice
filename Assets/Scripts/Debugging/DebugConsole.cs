@@ -286,11 +286,12 @@ public class DebugConsole : MonoBehaviour
                 }
                 else if (command is DebugCommand<DiceOrientation> dcDiceOrientation)
                 {
-                    if (DiceOrientation.TryParse(inputParts[1], out DiceOrientation d))
-                        dcDiceOrientation.Invoke(d);
-                    else
-                    {
-                        Debug.LogError($"'{command.Id}' requires a DiceOrientation enum parameter!");
+                    if (int.TryParse(inputParts[1][1..3], out int faceNumber)
+                        && int.TryParse(inputParts[1][3..5], out int faceRotation)
+                    ) {
+                        dcDiceOrientation.Invoke(new DiceOrientation(faceNumber, faceRotation));
+                    } else {
+                        Debug.LogError($"'{command.Id}' requires a DiceOrientation parameter!");
                         return;
                     }
                 }
