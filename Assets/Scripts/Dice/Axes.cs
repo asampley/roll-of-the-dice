@@ -39,7 +39,7 @@ public struct HashQuat {
 
     public static bool operator!=(HashQuat a, HashQuat b) => !(a == b);
 
-    override public bool Equals(object? o) {
+    override public bool Equals(object o) {
         if (o != null && o is HashQuat) {
             return this == (HashQuat)o;
         } else {

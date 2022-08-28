@@ -38,7 +38,7 @@ public struct DiceOrientation {
         return !(a == b);
     }
 
-    override public bool Equals(object? o) {
+    override public bool Equals(object o) {
         if (o != null && o is DiceOrientation) {
             return this == (DiceOrientation)o;
         } else {
