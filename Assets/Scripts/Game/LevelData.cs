@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using Unity.EditorCoroutines.Editor;
+using Cysharp.Threading.Tasks;
 
 
 public enum GridType
@@ -47,30 +48,22 @@ public class LevelData : ScriptableObject
         foreach (DiceSpawn dice in alliedDice)
         {
             if (positions.Contains(dice.tilePosition))
-            {
                 Debug.LogError("Identical spawn positions in a start position");
-            }
             else
-            {
                 positions.Add(dice.tilePosition);
-            }
         }
         foreach (DiceSpawn dice in enemyDice)
         {
             if (positions.Contains(dice.tilePosition))
-            {
                 Debug.LogError("Identical spawn positions in a start position");
-            }
             else
-            {
                 positions.Add(dice.tilePosition);
-            }
         }
     }
 
     public void LoadScene()
     {
-        DataHandler.LoadGameData();
+        DataHandler.LoadGameData().Forget();
         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
         string scene = Globals.SCENES_FOLDER + "/" + worldName.ToString() + "/" + sceneName + ".unity";
         EditorSceneManager.OpenScene(scene);
@@ -78,7 +71,7 @@ public class LevelData : ScriptableObject
         MapManager mapManager = FindObjectOfType(typeof(MapManager)) as MapManager;
 
         mapManager.DeclareInstance();
-        mapManager.GenerateMap();
+        mapManager.GenerateMap().Forget();
 
         foreach (DiceSpawn die in alliedDice)
             SpawnDie(die.tilePosition, die.diceClass, false, die.diceOrientation);

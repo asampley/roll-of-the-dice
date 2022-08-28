@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering;
 using TMPro;
-
+using Cysharp.Threading.Tasks;
 
 public class UIManager : MonoBehaviour
 {
@@ -56,7 +56,7 @@ public class UIManager : MonoBehaviour
     {
         DataHandler.ClearData();
         Back();
-        GameManager.Instance.SetupGame();
+        GameManager.Instance.SetupGame().Forget();
     }
 
     public void RerollLevel()

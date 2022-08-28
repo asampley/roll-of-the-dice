@@ -477,10 +477,12 @@ public class UnitManager : MonoBehaviour, IPhaseListener
             tile.HideTile();
     }
 
-    public List<OverlayTile> GetTilesInRange(Vector2Int position) {
+    public List<OverlayTile> GetTilesInRange(Vector2Int position)
+    {
         if (_movesAvailable <= 0) return new();
 
-        return MovementPattern switch {
+        return MovementPattern switch
+        {
             MovementPattern.Straight => MapManager.Instance.GetTilesStraightLine(position),
             MovementPattern.Single => MapManager.Instance.GetSurroundingTiles(position),
             MovementPattern.Knight => MapManager.Instance.GetTilesKnight(position),
@@ -493,7 +495,8 @@ public class UnitManager : MonoBehaviour, IPhaseListener
         _tilesInRange = GetTilesInRange(Position);
     }
 
-    private List<OverlayTile> GetTilesAdjacent() {
+    private List<OverlayTile> GetTilesAdjacent()
+    {
         return MapManager.Instance.GetSurroundingTiles(Position);
     }
 

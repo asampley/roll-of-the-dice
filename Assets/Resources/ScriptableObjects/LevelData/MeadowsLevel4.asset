@@ -13,35 +13,36 @@ MonoBehaviour:
   m_Name: MeadowsLevel4
   m_EditorClassIdentifier: Assembly-CSharp::StartPosition
   levelName: meadows4
-  sceneName: pond7x7
+  worldName: 0
+  sceneName: field5x5
   nextLevel: {fileID: 11400000, guid: 6f8f9d8e31cc6174fb39764e62bdd798, type: 2}
   camStartPos: {x: 0.13, y: 1, z: -200}
-  camStartDistance: 2
+  camStartDist: 2.5
   gameRules: {fileID: 11400000, guid: 8fcb3547f400cc14bb10d7414947a2c2, type: 2}
   gridType: 0
   alliedDice:
-  - diceClass: 1
-    tilePosition: {x: -1, y: -3}
-    isEnemy: 0
-  - diceClass: 1
-    tilePosition: {x: 5, y: 3}
-    isEnemy: 0
+  - diceClass: 0
+    tilePosition: {x: 1, y: -1}
+    randomOrientation: 0
+    diceOrientation: 3
+  - diceClass: 0
+    tilePosition: {x: 3, y: -1}
+    randomOrientation: 0
+    diceOrientation: 14
   enemyDice:
   - diceClass: 0
-    tilePosition: {x: 2, y: 2}
-    isEnemy: 1
+    tilePosition: {x: 1, y: 1}
+    randomOrientation: 0
+    diceOrientation: 3
   - diceClass: 0
-    tilePosition: {x: 4, y: 1}
-    isEnemy: 1
+    tilePosition: {x: 3, y: 1}
+    randomOrientation: 0
+    diceOrientation: 13
   - diceClass: 0
-    tilePosition: {x: 3, y: -2}
-    isEnemy: 1
-  - diceClass: 1
-    tilePosition: {x: 0, y: 1}
-    isEnemy: 1
-  - diceClass: 1
-    tilePosition: {x: -1, y: 3}
-    isEnemy: 1
-  - diceClass: 1
-    tilePosition: {x: 5, y: -3}
-    isEnemy: 1
+    tilePosition: {x: 5, y: 1}
+    randomOrientation: 0
+    diceOrientation: 20
+  - diceClass: 0
+    tilePosition: {x: 3, y: 3}
+    randomOrientation: 0
+    diceOrientation: 24

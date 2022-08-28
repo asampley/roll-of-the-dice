@@ -53,4 +53,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Meadows/pond7x7.unity
     guid: 2393f9bf1ba19bc4f902c9b82bbc19cc
+  - enabled: 1
+    path: Assets/Scenes/Meadows/field3x3.unity
+    guid: b05a6457210e25c43aee468557d8c671
   m_configObjects: {}

@@ -9,8 +9,7 @@ public class Unit
     protected UnitData _data;
     public UnitData Data { get => _data; }
     protected Transform _transform;
-    public Transform Transform
-    { get =>_transform; }
+    public Transform Transform { get =>_transform; }
     protected string _uid;
     public string Uid
     {

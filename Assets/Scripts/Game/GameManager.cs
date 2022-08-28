@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
 
         levelData = CoreDataHandler.Instance.LevelData;
         gameRulesData = levelData.gameRules;
-        LoadGameData();
+        LoadGameData().Forget();
     }
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
@@ -237,7 +237,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
     public void RerollGame()
     {
         SetDefaultPositions(true);
-        SetupGame();
+        SetupGame().Forget();
     }
 
     public async UniTask ClearMap()

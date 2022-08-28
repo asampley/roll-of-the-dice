@@ -8,8 +8,6 @@ using Cysharp.Threading.Tasks;
 
 public class DataHandler : MonoBehaviour
 {
-    public event Action<Win> WinEvent;
-
     private void Start()
     {
         GameManager.Instance.WinEvent += (_) => ClearData();

@@ -244,7 +244,7 @@ public class MapManager : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         if (Application.isPlaying) return;
-        GenerateMap();
+        GenerateMap().Forget();
         foreach (KeyValuePair<Vector2Int, OverlayTile> pair in map)
         {
             pair.Value.gridLocationText.text = pair.Value.gridLocation.ToString();

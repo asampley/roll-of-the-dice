@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEditor;
 
@@ -94,7 +93,9 @@ public class LevelDataEditor : Editor
             EditorGUILayout.PropertyField(prop.FindPropertyRelative("tilePosition"), GUIContent.none);
             GUILayout.Space(10f);
             EditorGUILayout.PropertyField(prop.FindPropertyRelative("randomOrientation"), GUIContent.none);
-            EditorGUILayout.PropertyField(prop.FindPropertyRelative("diceOrientation"), GUIContent.none);
+            EditorGUIUtility.fieldWidth = 2f;
+            EditorGUILayout.PropertyField(prop.FindPropertyRelative("diceOrientation").FindPropertyRelative("FaceNumber"), GUIContent.none);
+            EditorGUILayout.PropertyField(prop.FindPropertyRelative("diceOrientation").FindPropertyRelative("FaceRotation"), GUIContent.none);
             GUILayout.EndHorizontal();
         }
         EditorGUILayout.BeginHorizontal();
@@ -135,8 +136,9 @@ public class LevelDataEditor : Editor
             EditorGUILayout.PropertyField(prop.FindPropertyRelative("tilePosition"), GUIContent.none);
             GUILayout.Space(10f);
             EditorGUILayout.PropertyField(prop.FindPropertyRelative("randomOrientation"), GUIContent.none);
-            //if (prop.FindPropertyRelative("randomOrientation").Equals(true))
-            EditorGUILayout.PropertyField(prop.FindPropertyRelative("diceOrientation"), GUIContent.none);
+            EditorGUIUtility.fieldWidth = 2f;
+            EditorGUILayout.PropertyField(prop.FindPropertyRelative("diceOrientation").FindPropertyRelative("FaceNumber"), GUIContent.none);
+            EditorGUILayout.PropertyField(prop.FindPropertyRelative("diceOrientation").FindPropertyRelative("FaceRotation"), GUIContent.none);
             GUILayout.EndHorizontal();
         }
         EditorGUILayout.BeginHorizontal();

@@ -13,29 +13,32 @@ MonoBehaviour:
   m_Name: MeadowsLevel5
   m_EditorClassIdentifier: Assembly-CSharp::StartPosition
   levelName: meadows5
-  sceneName: drainage_ditch_8x8
-  nextLevel: {fileID: 11400000, guid: e07d6bf5fd294494dbe1e69200c6aadd, type: 2}
+  worldName: 0
+  sceneName: field5x5
+  nextLevel: {fileID: 11400000, guid: 3f71831e4cd025e46a55c70a34cffcc8, type: 2}
   camStartPos: {x: -0.3, y: 0.86, z: -200}
-  camStartDistance: 3
+  camStartDist: 2.5
   gameRules: {fileID: 11400000, guid: 8fcb3547f400cc14bb10d7414947a2c2, type: 2}
   gridType: 0
   alliedDice:
-  - diceClass: 1
-    tilePosition: {x: -1, y: -3}
-    isEnemy: 0
-  - diceClass: 2
-    tilePosition: {x: 5, y: 3}
-    isEnemy: 0
+  - diceClass: 0
+    tilePosition: {x: 1, y: -1}
+    randomOrientation: 0
+    diceOrientation: 5
   enemyDice:
-  - diceClass: 2
+  - diceClass: 0
     tilePosition: {x: 2, y: 2}
-    isEnemy: 1
-  - diceClass: 2
+    randomOrientation: 0
+    diceOrientation: 9
+  - diceClass: 0
     tilePosition: {x: 4, y: 1}
-    isEnemy: 1
-  - diceClass: 1
-    tilePosition: {x: 3, y: -2}
-    isEnemy: 1
-  - diceClass: 1
-    tilePosition: {x: 0, y: 1}
-    isEnemy: 1
+    randomOrientation: 0
+    diceOrientation: 13
+  - diceClass: 0
+    tilePosition: {x: 4, y: -1}
+    randomOrientation: 0
+    diceOrientation: 23
+  - diceClass: 0
+    tilePosition: {x: 3, y: 3}
+    randomOrientation: 0
+    diceOrientation: 15
