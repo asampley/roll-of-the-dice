@@ -107,7 +107,6 @@ public class Unit
         _unitManager.DieTexturer.Initialize();
         _faces = _unitManager.DieTexturer.Faces;
         _unitManager.Initialize(startOrientation);
-        _unitManager.Orientation = startOrientation;
 
         // Add to dice list for save data
         if (DICE_LIST == null)

@@ -177,10 +177,13 @@ public class DieRotator : MonoBehaviour {
     {
         _currentOrientation = orientation;
 
-        if (axes.OrientationToQuaternion.TryGetValue(_currentOrientation, out Quaternion quat)) {
+        if (axes.OrientationToQuaternion.TryGetValue(_currentOrientation, out Quaternion quat))
+        {
             this.SetRotation(_qOffsetRotation * quat);
             this.RotateNow();
-        } else {
+        }
+        else
+        {
             Debug.LogError(transform.parent.name + " " + _currentOrientation);
         }
     }
@@ -192,18 +195,19 @@ public class DieRotator : MonoBehaviour {
 
     public void UpdateOrientation()
     {
-
         _currentOrientation = GetOrientation();
     }
 
     public DiceOrientation GetOrientation()
     {
         Quaternion rot = Quaternion.Inverse(_qOffsetRotation) * this.FinalTarget();
-        HashQuat rotation = new HashQuat(rot);
 
-        if (axes.QuaternionToOrientation.TryGetValue(new HashQuat(rot), out DiceOrientation orientation)) {
+        if (axes.QuaternionToOrientation.TryGetValue(new HashQuat(rot), out DiceOrientation orientation))
+        {
             return orientation;
-        } else {
+        }
+        else
+        {
             Debug.LogError(transform.parent.name + " " + this.FinalTarget().ToString("f7") + " -> " + rot);
             return DiceOrientation.ZERO;
         }

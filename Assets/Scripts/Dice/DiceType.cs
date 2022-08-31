@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum DiceClass
@@ -19,34 +17,39 @@ public enum DiceClass
 
 // Face number is on top, face rotation is how many times to rotate about that face
 [Serializable]
-public struct DiceOrientation {
-    public static readonly DiceOrientation ZERO = new DiceOrientation();
+public struct DiceOrientation
+{
+    public static readonly DiceOrientation ZERO = new();
 
     public int FaceNumber;
     public int FaceRotation;
 
-    public DiceOrientation(int faceNumber, int faceRotation) {
+    public DiceOrientation(int faceNumber, int faceRotation)
+    {
         this.FaceNumber = faceNumber;
         this.FaceRotation = faceRotation;
     }
 
-    public static bool operator==(DiceOrientation a, DiceOrientation b) {
+    public static bool operator==(DiceOrientation a, DiceOrientation b)
+    {
         return a.FaceNumber == b.FaceNumber && a.FaceRotation == b.FaceRotation;
     }
 
-    public static bool operator!=(DiceOrientation a, DiceOrientation b) {
+    public static bool operator!=(DiceOrientation a, DiceOrientation b)
+    {
         return !(a == b);
     }
 
-    override public bool Equals(object o) {
-        if (o != null && o is DiceOrientation) {
-            return this == (DiceOrientation)o;
-        } else {
+    override public bool Equals(object o)
+    {
+        if (o != null && o is DiceOrientation orientation)
+            return this == orientation;
+        else
             return false;
-        }
     }
 
-    override public int GetHashCode() {
+    override public int GetHashCode()
+    {
         int hash = 23;
         hash = hash * 31 + FaceNumber;
         hash = hash * 31 + FaceRotation;
