@@ -823,6 +823,6 @@ public class UnitManager : MonoBehaviour, IPhaseListener
     }
 
     public string PathStr() {
-        return (Vector2Int)parentTile.gridLocation + " -> " + Utilities.EnumerableString(path);
+        return (Vector2Int)parentTile.gridLocation + " -> " + path.StrJoin();
     }
 }

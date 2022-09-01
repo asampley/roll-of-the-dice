@@ -60,7 +60,7 @@ public class DebugConsole : MonoBehaviour
         new DebugCommand("phase", "Print the current phase information.", "phase", () =>
         {
             Debug.Log(GameManager.Instance.phaseManager.StackString());
-            Debug.Log(Utilities.EnumerableString(GameManager.Instance.phaseManager.CurrentPhaseResults()));
+            Debug.Log(GameManager.Instance.phaseManager.CurrentPhaseResults().StrJoin());
         });
         new DebugCommand("debug_game_setup", "Print game setup and cleanup debugging.", "debug_game_setup", () =>
         {

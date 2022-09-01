@@ -57,7 +57,7 @@ public class PhaseData {
     }
 
     override public string ToString() {
-        return phase + Utilities.EnumerableString(phaseStep);
+        return phase + phaseStep.StrJoin();
     }
 }
 
@@ -96,7 +96,7 @@ public class PhaseManager {
 
         Current.results = results;
 
-        Logging.LogNotification(("PhaseManager new stack " + Utilities.EnumerableString(phaseStack)).ToString(), LogType.PHASES);
+        Logging.LogNotification(("PhaseManager new stack " + phaseStack.StrJoin()).ToString(), LogType.PHASES);
     }
 
     public void Push(Phase phase) {
@@ -114,7 +114,7 @@ public class PhaseManager {
 
         Current.results = results;
 
-        Logging.LogNotification(("PhaseManager new stack " + Utilities.EnumerableString(phaseStack)).ToString(), LogType.PHASES);
+        Logging.LogNotification(("PhaseManager new stack " + phaseStack.StrJoin()).ToString(), LogType.PHASES);
     }
 
     public void Pop() {
@@ -128,7 +128,7 @@ public class PhaseManager {
             listener.OnPhaseResume(CurrentPhase.Value);
         }
 
-        Logging.LogNotification(("PhaseManager new stack " + Utilities.EnumerableString(phaseStack)).ToString(), LogType.PHASES);
+        Logging.LogNotification(("PhaseManager new stack " + phaseStack.StrJoin()).ToString(), LogType.PHASES);
     }
 
     public async UniTask PhaseStep(CancellationToken token) {
@@ -206,6 +206,6 @@ public class PhaseManager {
     }
 
     public string StackString() {
-        return Utilities.EnumerableString(phaseStack);
+        return phaseStack.StrJoin();
     }
 }
