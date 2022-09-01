@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
                 else
                     _alliedSpawnPositions.Add(spawn, spawn.diceOrientation);
             }
-                
+
             foreach (DiceSpawn spawn in levelData.enemyDice)
             {
                 if (spawn.randomOrientation)
@@ -268,6 +268,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
         else if (EnemyCount == 0)
             WinEvent?.Invoke(Win.Player);
 
+        WinEvent = null;
     }
 
     public void CheckWin(bool player)
