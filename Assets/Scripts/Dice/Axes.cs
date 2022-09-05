@@ -70,6 +70,8 @@ public class Axes : ScriptableObject {
         Vector3[]
     )> _rotations = new(CreateRotations);
 
+    // I promise to do all the math right and make opposite faces indices added
+    // together to be the number of faces minus one.
     private static (
         Dictionary<HashQuat, DiceOrientation>,
         Dictionary<DiceOrientation, Quaternion>,
@@ -103,5 +105,25 @@ public class Axes : ScriptableObject {
         }
 
         return (dict1, dict2, faces);
+    }
+
+    public int ClosestFaceNumber(Vector3 position) {
+        int face_index = 0;
+        float dist = Vector3.Distance(Faces[0], position);
+
+        for (int i = 1; i < Faces.Length; ++i) {
+            var d = Vector3.Distance(Faces[i], position);
+
+            if (d < dist) {
+                face_index = i;
+                dist = d;
+            }
+        }
+
+        return face_index;
+    }
+
+    public int OpposingFace(int faceNumber) {
+        return Faces.Length - faceNumber - 1;
     }
 }

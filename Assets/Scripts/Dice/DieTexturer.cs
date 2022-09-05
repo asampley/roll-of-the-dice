@@ -3,17 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[System.Serializable]
-public class Face {
-    public DiceState state;
-    public Vector3 position;
-
-    public Face(Face original) {
-        this.state = original.state;
-        this.position = original.position;
-    }
-}
-
 [RequireComponent(typeof(MeshFilter))]
 public class DieTexturer : MonoBehaviour {
     public static readonly Vector2 uvScale = new(1f / Globals.DICE_STATES, 1f);
@@ -89,10 +78,13 @@ public class DieTexturer : MonoBehaviour {
                 meshVertices[t[2]],
             };
 
-            var face = ClosestFace((v[0] + v[1] + v[2]) / 3f);
+            var position = (v[0] + v[1] + v[2]) / 3f;
+
+            // z axis is flipped in mesh coordinates?
+            position.Scale(new Vector3(1f, 1f, -1f));
+            var face = ClosestFace(position);
 
             for (int j = 0; j < 3; ++j) {
-                var n = meshNormals[t[j]];
                 var uv = originalUvs[t[j]];
 
                 uvs[t[j]] = Vector2.Scale(uv, uvScale) + Offset(face);
@@ -104,32 +96,9 @@ public class DieTexturer : MonoBehaviour {
         mesh.SetUVs(0, uvs);
     }
 
-    public int ClosestFaceIndex(Vector3 position)
-    {
-        int face_index = -1;
-        float dist = float.PositiveInfinity;
-
-        for (int i = 0; i < axes.Faces.Length; ++i) {
-            var d = Vector3.Distance(axes.Faces[i], position);
-
-            if (d < dist) {
-                face_index = i;
-                dist = d;
-            }
-        }
-
-        if (face_index == -1)
-        {
-            Debug.LogError("No face found for texturing, make sure faces is not empty");
-            throw new System.IndexOutOfRangeException();
-        } else {
-            return face_index;
-        }
-    }
-
     public DiceState ClosestFace(Vector3 position)
     {
-        return Faces[ClosestFaceIndex(position)];
+        return Faces[axes.ClosestFaceNumber(position)];
     }
 
     static Vector2 Offset(DiceState index)

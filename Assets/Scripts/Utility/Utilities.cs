@@ -14,6 +14,11 @@ public static class Utilities
         return "[" + string.Join(separator, enumerable) + "]";
     }
 
+    public static T DebugLog<T>(this T t, params object[] additional) {
+        Debug.Log(t.ToString() + ": " + additional.StrJoin());
+        return t;
+    }
+
     /// <summary>
     /// Gets all children of `SerializedProperty` at 1 level depth.
     /// </summary>
