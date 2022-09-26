@@ -54,6 +54,7 @@ public class UIManager : MonoBehaviour
     // MENU -------------------------------------------------
     public void RestartLevel()
     {
+        GameManager.Instance.WinEvent += w => ShowVictoryScreen(w == Win.Player);
         DataHandler.ClearData();
         Back();
         GameManager.Instance.SetupGame().Forget();
@@ -61,6 +62,7 @@ public class UIManager : MonoBehaviour
 
     public void RerollLevel()
     {
+        GameManager.Instance.WinEvent += w => ShowVictoryScreen(w == Win.Player);
         DataHandler.ClearData();
         Back();
         GameManager.Instance.RerollGame();

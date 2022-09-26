@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
             _instance = this;
 
         phaseManager.AllPhaseListeners.Add(this);
-        GameManager.Instance.WinEvent += w => _winState = w;
+        
     }
 
     private void Start()
@@ -187,6 +187,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
 
     public async UniTask SetupGame()
     {
+        GameManager.Instance.WinEvent += w => _winState = w;
         Camera.main.transform.position = levelData.camStartPos;
         Camera.main.orthographicSize = levelData.camStartDist;
 
@@ -217,7 +218,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
 
     public async UniTask LoadGame()
     {
-
+        GameManager.Instance.WinEvent += w => _winState = w;
         _winState = Win.None;
         phaseUpdateCancel?.Cancel();
         phaseUpdateCancel?.Dispose();
@@ -259,16 +260,24 @@ public class GameManager : MonoBehaviour, IPhaseListener
 
     public void CheckWin()
     {
+        Debug.Log(EnemyCount);
         if (phaseManager.CurrentPhase == Phase.Setup || phaseManager.CurrentPhase == null) return;
 
         if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
+        {
             WinEvent?.Invoke(Win.Enemy);
+            WinEvent = null;
+        }
         else if (PlayerCount == 0 || PlayerKingDefeated)
+        {
             WinEvent?.Invoke(Win.Enemy);
+            WinEvent = null;
+        }
         else if (EnemyCount == 0)
+        {
             WinEvent?.Invoke(Win.Player);
-
-        WinEvent = null;
+            WinEvent = null;
+        }
     }
 
     public void CheckWin(bool player)
