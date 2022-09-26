@@ -33,7 +33,7 @@ MonoBehaviour:
     randomOrientation: 0
     diceOrientation:
       FaceNumber: 1
-      FaceRotation: 0
+      FaceRotation: 1
   - diceClass: 0
     tilePosition: {x: 3, y: 4}
     randomOrientation: 0

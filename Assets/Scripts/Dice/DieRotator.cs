@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteAlways]
 public class DieRotator : MonoBehaviour {
     private Quaternion startRot;
     private float startTime;
