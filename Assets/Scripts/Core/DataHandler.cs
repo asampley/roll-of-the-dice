@@ -10,7 +10,8 @@ public class DataHandler : MonoBehaviour
 {
     public static async UniTask LoadGameData()
     {
-        GameManager.Instance.WinEvent += (_) => ClearData();
+        if (Application.isPlaying)
+            GameManager.Instance.WinEvent += (_) => ClearData();
         Globals.UNIT_DATA = Resources.LoadAll<UnitData>(Globals.DICE_CLASS_FOLDER) as UnitData[];
 
         Globals.DICE_MATERIALS = new();

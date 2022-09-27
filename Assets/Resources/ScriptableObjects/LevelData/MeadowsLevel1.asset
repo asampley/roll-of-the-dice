@@ -34,15 +34,3 @@ MonoBehaviour:
     diceOrientation:
       FaceNumber: 1
       FaceRotation: 1
-  - diceClass: 0
-    tilePosition: {x: 3, y: 4}
-    randomOrientation: 0
-    diceOrientation:
-      FaceNumber: 1
-      FaceRotation: 0
-  - diceClass: 0
-    tilePosition: {x: 4, y: 3}
-    randomOrientation: 0
-    diceOrientation:
-      FaceNumber: 1
-      FaceRotation: 0

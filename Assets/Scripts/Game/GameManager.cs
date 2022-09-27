@@ -107,8 +107,7 @@ public class GameManager : MonoBehaviour, IPhaseListener
         if (_instance == null)
             _instance = this;
 
-        phaseManager.AllPhaseListeners.Add(this);
-        
+        phaseManager.AllPhaseListeners.Add(this);        
     }
 
     private void Start()
@@ -159,7 +158,6 @@ public class GameManager : MonoBehaviour, IPhaseListener
 
     public DiceOrientation GenerateDiceOrientation(bool isCube)
     {
-        Debug.Log("Garfeel");
         string identifier;
 
         switch (isCube)
@@ -260,7 +258,6 @@ public class GameManager : MonoBehaviour, IPhaseListener
 
     public void CheckWin()
     {
-        Debug.Log(EnemyCount);
         if (phaseManager.CurrentPhase == Phase.Setup || phaseManager.CurrentPhase == null) return;
 
         if (CurrentRound >= MaxNumberOfTurns && gameRulesData.turnLimit)
