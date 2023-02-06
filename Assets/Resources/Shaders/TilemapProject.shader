@@ -17,7 +17,7 @@ Shader "Unlit/TileMapProject"
 
         Pass
         {
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
@@ -33,8 +33,9 @@ Shader "Unlit/TileMapProject"
             struct v2f
             {
                 float4 pos : POSITION;
-                float2 uv : TEXCOORD0;
                 float4 original : POSITION1;
+                float2 uv : TEXCOORD0;
+                float2 iso : TEXCOORD1;
             };
 
             sampler2D _MainTex;
@@ -60,6 +61,8 @@ Shader "Unlit/TileMapProject"
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv.xy;
                 o.original = v.vertex;
+                // get iso cordinates (unknown offset reasons atm)
+                o.iso = mul(_ToIso, v.vertex.xy) + float2(-0.5, -0.5);
 
                 return o;
             }
@@ -71,17 +74,22 @@ Shader "Unlit/TileMapProject"
                 // clip if the alpha is very low
                 clip(col.a - _AlphaCutoff);
 
-                // get iso cordinates (unknown offset reasons atm)
-                float2 iso = mul(_ToIso, i.original.xy) + float2(-0.5, -0.5);
-
                 // tile increasing numbers up and decreasing numbers down
-                float z = _ZSpread * (round(iso.x) + round(iso.y));
+                float z = _ZSpread * (round(i.iso.x) + round(i.iso.y));
 
-                depth = UnityObjectToClipPos(float4(i.original.x, i.original.y, z, 1)).z;
+                float4 clip = UnityObjectToClipPos(float3(i.original.xy, z));
+                depth = clip.z;
+
+                #if !defined(UNITY_REVERSED_Z)
+                    // convert [-1, 1] clip plane to [1, 0] depth
+                    // the UNITY_REVERSED_Z check is currently equivalent to the near plane
+                    // being 1 or -1
+                    depth = (1.0 + clip.z) / 2.0;
+                #endif
 
                 return col;
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }

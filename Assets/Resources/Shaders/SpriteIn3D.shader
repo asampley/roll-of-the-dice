@@ -15,7 +15,7 @@ Shader "Unlit/SpriteIn3D"
 
         Pass
         {
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
@@ -60,7 +60,7 @@ Shader "Unlit/SpriteIn3D"
 
                 return col;
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }

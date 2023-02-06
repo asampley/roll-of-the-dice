@@ -16,7 +16,7 @@ Shader "Unlit/TileMap"
 
         Pass
         {
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
@@ -85,7 +85,7 @@ Shader "Unlit/TileMap"
 
                 return col;
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }
