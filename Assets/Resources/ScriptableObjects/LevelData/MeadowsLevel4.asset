@@ -22,27 +22,51 @@ MonoBehaviour:
   gridType: 0
   alliedDice:
   - diceClass: 0
-    tilePosition: {x: 1, y: -1}
+    tilePosition: {x: 3, y: 2}
     randomOrientation: 0
-    diceOrientation: 3
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
   - diceClass: 0
-    tilePosition: {x: 3, y: -1}
+    tilePosition: {x: 3, y: 0}
     randomOrientation: 0
-    diceOrientation: 14
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
   enemyDice:
   - diceClass: 0
-    tilePosition: {x: 1, y: 1}
+    tilePosition: {x: 1, y: 3}
     randomOrientation: 0
-    diceOrientation: 3
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
   - diceClass: 0
-    tilePosition: {x: 3, y: 1}
+    tilePosition: {x: 5, y: 3}
     randomOrientation: 0
-    diceOrientation: 13
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
   - diceClass: 0
     tilePosition: {x: 5, y: 1}
     randomOrientation: 0
-    diceOrientation: 20
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
   - diceClass: 0
-    tilePosition: {x: 3, y: 3}
+    tilePosition: {x: 1, y: 1}
     randomOrientation: 0
-    diceOrientation: 24
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
+  - diceClass: 0
+    tilePosition: {x: 1, y: -1}
+    randomOrientation: 0
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
+  - diceClass: 0
+    tilePosition: {x: 5, y: -1}
+    randomOrientation: 0
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0

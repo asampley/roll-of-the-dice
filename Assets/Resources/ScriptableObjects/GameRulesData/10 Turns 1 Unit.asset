@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8f9f00d45b7c5fa4d900527cca2fd750, type: 3}
-  m_Name: Timed
+  m_Name: 10 Turns 1 Unit
   m_EditorClassIdentifier: 
   gameMode: 0
-  turnLimit: 0
+  turnLimit: 1
   maxTurns: 10
   canMoveAll: 0
-  playerUnitsToMove: 2
+  playerUnitsToMove: 1

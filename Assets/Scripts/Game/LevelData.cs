@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using Unity.EditorCoroutines.Editor;
-using Cysharp.Threading.Tasks;
+#endif
 
 
 public enum GridType
@@ -64,6 +67,7 @@ public class LevelData : ScriptableObject
     public void LoadScene()
     {
         DataHandler.LoadGameData().Forget();
+#if UNITY_EDITOR
         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
         string scene = Globals.SCENES_FOLDER + "/" + worldName.ToString() + "/" + sceneName + ".unity";
         EditorSceneManager.OpenScene(scene);
@@ -76,12 +80,15 @@ public class LevelData : ScriptableObject
         foreach (DiceSpawn die in alliedDice)
             SpawnDie(die.tilePosition, die.diceClass, false, die.diceOrientation);
         foreach (DiceSpawn die in enemyDice)
-            SpawnDie(die.tilePosition, die.diceClass, true, die.diceOrientation);        
+            SpawnDie(die.tilePosition, die.diceClass, true, die.diceOrientation);
+#endif
     }
 
     public void SpawnDie(Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
     {
+#if UNITY_EDITOR
         EditorCoroutineUtility.StartCoroutine(SleepyLoadUnit(2, startPos, diceClass, isEnemy, orientation), this);
+#endif
     }
 
     IEnumerator SleepyLoadUnit(float time, Vector2Int startPos, DiceClass diceClass, bool isEnemy, DiceOrientation orientation)
@@ -95,6 +102,8 @@ public class LevelData : ScriptableObject
 
     public void LoadGame()
     {
+#if UNITY_EDITOR
+
         if (Application.isPlaying) return;
 
         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
@@ -103,5 +112,6 @@ public class LevelData : ScriptableObject
         FindObjectOfType<CoreBooter>().loadFromEditor = this;
 
         EditorApplication.EnterPlaymode();
+#endif
     }
 }

@@ -65,8 +65,10 @@ public class MapManager : MonoBehaviour
         map.Clear();
         foreach (Transform child in tileParent.transform)
         {
-            if (child.gameObject != null)
+            if (child.gameObject != null && Application.isPlaying)
                 GameObject.Destroy(child.gameObject);
+            if (child.gameObject != null && !Application.isPlaying)
+                GameObject.DestroyImmediate(child.gameObject);
         }
 
         await UniTask.Yield();
@@ -245,9 +247,8 @@ public class MapManager : MonoBehaviour
     {
         if (Application.isPlaying) return;
         GenerateMap().Forget();
+
         foreach (KeyValuePair<Vector2Int, OverlayTile> pair in map)
-        {
             pair.Value.gridLocationText.text = pair.Value.gridLocation.ToString();
-        }
     }
 }

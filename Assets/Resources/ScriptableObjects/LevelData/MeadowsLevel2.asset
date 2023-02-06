@@ -24,17 +24,25 @@ MonoBehaviour:
   - diceClass: 0
     tilePosition: {x: 3, y: 2}
     randomOrientation: 0
-    diceOrientation: 14
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
   enemyDice:
-  - diceClass: 0
-    tilePosition: {x: 2, y: 3}
-    randomOrientation: 0
-    diceOrientation: 19
-  - diceClass: 0
-    tilePosition: {x: 4, y: 3}
-    randomOrientation: 0
-    diceOrientation: 3
   - diceClass: 0
     tilePosition: {x: 3, y: 4}
     randomOrientation: 0
-    diceOrientation: 12
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
+  - diceClass: 0
+    tilePosition: {x: 4, y: 4}
+    randomOrientation: 0
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 0
+  - diceClass: 0
+    tilePosition: {x: 2, y: 4}
+    randomOrientation: 0
+    diceOrientation:
+      FaceNumber: 0
+      FaceRotation: 1
